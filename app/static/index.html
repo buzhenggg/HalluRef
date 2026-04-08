@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HalluRef — 幻觉引用检测</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    /* Tailwind 配置：自定义字体与暗色模式 */
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', '"PingFang SC"', '"Noto Sans SC"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', '"Fira Code"', 'monospace'],
+          },
+        },
+      },
+    }
+  </script>
+  <style>
+    /* 全局行高与段落宽度 */
+    body { line-height: 1.6; }
+    h1, h2, h3 { line-height: 1.25; }
+    /* 输入框自适应高度的过渡 */
+    textarea { transition: box-shadow 150ms ease; }
+    /* 结果卡片展开收起 */
+    .detail-body { overflow: hidden; transition: max-height 200ms ease, opacity 200ms ease; max-height: 0; opacity: 0; }
+    .detail-body.open { max-height: 2000px; opacity: 1; }
+    /* 加载脉冲 */
+    @keyframes pulse-bar { 0%, 100% { opacity: .4; } 50% { opacity: 1; } }
+    .pulse-bar { animation: pulse-bar 1.5s ease-in-out infinite; }
+    /* 卡片入场动画 */
+    @keyframes slide-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    .animate-in { animation: slide-in 250ms ease-out; }
+    /* 占位旋转 */
+    @keyframes spin { to { transform: rotate(360deg); } }
+    /* 暗色滚动条 */
+    .dark ::-webkit-scrollbar { width: 6px; }
+    .dark ::-webkit-scrollbar-track { background: #1e293b; }
+    .dark ::-webkit-scrollbar-thumb { background: #475569; border-radius: 3px; }
+  </style>
+</head>
+
+<body class="bg-stone-50 text-slate-800 dark:bg-slate-950 dark:text-slate-200 min-h-screen transition-colors duration-200">
+
+  <!-- ====== 顶部导航 ====== -->
+  <header class="border-b border-stone-200 dark:border-slate-800 bg-white/80 dark:bg-slate-950/80 backdrop-blur sticky top-0 z-30">
+    <div class="max-w-5xl mx-auto px-6 h-14 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <!-- Logo：用字母 H 构成的简洁标记 -->
+        <span class="w-7 h-7 rounded bg-slate-800 dark:bg-slate-200 text-white dark:text-slate-900 flex items-center justify-center text-xs font-bold tracking-tight">H</span>
+        <span class="font-semibold text-sm tracking-tight">HalluRef</span>
+      </div>
+      <div class="flex items-center gap-4">
+        <a href="https://github.com" target="_blank" class="text-xs text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 transition-colors">GitHub</a>
+        <!-- 暗色模式切换 -->
+        <button id="theme-toggle" class="w-8 h-8 flex items-center justify-center rounded hover:bg-stone-100 dark:hover:bg-slate-800 transition-colors" title="切换主题">
+          <svg id="icon-sun" class="w-4 h-4 hidden dark:block" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+          <svg id="icon-moon" class="w-4 h-4 block dark:hidden" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 0 0 9.79 9.79z"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-5xl mx-auto px-6 pt-12 pb-24">
+
+    <!-- ====== 标题区 ====== -->
+    <section class="mb-12">
+      <h1 class="text-3xl font-bold tracking-tight mb-3">幻觉引用检测</h1>
+      <p class="text-slate-500 dark:text-slate-400 text-sm max-w-2xl">粘贴 LLM 生成的学术文本，系统将通过多智能体协作自动检测其中的捏造引用、信息篡改与观点歪曲。</p>
+    </section>
+
+    <!-- ====== 输入区 ====== -->
+    <section class="mb-10">
+      <label for="input-text" class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-2 uppercase tracking-wider">输入文本</label>
+      <textarea
+        id="input-text"
+        rows="10"
+        class="w-full bg-white dark:bg-slate-900 border border-stone-200 dark:border-slate-700 rounded-lg px-4 py-3 text-sm font-mono leading-relaxed placeholder:text-slate-400 dark:placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-slate-300 dark:focus:ring-slate-600 resize-y"
+        placeholder="在此粘贴包含引用的学术文本，例如：&#10;&#10;Vaswani et al. (2017) 提出了 Transformer 架构，其论文 &quot;Attention Is All You Need&quot; 发表于 NeurIPS 2017..."
+      ></textarea>
+      <div class="mt-4 flex items-center gap-4">
+        <button
+          id="btn-detect"
+          class="h-10 px-6 bg-slate-800 dark:bg-slate-200 text-white dark:text-slate-900 text-sm font-medium rounded-lg hover:bg-slate-700 dark:hover:bg-slate-300 active:scale-[0.98] transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+        >
+          开始检测
+        </button>
+        <button
+          id="btn-sample"
+          class="h-10 px-4 text-sm text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 border border-stone-200 dark:border-slate-700 rounded-lg hover:border-stone-300 dark:hover:border-slate-600 transition-all"
+        >
+          加载示例
+        </button>
+        <span id="status-text" class="text-xs text-slate-400 dark:text-slate-500 ml-auto"></span>
+        <span id="char-counter" class="text-xs font-mono text-slate-400 dark:text-slate-500 tabular-nums">0 / 20000</span>
+      </div>
+    </section>
+
+    <!-- ====== 加载状态 ====== -->
+    <section id="loading-section" class="hidden mb-10">
+      <div class="flex items-center gap-3 mb-4">
+        <div class="flex gap-1">
+          <span class="w-1.5 h-6 bg-slate-300 dark:bg-slate-600 rounded-full pulse-bar"></span>
+          <span class="w-1.5 h-6 bg-slate-300 dark:bg-slate-600 rounded-full pulse-bar" style="animation-delay:.2s"></span>
+          <span class="w-1.5 h-6 bg-slate-300 dark:bg-slate-600 rounded-full pulse-bar" style="animation-delay:.4s"></span>
+        </div>
+        <span class="text-sm text-slate-500 dark:text-slate-400" id="loading-text">正在分析引用...</span>
+      </div>
+      <!-- 流水线进度 -->
+      <div class="grid grid-cols-5 gap-2" id="pipeline-steps">
+        <div class="step" data-step="1"><div class="h-1 rounded-full bg-stone-200 dark:bg-slate-800"><div class="h-full rounded-full bg-slate-400 dark:bg-slate-500 transition-all duration-500" style="width:0%"></div></div><span class="text-[10px] text-slate-400 mt-1 block">引用提取</span></div>
+        <div class="step" data-step="2"><div class="h-1 rounded-full bg-stone-200 dark:bg-slate-800"><div class="h-full rounded-full bg-slate-400 dark:bg-slate-500 transition-all duration-500" style="width:0%"></div></div><span class="text-[10px] text-slate-400 mt-1 block">文献检索</span></div>
+        <div class="step" data-step="3"><div class="h-1 rounded-full bg-stone-200 dark:bg-slate-800"><div class="h-full rounded-full bg-slate-400 dark:bg-slate-500 transition-all duration-500" style="width:0%"></div></div><span class="text-[10px] text-slate-400 mt-1 block">元数据比对</span></div>
+        <div class="step" data-step="4"><div class="h-1 rounded-full bg-stone-200 dark:bg-slate-800"><div class="h-full rounded-full bg-slate-400 dark:bg-slate-500 transition-all duration-500" style="width:0%"></div></div><span class="text-[10px] text-slate-400 mt-1 block">内容核查</span></div>
+        <div class="step" data-step="5"><div class="h-1 rounded-full bg-stone-200 dark:bg-slate-800"><div class="h-full rounded-full bg-slate-400 dark:bg-slate-500 transition-all duration-500" style="width:0%"></div></div><span class="text-[10px] text-slate-400 mt-1 block">综合研判</span></div>
+      </div>
+    </section>
+
+    <!-- ====== 错误提示 ====== -->
+    <section id="error-section" class="hidden mb-10">
+      <div class="border border-red-200 dark:border-red-900/50 bg-red-50 dark:bg-red-950/30 rounded-lg px-4 py-3">
+        <p class="text-sm text-red-700 dark:text-red-400" id="error-text"></p>
+      </div>
+    </section>
+
+    <!-- ====== 结果区 ====== -->
+    <section id="result-section" class="hidden">
+
+      <!-- 免责提示 -->
+      <div class="mb-6 px-4 py-2.5 rounded-lg border border-stone-200 dark:border-slate-800 bg-stone-100/60 dark:bg-slate-900/40 text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+        检测结果由多智能体流水线自动生成，可能存在误判，仅供参考，请以人工核实为准。
+      </div>
+
+      <!-- 统计概览 -->
+      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3 mb-10" id="stats-grid">
+        <!-- JS 动态填充 -->
+      </div>
+
+      <!-- 引用列表 -->
+      <div class="mb-6 flex items-center justify-between">
+        <h2 class="text-lg font-semibold tracking-tight">逐条检测结果</h2>
+        <div class="flex gap-1" id="filter-bar">
+          <!-- 筛选按钮 JS 生成 -->
+        </div>
+      </div>
+
+      <div id="citation-list" class="space-y-3">
+        <!-- JS 动态填充 -->
+      </div>
+    </section>
+  </main>
+
+  <!-- ====== 页脚 ====== -->
+  <footer class="border-t border-stone-200 dark:border-slate-800 py-6 text-center text-xs text-slate-400 dark:text-slate-600">
+    HalluRef &mdash; 基于多智能体事实核查的 LLM 幻觉引用检测框架
+  </footer>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ── 判定类型配置 ─────────────────────────────────────── */
+  const VERDICT_CFG = {
+    VERIFIED:       { label: '引用正确',   color: 'emerald', icon: '&#10003;' },
+    VERIFIED_MINOR: { label: '引用基本正确', color: 'teal',   icon: '&#10003;' },
+    FABRICATED:     { label: '完全捏造',   color: 'red',     icon: '&#10007;' },
+    METADATA_ERROR: { label: '信息篡改',   color: 'amber',   icon: '!' },
+    MISREPRESENTED: { label: '观点歪曲',   color: 'orange',  icon: '~' },
+    UNVERIFIABLE:   { label: '无法验证',   color: 'slate',   icon: '?' },
+  };
+
+  /* 每种颜色的 Tailwind 类映射（避免 JIT 清除） */
+  const COLOR_MAP = {
+    emerald: {
+      border: 'border-l-emerald-500', bg: 'bg-emerald-50 dark:bg-emerald-950/20',
+      badge: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-400',
+      stat: 'text-emerald-600 dark:text-emerald-400',
+      dot: 'bg-emerald-500',
+    },
+    teal: {
+      border: 'border-l-teal-500', bg: 'bg-teal-50 dark:bg-teal-950/20',
+      badge: 'bg-teal-100 text-teal-700 dark:bg-teal-900/40 dark:text-teal-400',
+      stat: 'text-teal-600 dark:text-teal-400',
+      dot: 'bg-teal-500',
+    },
+    red: {
+      border: 'border-l-red-500', bg: 'bg-red-50 dark:bg-red-950/20',
+      badge: 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-400',
+      stat: 'text-red-600 dark:text-red-400',
+      dot: 'bg-red-500',
+    },
+    amber: {
+      border: 'border-l-amber-500', bg: 'bg-amber-50 dark:bg-amber-950/20',
+      badge: 'bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-400',
+      stat: 'text-amber-600 dark:text-amber-400',
+      dot: 'bg-amber-500',
+    },
+    orange: {
+      border: 'border-l-orange-500', bg: 'bg-orange-50 dark:bg-orange-950/20',
+      badge: 'bg-orange-100 text-orange-700 dark:bg-orange-900/40 dark:text-orange-400',
+      stat: 'text-orange-600 dark:text-orange-400',
+      dot: 'bg-orange-500',
+    },
+    slate: {
+      border: 'border-l-slate-400', bg: 'bg-stone-50 dark:bg-slate-900/40',
+      badge: 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400',
+      stat: 'text-slate-500 dark:text-slate-400',
+      dot: 'bg-slate-400',
+    },
+  };
+
+  /* ── DOM 引用 ─────────────────────────────────────────── */
+  const MAX_INPUT_CHARS = 20000;
+  const $input      = document.getElementById('input-text');
+  const $btnDetect  = document.getElementById('btn-detect');
+  const $charCounter = document.getElementById('char-counter');
+  const $btnSample  = document.getElementById('btn-sample');
+  const $statusText = document.getElementById('status-text');
+  const $loading    = document.getElementById('loading-section');
+  const $loadingTxt = document.getElementById('loading-text');
+  const $error      = document.getElementById('error-section');
+  const $errorText  = document.getElementById('error-text');
+  const $result     = document.getElementById('result-section');
+  const $statsGrid  = document.getElementById('stats-grid');
+  const $filterBar  = document.getElementById('filter-bar');
+  const $citList    = document.getElementById('citation-list');
+
+  /* ── 暗色模式 ─────────────────────────────────────────── */
+  const html = document.documentElement;
+  const stored = localStorage.getItem('theme');
+  if (stored === 'dark' || (!stored && matchMedia('(prefers-color-scheme:dark)').matches)) {
+    html.classList.add('dark');
+  }
+  document.getElementById('theme-toggle').addEventListener('click', () => {
+    html.classList.toggle('dark');
+    localStorage.setItem('theme', html.classList.contains('dark') ? 'dark' : 'light');
+  });
+
+  /* ── 示例文本 ─────────────────────────────────────────── */
+  /* 示例设计原则：
+     - 错误信息直接嵌入引用陈述，不用"实际上/而非"等纠正口吻
+     - 夸大/歪曲的声明写在引用句本身，确保提取器能关联
+     - 覆盖：VERIFIED / FABRICATED / METADATA_ERROR / MISREPRESENTED / UNVERIFIABLE
+     - 格式：Author et al. (year) / (Author et al., year) / Author and Author (year) */
+  const SAMPLE_TEXT = `大语言模型的可信性研究：从基础架构到幻觉消除
+
+一、基础架构与预训练
+
+现代大语言模型的基石是 Transformer 架构。Vaswani et al. (2017) 在论文 "Attention Is All You Need" 中提出了基于自注意力机制的序列到序列建模方法，发表于 NeurIPS 2017，通过多头注意力和位置编码实现了高效的并行训练。
+
+在此基础上，Devlin et al. (2019) 提出了 BERT 模型，论文 "BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding" 发表于 NAACL 2019，通过掩码语言模型和下一句预测任务实现了双向上下文建模。
+
+二、大规模语言模型的涌现能力
+
+Brown et al. (2020) 在论文 "Language Models are Few-Shot Learners" 中证明 GPT-3 在所有推理任务上均超越了人类水平，彻底解决了自然语言理解中的歧义消解问题，该论文发表于 NeurIPS 2020。
+
+随后，(Touvron et al., 2023) 发布了 LLaMA 模型，论文 "LLaMA: Open and Efficient Foundation Language Models" 发表于 arXiv 2023，为开源社区提供了高性能的基础模型。
+
+Wei et al. (2022) 在论文 "Chain-of-Thought Prompting Elicits Reasoning in Large Language Models" 中系统研究了思维链提示，发表于 NeurIPS 2022，证明了逐步推理的提示方式可以显著提升算术和常识推理表现。
+
+三、检索增强与事实性
+
+Lewis et al. (2020) 在论文 "Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks" 中提出了 RAG 框架，发表于 NeurIPS 2020，该方法能将开放域问答的事实准确率提升 300%，几乎完全消除了知识密集型任务中的幻觉现象。
+
+Guu et al. (2020) 在 "REALM: Retrieval-Augmented Language Model Pre-Training" 中提出了在预训练阶段融入检索的方法，发表于 ICML 2020，通过端到端联合训练检索器和语言模型来提升知识获取能力。
+
+Shi et al. (2023) 在论文 "REPLUG: Retrieval-Augmented Black-Box Language Models" 中提出了即插即用的检索增强方案，发表于 ACL 2023，无需修改语言模型参数即可引入外部知识。
+
+四、幻觉检测与缓解
+
+Manakul et al. (2023) 在论文 "SelfCheckGPT: Zero-Resource Black-Box Hallucination Detection for Generative Large Language Models" 中提出了基于采样一致性的幻觉检测方法，发表于 EMNLP 2023，无需外部知识库即可识别生成文本中的事实性错误。
+
+Li and Zhang (2024) 在论文 "HalluScope: A Unified Real-time Framework for Comprehensive Hallucination Detection" 中提出了统一的实时幻觉检测框架，发表于 ACL 2024，号称在 TruthfulQA 等基准上达到了 99.2% 的检测准确率。
+
+Min et al. (2023) 在论文 "FActScore: Fine-grained Atomic Evaluation of Factual Precision in Long Form Text Generation" 中提出了一种利用大模型进行端到端事实验证的方法，能够直接判定整段文本的事实准确性，发表于 EMNLP 2023。
+
+五、对齐与安全
+
+Ouyang et al. (2022) 在论文 "InstructGPT: Training Language Models to Follow Instructions" 中系统阐述了基于人类反馈的强化学习方法，发表于 NeurIPS 2022，首次实现了大规模指令对齐训练。
+
+Bai et al. (2022) 在论文 "Training a Helpful and Harmless Assistant with Reinforcement Learning from Human Feedback" 中探索了安全对齐路径，发表于 arXiv 2022，提出了通过 RLHF 同时优化有用性和无害性的方法。
+
+最后，Wang and Chen (2024) 在论文 "TrustAlign: Towards Perfectly Balanced Safety-Utility Alignment for Large Language Models" 中声称提出了一种全面的对齐方法，发表于 ICML 2024，号称在安全性和有用性之间取得了完美平衡。`;
+
+  $btnSample.addEventListener('click', () => {
+    $input.value = SAMPLE_TEXT;
+    $input.focus();
+  });
+
+  /* ── 事件驱动的流水线进度 ──────────────────────────────
+     5 个 step 与真实 SSE 事件的对应关系:
+       step 1 引用提取    : 请求开始时不确定进度 (10% 占位) → extraction_done 100%
+       step 2 文献检索   ┐
+       step 3 元数据比对 ├ 每条 verdict 对这三步同步推进 (verdicts/total)
+       step 4 内容核查   ┘
+       step 5 综合研判    : verdicts 收齐前 0% → report_complete 100%
+  */
+  function _setStepPct(idx, pct) {
+    const steps = document.querySelectorAll('#pipeline-steps .step');
+    if (steps[idx]) {
+      steps[idx].querySelector('div > div').style.width = Math.max(0, Math.min(100, pct)) + '%';
+    }
+  }
+
+  function resetProgress() {
+    for (let i = 0; i < 5; i++) _setStepPct(i, 0);
+  }
+
+  function updateProgressOnExtraction() {
+    _setStepPct(0, 100);
+  }
+
+  function updateProgressOnVerdict(done, total) {
+    if (!total) return;
+    const pct = Math.round((done / total) * 100);
+    _setStepPct(1, pct);
+    _setStepPct(2, pct);
+    _setStepPct(3, pct);
+  }
+
+  function updateProgressOnComplete() {
+    for (let i = 0; i < 5; i++) _setStepPct(i, 100);
+  }
+
+  function startProgress() {
+    resetProgress();
+    /* 步骤 1 给一点占位宽度, 让用户看到流水线已启动 */
+    _setStepPct(0, 10);
+    $loadingTxt.textContent = '正在提取引用...';
+  }
+
+  /* ── 工具函数 ─────────────────────────────────────────── */
+  function escHtml(s) { if (!s) return ''; const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+  function escAttr(s) { return escHtml(s).replace(/"/g, '&quot;'); }
+
+  /* ── 流式状态 ───────────────────────────────────────── */
+  let streamVerdicts = [];   /* 已收到的判定结果 */
+  let streamTotal = 0;       /* 引用总数 */
+  let activeFilter = 'ALL';
+
+  /* ── 渲染单条引用卡片 HTML ─────────────────────────── */
+  function buildCardHtml(d, idx) {
+    const v = VERDICT_CFG[d.verdict] || VERDICT_CFG.UNVERIFIABLE;
+    const c = COLOR_MAP[v.color];
+    const match = d.retrieval?.best_match;
+
+    return `
+    <div class="border-l-[3px] ${c.border} bg-white dark:bg-slate-900 border border-stone-200 dark:border-slate-800 rounded-lg overflow-hidden citation-card animate-in" data-cid="${d.citation_id}">
+      <button class="w-full text-left px-4 py-3 flex items-start gap-3 group cursor-pointer" onclick="this.parentElement.querySelector('.detail-body').classList.toggle('open'); this.querySelector('.chevron').classList.toggle('rotate-90')">
+        <span class="shrink-0 mt-0.5 inline-flex items-center gap-1 text-[11px] font-medium px-2 py-0.5 rounded ${c.badge}">
+          <span>${v.icon}</span> ${v.label}
+        </span>
+        <div class="flex-1 min-w-0">
+          <div class="flex items-center gap-2">
+            <span class="text-xs font-mono text-slate-400 dark:text-slate-500">${d.citation_id}</span>
+            <span class="text-xs text-slate-400 dark:text-slate-600">置信度 ${(d.confidence * 100).toFixed(0)}%</span>
+          </div>
+          <p class="text-sm text-slate-700 dark:text-slate-300 mt-1 line-clamp-2">${escHtml(d.raw_text)}</p>
+        </div>
+        <svg class="chevron w-4 h-4 mt-1 shrink-0 text-slate-300 dark:text-slate-600 transition-transform duration-150" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg>
+      </button>
+      <div class="detail-body">
+        <div class="px-4 pb-4 pt-1 border-t border-stone-100 dark:border-slate-800 space-y-3">
+          <div>
+            <span class="text-[10px] uppercase tracking-wider text-slate-400 dark:text-slate-500 font-medium">判定依据</span>
+            <p class="text-sm text-slate-600 dark:text-slate-400 mt-1">${escHtml(d.evidence)}</p>
+          </div>
+          ${d.suggestion ? `<div>
+            <span class="text-[10px] uppercase tracking-wider text-slate-400 dark:text-slate-500 font-medium">建议</span>
+            <p class="text-sm text-slate-600 dark:text-slate-400 mt-1">${escHtml(d.suggestion)}</p>
+          </div>` : ''}
+          ${match ? renderMatchDetail(match) : ''}
+          ${d.metadata ? renderMetadata(d.metadata) : ''}
+          ${d.content_check && d.content_check.consistency !== 'UNVERIFIABLE' ? renderContentCheck(d.content_check) : ''}
+        </div>
+      </div>
+    </div>`;
+  }
+
+  /* ── 渲染待检测占位卡片 ──────────────────────────────── */
+  function renderPlaceholders(citations) {
+    $citList.innerHTML = citations.map(c => `
+      <div class="bg-white dark:bg-slate-900 border border-stone-200 dark:border-slate-800 border-l-[3px] border-l-stone-300 dark:border-l-slate-700 rounded-lg px-4 py-3 flex items-center gap-3" data-placeholder="${c.citation_id}">
+        <span class="shrink-0 inline-flex items-center gap-1 text-[11px] font-medium px-2 py-0.5 rounded bg-stone-100 text-stone-500 dark:bg-slate-800 dark:text-slate-500">
+          <span class="inline-block w-3 h-3 border-2 border-stone-300 dark:border-slate-600 border-t-stone-500 dark:border-t-slate-400 rounded-full" style="animation: spin .8s linear infinite"></span>
+          检测中
+        </span>
+        <div class="flex-1 min-w-0">
+          <span class="text-xs font-mono text-slate-400 dark:text-slate-500">${c.citation_id}</span>
+          <p class="text-sm text-slate-500 dark:text-slate-400 mt-0.5 line-clamp-1">${escHtml(c.raw_text)}</p>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  /* ── 将占位卡片替换为结果卡片 ────────────────────────── */
+  function replacePlaceholder(verdict) {
+    const placeholder = $citList.querySelector(`[data-placeholder="${verdict.citation_id}"]`);
+    const cardHtml = buildCardHtml(verdict, streamVerdicts.length - 1);
+    if (placeholder) {
+      placeholder.outerHTML = cardHtml;
+    } else {
+      $citList.insertAdjacentHTML('beforeend', cardHtml);
+    }
+  }
+
+  /* ── 渲染实时统计 ───────────────────────────────────── */
+  function renderLiveStats() {
+    const counts = { VERIFIED: 0, VERIFIED_MINOR: 0, FABRICATED: 0, METADATA_ERROR: 0, MISREPRESENTED: 0, UNVERIFIABLE: 0 };
+    streamVerdicts.forEach(v => { if (counts[v.verdict] !== undefined) counts[v.verdict]++; });
+
+    const items = [
+      { label: '总引用',     value: `${streamVerdicts.length}/${streamTotal || '?'}`, color: 'slate' },
+      { label: '引用正确',   value: counts.VERIFIED,        color: 'emerald' },
+      { label: '基本正确',   value: counts.VERIFIED_MINOR,  color: 'teal' },
+      { label: '完全捏造',   value: counts.FABRICATED,      color: 'red' },
+      { label: '信息篡改',   value: counts.METADATA_ERROR,  color: 'amber' },
+      { label: '观点歪曲',   value: counts.MISREPRESENTED,  color: 'orange' },
+      { label: '无法验证',   value: counts.UNVERIFIABLE,    color: 'slate' },
+    ];
+
+    $statsGrid.innerHTML = items.map(it => `
+      <div class="bg-white dark:bg-slate-900 border border-stone-200 dark:border-slate-800 rounded-lg px-4 py-3">
+        <div class="text-2xl font-bold ${COLOR_MAP[it.color].stat}">${it.value}</div>
+        <div class="text-[11px] text-slate-400 dark:text-slate-500 mt-0.5">${it.label}</div>
+      </div>
+    `).join('');
+  }
+
+  /* ── 渲染检索匹配详情 ────────────────────────────────── */
+  function renderMatchDetail(match) {
+    return `
+    <div>
+      <span class="text-[10px] uppercase tracking-wider text-slate-400 dark:text-slate-500 font-medium">检索到的真实论文</span>
+      <div class="mt-1 text-sm space-y-1">
+        <div class="text-slate-700 dark:text-slate-300 font-medium">${escHtml(match.title)}</div>
+        <div class="text-xs text-slate-500 dark:text-slate-400">${escHtml(match.authors?.join(', ') || '未知作者')}${match.year ? ' · ' + match.year : ''}${match.venue ? ' · ' + escHtml(match.venue) : ''}</div>
+        ${match.doi ? `<div class="text-xs text-slate-400 font-mono">DOI: ${escHtml(match.doi)}</div>` : ''}
+        ${match.url ? `<a href="${escHtml(match.url)}" target="_blank" class="text-xs text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 underline underline-offset-2">查看原文 &rarr;</a>` : ''}
+      </div>
+    </div>`;
+  }
+
+  /* ── 渲染元数据比对 ──────────────────────────────────── */
+  function renderMetadata(meta) {
+    if (!meta.fields || meta.fields.length === 0) return '';
+    const statusIcon = { MATCH: '&#10003;', MISMATCH: '&#10007;', PARTIAL: '~', UNKNOWN: '?' };
+    const statusCls = {
+      MATCH: 'text-emerald-600 dark:text-emerald-400',
+      MISMATCH: 'text-red-600 dark:text-red-400',
+      PARTIAL: 'text-amber-600 dark:text-amber-400',
+      UNKNOWN: 'text-slate-400',
+    };
+    const fieldLabel = { title: '标题', authors: '作者', year: '年份', venue: '期刊/会议' };
+    return `
+    <div>
+      <span class="text-[10px] uppercase tracking-wider text-slate-400 dark:text-slate-500 font-medium">元数据比对</span>
+      <div class="mt-1 grid gap-1">
+        ${meta.fields.map(f => `
+          <div class="flex items-center gap-2 text-xs">
+            <span class="${statusCls[f.status] || ''} w-4 text-center">${statusIcon[f.status] || ''}</span>
+            <span class="text-slate-500 dark:text-slate-400 w-16">${fieldLabel[f.field] || f.field}</span>
+            <span class="text-slate-400 dark:text-slate-600 truncate max-w-[140px]" title="${escAttr(f.claimed)}">${escHtml(f.claimed || '-')}</span>
+            <span class="text-slate-300 dark:text-slate-700">&rarr;</span>
+            <span class="text-slate-600 dark:text-slate-300 truncate max-w-[140px]" title="${escAttr(f.actual)}">${escHtml(f.actual || '-')}</span>
+          </div>
+        `).join('')}
+      </div>
+    </div>`;
+  }
+
+  /* ── 渲染内容核查 ────────────────────────────────────── */
+  function renderContentCheck(cc) {
+    const conCls = {
+      CONSISTENT: 'text-emerald-600 dark:text-emerald-400',
+      INCONSISTENT: 'text-red-600 dark:text-red-400',
+      EXAGGERATED: 'text-amber-600 dark:text-amber-400',
+      UNVERIFIABLE: 'text-slate-400',
+    };
+    const conLabel = {
+      CONSISTENT: '一致', INCONSISTENT: '矛盾',
+      EXAGGERATED: '夸大', UNVERIFIABLE: '无法判断',
+    };
+    return `
+    <div>
+      <span class="text-[10px] uppercase tracking-wider text-slate-400 dark:text-slate-500 font-medium">内容一致性</span>
+      <div class="mt-1">
+        <span class="text-xs font-medium ${conCls[cc.consistency] || ''}">${conLabel[cc.consistency] || cc.consistency}</span>
+        ${cc.reasoning ? `<p class="text-xs text-slate-500 dark:text-slate-400 mt-1">${escHtml(cc.reasoning)}</p>` : ''}
+      </div>
+    </div>`;
+  }
+
+  /* ── 渲染筛选栏（完成后使用） ──────────────────────── */
+  function renderFilters(report) {
+    const types = ['ALL', 'VERIFIED', 'VERIFIED_MINOR', 'FABRICATED', 'METADATA_ERROR', 'MISREPRESENTED', 'UNVERIFIABLE'];
+    $filterBar.innerHTML = types.map(t => {
+      const cfg = t === 'ALL' ? { label: '全部', color: 'slate' } : VERDICT_CFG[t];
+      const count = t === 'ALL' ? report.details.length
+        : report.details.filter(d => d.verdict === t).length;
+      if (t !== 'ALL' && count === 0) return '';
+      return `<button data-filter="${t}" class="filter-btn text-[11px] px-2.5 py-1 rounded border transition-all
+        ${activeFilter === t
+          ? 'border-slate-400 dark:border-slate-500 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300'
+          : 'border-transparent text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300'
+        }">${cfg.label} (${count})</button>`;
+    }).join('');
+
+    $filterBar.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        activeFilter = btn.dataset.filter;
+        renderFilters(report);
+        renderFullCitations(report);
+      });
+    });
+  }
+
+  /* ── 渲染完整引用列表（完成后用于筛选） ──────────────── */
+  function renderFullCitations(report) {
+    const list = activeFilter === 'ALL'
+      ? report.details
+      : report.details.filter(d => d.verdict === activeFilter);
+
+    if (list.length === 0) {
+      $citList.innerHTML = `<div class="text-center py-16 text-slate-400 dark:text-slate-600 text-sm">没有符合筛选条件的引用</div>`;
+      return;
+    }
+    $citList.innerHTML = list.map((d, i) => buildCardHtml(d, i)).join('');
+  }
+
+  /* ── SSE 流式解析器 ─────────────────────────────────── */
+  async function parseSSE(response, handlers) {
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = '';
+    let eventType = '';
+    let dataLines = [];
+
+    function dispatch() {
+      if (eventType && dataLines.length > 0) {
+        const data = JSON.parse(dataLines.join('\n'));
+        if (handlers[eventType]) handlers[eventType](data);
+      }
+      eventType = '';
+      dataLines = [];
+    }
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      buffer += decoder.decode(value, { stream: true });
+
+      const lines = buffer.split('\n');
+      buffer = lines.pop();
+
+      for (const line of lines) {
+        if (line.startsWith('event:')) {
+          eventType = line.slice(6).trim();
+        } else if (line.startsWith('data:')) {
+          dataLines.push(line.slice(5).trim());
+        } else if (line.trim() === '') {
+          dispatch();
+        }
+      }
+    }
+    /* 流结束，flush 缓冲区中残余的最后一个事件 */
+    dispatch();
+  }
+
+  /* ── 主流程 ──────────────────────────────────────────── */
+  /* ── 字符计数器 ──────────────────────────────────────── */
+  function updateCharCounter() {
+    const len = $input.value.length;
+    $charCounter.textContent = `${len.toLocaleString()} / ${MAX_INPUT_CHARS.toLocaleString()}`;
+    $charCounter.classList.remove('text-slate-400', 'dark:text-slate-500', 'text-amber-500', 'text-red-500', 'font-semibold');
+    if (len > MAX_INPUT_CHARS) {
+      $charCounter.classList.add('text-red-500', 'font-semibold');
+    } else if (len > MAX_INPUT_CHARS * 0.8) {
+      $charCounter.classList.add('text-amber-500');
+    } else {
+      $charCounter.classList.add('text-slate-400', 'dark:text-slate-500');
+    }
+  }
+  $input.addEventListener('input', updateCharCounter);
+  updateCharCounter();
+
+  $btnDetect.addEventListener('click', async () => {
+    const text = $input.value.trim();
+    if (!text) { $input.focus(); return; }
+    if (text.length > MAX_INPUT_CHARS) {
+      alert(`输入文本长度 ${text.length.toLocaleString()} 字符，超出上限 ${MAX_INPUT_CHARS.toLocaleString()} 字符。请缩减后再试。`);
+      return;
+    }
+
+    /* 重置状态 */
+    $btnDetect.disabled = true;
+    $error.classList.add('hidden');
+    $result.classList.add('hidden');
+    $loading.classList.remove('hidden');
+    $statusText.textContent = '';
+    $citList.innerHTML = '';
+    $statsGrid.innerHTML = '';
+    $filterBar.innerHTML = '';
+    streamVerdicts = [];
+    streamTotal = 0;
+    activeFilter = 'ALL';
+    startProgress();
+
+    const t0 = performance.now();
+
+    try {
+      const resp = await fetch('/api/detect/stream', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text }),
+      });
+
+      if (!resp.ok) {
+        throw new Error(`HTTP ${resp.status}: ${await resp.text()}`);
+      }
+
+      /* 收到响应后立即显示结果区 */
+      $result.classList.remove('hidden');
+
+      await parseSSE(resp, {
+        extraction_done(data) {
+          streamTotal = data.total;
+          updateProgressOnExtraction();
+          $loadingTxt.textContent = `已提取 ${data.total} 条引用，逐条检测中...`;
+          /* 渲染占位卡片 */
+          renderPlaceholders(data.citations);
+          /* 初始化统计 */
+          renderLiveStats();
+        },
+
+        citation_verdict(data) {
+          streamVerdicts.push(data);
+          updateProgressOnVerdict(streamVerdicts.length, streamTotal);
+          $loadingTxt.textContent = `正在检测... (${streamVerdicts.length}/${streamTotal})`;
+          $statusText.textContent = `已完成 ${streamVerdicts.length}/${streamTotal}`;
+          /* 替换占位卡片 */
+          replacePlaceholder(data);
+          /* 更新统计 */
+          renderLiveStats();
+        },
+
+        report_complete(report) {
+          updateProgressOnComplete();
+          const elapsed = ((performance.now() - t0) / 1000).toFixed(1);
+          $statusText.textContent = `检测完成，耗时 ${elapsed}s`;
+          $loading.classList.add('hidden');
+          /* 用最终报告渲染筛选栏 */
+          renderFilters(report);
+        },
+
+        error(data) {
+          throw new Error(data.message || '未知错误');
+        },
+      });
+
+    } catch (err) {
+      resetProgress();
+      $loading.classList.add('hidden');
+      $errorText.textContent = `检测失败：${err.message}`;
+      $error.classList.remove('hidden');
+    } finally {
+      $btnDetect.disabled = false;
+    }
+  });
+
+})();
+</script>
+</body>
+</html>

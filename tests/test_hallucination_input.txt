@@ -1,0 +1,31 @@
+深度学习在自然语言处理中的关键进展
+
+一、基础架构
+
+现代自然语言处理的核心架构源于 Vaswani et al. (2017) 提出的 Transformer 模型，其论文 "Attention Is All You Need" 发表于 NeurIPS 2017，通过自注意力机制取代了传统的循环神经网络，大幅提升了并行训练效率。
+
+在预训练语言模型方面，Devlin et al. (2019) 提出了 BERT 模型，论文 "BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding" 发表于 NAACL 2019，通过掩码语言模型和下一句预测任务实现了深度双向预训练。
+
+二、大规模语言模型
+
+Brown et al. (2020) 在 "Language Models are Few-Shot Learners" 中展示了 GPT-3 的 few-shot 学习能力，该论文发表于 NeurIPS 2020，首次证明了足够大规模的语言模型可以通过上下文学习完成多种任务。
+
+随后，Touvron et al. (2023) 发布了开源的 LLaMA 模型，论文 "LLaMA: Open and Efficient Foundation Language Models" 发表于 arXiv，为开源社区提供了高性能的基础模型。
+
+三、幻觉问题研究
+
+在幻觉检测方面，Li et al. (2024) 提出了 "HalluDetect: A Unified Framework for Real-time Hallucination Detection in Large Language Models"，发表于 ACL 2024，该方法通过多层验证机制实现了实时幻觉检测，在多个基准上达到了 98% 的检测准确率。
+
+此外，Zhang and Liu (2023) 在其论文 "Recursive Fact Verification for Eliminating LLM Hallucinations" 中提出了递归事实验证框架，发表于 EMNLP 2023，声称可以将幻觉率降低 90%。
+
+四、检索增强生成
+
+Lewis et al. (2020) 提出了 RAG 框架，论文 "Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks" 发表于 NeurIPS 2020，通过在生成过程中引入外部检索的文档来提高事实准确性。
+
+在 RAG 的改进方面，Gao et al. (2024) 发表了综述 "Retrieval-Augmented Generation for Large Language Models: A Survey"，系统总结了 RAG 技术的发展脉络与未来方向。
+
+五、对齐与安全
+
+Ouyang et al. (2022) 在 "Training language models to follow instructions with human feedback" 中提出了 InstructGPT，发表于 NeurIPS 2022，通过基于人类反馈的强化学习（RLHF）使语言模型更好地遵循人类指令。
+
+最后，Chen and Wang (2024) 在 "SafeAlign: Comprehensive Alignment for Trustworthy AI Generation" 中提出了一种全面的对齐方法，发表于 ICML 2024，号称在安全性和有用性之间取得了完美平衡。

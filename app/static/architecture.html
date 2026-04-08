@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HalluRef — 系统架构图</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', '"PingFang SC"', '"Noto Sans SC"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', '"Fira Code"', 'monospace'],
+          },
+        },
+      },
+    }
+  </script>
+  <style>
+    body { line-height: 1.5; }
+    h1, h2, h3 { line-height: 1.2; }
+  </style>
+</head>
+
+<!-- 纯白背景，无多余 UI，适合截图 -->
+<body class="bg-white text-slate-800 p-10">
+
+<div class="mx-auto" style="width:1320px">
+
+  <!-- 标题区 -->
+  <div class="text-center mb-10">
+    <h1 class="text-2xl font-bold tracking-tight">HalluRef: 多智能体幻觉引用检测流水线</h1>
+    <p class="text-sm text-slate-400 mt-1.5">Multi-Agent Pipeline for LLM Hallucinated Citation Detection</p>
+  </div>
+
+  <!-- ====== 主流水线：横向 ====== -->
+  <div class="flex items-start gap-0">
+
+    <!-- 输入 -->
+    <div class="flex flex-col items-center shrink-0" style="width:120px">
+      <div class="w-full border-2 border-slate-800 rounded-lg px-3 py-3 text-center bg-slate-800 text-white">
+        <div class="text-xs font-bold">用户输入</div>
+      </div>
+      <div class="text-[10px] text-slate-400 mt-1.5 text-center leading-tight">LLM 生成的<br/>学术文本</div>
+    </div>
+
+    <!-- 箭头 -->
+    <div class="flex items-center shrink-0 pt-3.5">
+      <svg width="40" height="16" viewBox="0 0 40 16" class="text-slate-300"><path d="M0 8h32M28 3l7 5-7 5" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+    </div>
+
+    <!-- Agent 1 -->
+    <div class="flex flex-col items-center shrink-0" style="width:180px">
+      <div class="w-full border border-slate-200 rounded-lg overflow-hidden">
+        <div class="bg-slate-50 px-3 py-2 border-b border-slate-200 flex items-center gap-2">
+          <span class="w-5 h-5 rounded bg-slate-800 text-white text-[10px] font-bold flex items-center justify-center shrink-0">1</span>
+          <span class="text-xs font-semibold">引用提取</span>
+        </div>
+        <div class="px-3 py-2.5 space-y-1.5">
+          <div class="text-[10px] text-slate-500 leading-relaxed">正则预提取 + LLM 结构化解析，识别所有学术引用</div>
+          <div class="flex flex-wrap gap-1 mt-1">
+            <span class="text-[9px] font-mono px-1 py-0.5 rounded bg-slate-100 text-slate-500">正则匹配</span>
+            <span class="text-[9px] font-mono px-1 py-0.5 rounded bg-slate-100 text-slate-500">LLM 解析</span>
+          </div>
+        </div>
+      </div>
+      <div class="text-[9px] font-mono text-emerald-600 mt-1.5">list[Citation]</div>
+    </div>
+
+    <!-- 箭头 -->
+    <div class="flex items-center shrink-0 pt-3.5">
+      <svg width="40" height="16" viewBox="0 0 40 16" class="text-slate-300"><path d="M0 8h32M28 3l7 5-7 5" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+    </div>
+
+    <!-- Agent 2 -->
+    <div class="flex flex-col items-center shrink-0" style="width:180px">
+      <div class="w-full border border-slate-200 rounded-lg overflow-hidden">
+        <div class="bg-slate-50 px-3 py-2 border-b border-slate-200 flex items-center gap-2">
+          <span class="w-5 h-5 rounded bg-slate-800 text-white text-[10px] font-bold flex items-center justify-center shrink-0">2</span>
+          <span class="text-xs font-semibold">文献检索核查</span>
+        </div>
+        <div class="px-3 py-2.5 space-y-1.5">
+          <div class="text-[10px] text-slate-500 leading-relaxed">在学术数据库中并发检索，判断论文是否真实存在</div>
+          <div class="flex flex-wrap gap-1 mt-1">
+            <span class="text-[9px] font-mono px-1 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200">OpenAlex</span>
+            <span class="text-[9px] font-mono px-1 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200">CrossRef</span>
+          </div>
+        </div>
+      </div>
+      <div class="text-[9px] font-mono text-emerald-600 mt-1.5">list[RetrievalResult]</div>
+    </div>
+
+    <!-- 箭头 -->
+    <div class="flex items-center shrink-0 pt-3.5">
+      <svg width="40" height="16" viewBox="0 0 40 16" class="text-slate-300"><path d="M0 8h32M28 3l7 5-7 5" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+    </div>
+
+    <!-- Agent 3 -->
+    <div class="flex flex-col items-center shrink-0" style="width:180px">
+      <div class="w-full border border-slate-200 rounded-lg overflow-hidden">
+        <div class="bg-slate-50 px-3 py-2 border-b border-slate-200 flex items-center gap-2">
+          <span class="w-5 h-5 rounded bg-slate-800 text-white text-[10px] font-bold flex items-center justify-center shrink-0">3</span>
+          <span class="text-xs font-semibold">元数据比对</span>
+        </div>
+        <div class="px-3 py-2.5 space-y-1.5">
+          <div class="text-[10px] text-slate-500 leading-relaxed">逐字段校验标题、作者、年份、期刊的一致性</div>
+          <div class="flex flex-wrap gap-1 mt-1">
+            <span class="text-[9px] font-mono px-1 py-0.5 rounded bg-slate-100 text-slate-500">模糊匹配</span>
+            <span class="text-[9px] font-mono px-1 py-0.5 rounded bg-slate-100 text-slate-500">相似度评分</span>
+          </div>
+        </div>
+      </div>
+      <div class="text-[9px] font-mono text-emerald-600 mt-1.5">list[MetadataResult]</div>
+    </div>
+
+    <!-- 箭头 -->
+    <div class="flex items-center shrink-0 pt-3.5">
+      <svg width="40" height="16" viewBox="0 0 40 16" class="text-slate-300"><path d="M0 8h32M28 3l7 5-7 5" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+    </div>
+
+    <!-- Agent 4 -->
+    <div class="flex flex-col items-center shrink-0" style="width:180px">
+      <div class="w-full border border-slate-200 rounded-lg overflow-hidden">
+        <div class="bg-slate-50 px-3 py-2 border-b border-slate-200 flex items-center gap-2">
+          <span class="w-5 h-5 rounded bg-slate-800 text-white text-[10px] font-bold flex items-center justify-center shrink-0">4</span>
+          <span class="text-xs font-semibold">内容一致性核查</span>
+        </div>
+        <div class="px-3 py-2.5 space-y-1.5">
+          <div class="text-[10px] text-slate-500 leading-relaxed">摘要 vs 引用声明，LLM 自然语言推理判断忠实性</div>
+          <div class="flex flex-wrap gap-1 mt-1">
+            <span class="text-[9px] font-mono px-1 py-0.5 rounded bg-slate-100 text-slate-500">LLM NLI</span>
+            <span class="text-[9px] font-mono px-1 py-0.5 rounded bg-slate-100 text-slate-400">无声明跳过</span>
+          </div>
+        </div>
+      </div>
+      <div class="text-[9px] font-mono text-emerald-600 mt-1.5">list[ContentResult]</div>
+    </div>
+
+    <!-- 箭头 -->
+    <div class="flex items-center shrink-0 pt-3.5">
+      <svg width="40" height="16" viewBox="0 0 40 16" class="text-slate-300"><path d="M0 8h32M28 3l7 5-7 5" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+    </div>
+
+    <!-- Agent 5 -->
+    <div class="flex flex-col items-center shrink-0" style="width:180px">
+      <div class="w-full border border-slate-200 rounded-lg overflow-hidden">
+        <div class="bg-slate-50 px-3 py-2 border-b border-slate-200 flex items-center gap-2">
+          <span class="w-5 h-5 rounded bg-slate-800 text-white text-[10px] font-bold flex items-center justify-center shrink-0">5</span>
+          <span class="text-xs font-semibold">综合研判</span>
+        </div>
+        <div class="px-3 py-2.5 space-y-1.5">
+          <div class="text-[10px] text-slate-500 leading-relaxed">汇总全部结果，决策树分类，生成结构化报告</div>
+          <div class="flex flex-wrap gap-1 mt-1">
+            <span class="text-[9px] font-mono px-1 py-0.5 rounded bg-slate-100 text-slate-500">决策树</span>
+            <span class="text-[9px] font-mono px-1 py-0.5 rounded bg-slate-100 text-slate-500">置信度评分</span>
+          </div>
+        </div>
+      </div>
+      <div class="text-[9px] font-mono text-emerald-600 mt-1.5">DetectionReport</div>
+    </div>
+
+  </div>
+
+  <!-- ====== 决策树 + 输出分类 ====== -->
+  <div class="mt-10 border-t border-slate-100 pt-8">
+    <div class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-4 text-center">分类决策树 &amp; 输出类型</div>
+
+    <div class="flex justify-center gap-16">
+
+      <!-- 决策树 -->
+      <div class="space-y-2 text-[11px]">
+        <div class="flex items-center gap-2">
+          <span class="text-slate-400 w-32 text-right shrink-0">未检索到论文</span>
+          <svg width="20" height="12" viewBox="0 0 20 12" class="text-slate-300 shrink-0"><path d="M0 6h14M11 2l5 4-5 4" fill="none" stroke="currentColor" stroke-width="1.2"/></svg>
+          <span class="px-2 py-0.5 rounded bg-red-50 text-red-700 border border-red-200 font-medium">FABRICATED</span>
+          <span class="text-slate-400">完全捏造</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="text-slate-400 w-32 text-right shrink-0">元数据严重不一致</span>
+          <svg width="20" height="12" viewBox="0 0 20 12" class="text-slate-300 shrink-0"><path d="M0 6h14M11 2l5 4-5 4" fill="none" stroke="currentColor" stroke-width="1.2"/></svg>
+          <span class="px-2 py-0.5 rounded bg-amber-50 text-amber-700 border border-amber-200 font-medium">METADATA_ERROR</span>
+          <span class="text-slate-400">信息篡改</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="text-slate-400 w-32 text-right shrink-0">内容矛盾 / 夸大</span>
+          <svg width="20" height="12" viewBox="0 0 20 12" class="text-slate-300 shrink-0"><path d="M0 6h14M11 2l5 4-5 4" fill="none" stroke="currentColor" stroke-width="1.2"/></svg>
+          <span class="px-2 py-0.5 rounded bg-orange-50 text-orange-700 border border-orange-200 font-medium">MISREPRESENTED</span>
+          <span class="text-slate-400">观点歪曲</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="text-slate-400 w-32 text-right shrink-0">摘要无法判断</span>
+          <svg width="20" height="12" viewBox="0 0 20 12" class="text-slate-300 shrink-0"><path d="M0 6h14M11 2l5 4-5 4" fill="none" stroke="currentColor" stroke-width="1.2"/></svg>
+          <span class="px-2 py-0.5 rounded bg-slate-50 text-slate-600 border border-slate-200 font-medium">UNVERIFIABLE</span>
+          <span class="text-slate-400">无法验证</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="text-slate-400 w-32 text-right shrink-0">全部通过</span>
+          <svg width="20" height="12" viewBox="0 0 20 12" class="text-slate-300 shrink-0"><path d="M0 6h14M11 2l5 4-5 4" fill="none" stroke="currentColor" stroke-width="1.2"/></svg>
+          <span class="px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200 font-medium">VERIFIED</span>
+          <span class="text-slate-400">引用正确</span>
+        </div>
+      </div>
+
+      <!-- 技术要点 -->
+      <div class="border-l border-slate-100 pl-10 space-y-3 text-[11px]">
+        <div class="text-xs font-semibold text-slate-500 mb-2">关键技术</div>
+        <div class="flex items-start gap-2">
+          <span class="mt-0.5 w-1 h-1 rounded-full bg-slate-400 shrink-0"></span>
+          <span class="text-slate-500">多源并发检索（OpenAlex + CrossRef），单源失败不阻塞</span>
+        </div>
+        <div class="flex items-start gap-2">
+          <span class="mt-0.5 w-1 h-1 rounded-full bg-slate-400 shrink-0"></span>
+          <span class="text-slate-500">SSE 流式推送，每完成一条引用实时返回结果</span>
+        </div>
+        <div class="flex items-start gap-2">
+          <span class="mt-0.5 w-1 h-1 rounded-full bg-slate-400 shrink-0"></span>
+          <span class="text-slate-500">无具体声明的引用自动跳过内容核查，节省 LLM 开销</span>
+        </div>
+        <div class="flex items-start gap-2">
+          <span class="mt-0.5 w-1 h-1 rounded-full bg-slate-400 shrink-0"></span>
+          <span class="text-slate-500">标题模糊匹配 + 作者姓名归一化 + 期刊缩写处理</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+  <!-- ====== 案例演示 ====== -->
+  <div class="mt-10 border-t border-slate-100 pt-8">
+    <div class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-6 text-center">案例演示 — 端到端检测流程</div>
+
+    <!-- 输入文本 -->
+    <div class="mb-6">
+      <div class="flex items-center gap-2 mb-2">
+        <span class="w-5 h-5 rounded bg-slate-800 text-white text-[10px] font-bold flex items-center justify-center shrink-0">IN</span>
+        <span class="text-xs font-semibold text-slate-600">输入文本（LLM 生成的学术段落）</span>
+      </div>
+      <div class="bg-slate-50 border border-slate-200 rounded-lg px-4 py-3 text-[11px] text-slate-600 leading-relaxed font-mono">
+        "近年来，大语言模型的安全对齐研究取得了显著进展。<span class="bg-amber-100 text-amber-800 px-0.5 rounded">Zou et al. (2023)</span> 提出的 GCG 攻击方法通过梯度搜索自动生成对抗后缀，<span class="underline decoration-amber-300">在 GPT-4 上实现了 98% 的攻击成功率</span>。此外，<span class="bg-red-100 text-red-800 px-0.5 rounded">Johnson &amp; Lee (2024)</span> 在 Nature Machine Intelligence 上发表了关于 LLM 幻觉的全面综述。"
+      </div>
+    </div>
+
+    <!-- 横向流程：每个 Agent 的中间结果 -->
+    <div class="grid grid-cols-5 gap-3">
+
+      <!-- Agent 1 结果 -->
+      <div class="border border-slate-200 rounded-lg overflow-hidden">
+        <div class="bg-slate-50 px-3 py-1.5 border-b border-slate-200 flex items-center gap-1.5">
+          <span class="w-4 h-4 rounded bg-slate-800 text-white text-[9px] font-bold flex items-center justify-center shrink-0">1</span>
+          <span class="text-[10px] font-semibold">引用提取结果</span>
+        </div>
+        <div class="px-3 py-2 space-y-2 text-[10px]">
+          <div class="border-l-2 border-amber-300 pl-2">
+            <div class="font-semibold text-slate-700">引用 #1</div>
+            <div class="text-slate-500">raw: "Zou et al. (2023)"</div>
+            <div class="text-slate-500">claim: "GCG 攻击…在 GPT-4 上实现了 98% 的攻击成功率"</div>
+          </div>
+          <div class="border-l-2 border-red-300 pl-2">
+            <div class="font-semibold text-slate-700">引用 #2</div>
+            <div class="text-slate-500">raw: "Johnson &amp; Lee (2024)"</div>
+            <div class="text-slate-500">claim: 无具体声明</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Agent 2 结果 -->
+      <div class="border border-slate-200 rounded-lg overflow-hidden">
+        <div class="bg-slate-50 px-3 py-1.5 border-b border-slate-200 flex items-center gap-1.5">
+          <span class="w-4 h-4 rounded bg-slate-800 text-white text-[9px] font-bold flex items-center justify-center shrink-0">2</span>
+          <span class="text-[10px] font-semibold">文献检索结果</span>
+        </div>
+        <div class="px-3 py-2 space-y-2 text-[10px]">
+          <div class="border-l-2 border-amber-300 pl-2">
+            <div class="font-semibold text-slate-700">#1 Zou et al.</div>
+            <div class="text-emerald-600 font-medium">found: true</div>
+            <div class="text-slate-500">匹配: "Universal and Transferable Adversarial Attacks on Aligned Language Models"</div>
+            <div class="text-slate-400 text-[9px]">来源: OpenAlex + CrossRef</div>
+          </div>
+          <div class="border-l-2 border-red-300 pl-2">
+            <div class="font-semibold text-slate-700">#2 Johnson &amp; Lee</div>
+            <div class="text-red-600 font-medium">found: false</div>
+            <div class="text-slate-400 text-[9px]">所有数据源均无匹配</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Agent 3 结果 -->
+      <div class="border border-slate-200 rounded-lg overflow-hidden">
+        <div class="bg-slate-50 px-3 py-1.5 border-b border-slate-200 flex items-center gap-1.5">
+          <span class="w-4 h-4 rounded bg-slate-800 text-white text-[9px] font-bold flex items-center justify-center shrink-0">3</span>
+          <span class="text-[10px] font-semibold">元数据比对结果</span>
+        </div>
+        <div class="px-3 py-2 space-y-2 text-[10px]">
+          <div class="border-l-2 border-amber-300 pl-2">
+            <div class="font-semibold text-slate-700">#1 Zou et al.</div>
+            <div class="flex flex-wrap gap-x-3 gap-y-0.5 text-[9px] mt-0.5">
+              <span>作者 <span class="text-emerald-600">✓</span></span>
+              <span>年份 <span class="text-emerald-600">✓</span></span>
+              <span>标题 <span class="text-emerald-600">✓</span></span>
+            </div>
+            <div class="text-emerald-600 font-medium mt-0.5">元数据一致</div>
+          </div>
+          <div class="border-l-2 border-red-300 pl-2">
+            <div class="font-semibold text-slate-700">#2 Johnson &amp; Lee</div>
+            <div class="text-slate-400 text-[9px]">未检索到，跳过比对</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Agent 4 结果 -->
+      <div class="border border-slate-200 rounded-lg overflow-hidden">
+        <div class="bg-slate-50 px-3 py-1.5 border-b border-slate-200 flex items-center gap-1.5">
+          <span class="w-4 h-4 rounded bg-slate-800 text-white text-[9px] font-bold flex items-center justify-center shrink-0">4</span>
+          <span class="text-[10px] font-semibold">内容核查结果</span>
+        </div>
+        <div class="px-3 py-2 space-y-2 text-[10px]">
+          <div class="border-l-2 border-amber-300 pl-2">
+            <div class="font-semibold text-slate-700">#1 Zou et al.</div>
+            <div class="text-orange-600 font-medium">EXAGGERATED</div>
+            <div class="text-slate-500 text-[9px]">原文报告攻击成功率约 84%，引用声明夸大为 98%</div>
+          </div>
+          <div class="border-l-2 border-red-300 pl-2">
+            <div class="font-semibold text-slate-700">#2 Johnson &amp; Lee</div>
+            <div class="text-slate-400 text-[9px]">未检索到 + 无声明，跳过</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Agent 5 结果 -->
+      <div class="border border-slate-200 rounded-lg overflow-hidden">
+        <div class="bg-slate-50 px-3 py-1.5 border-b border-slate-200 flex items-center gap-1.5">
+          <span class="w-4 h-4 rounded bg-slate-800 text-white text-[9px] font-bold flex items-center justify-center shrink-0">5</span>
+          <span class="text-[10px] font-semibold">综合研判结果</span>
+        </div>
+        <div class="px-3 py-2 space-y-2 text-[10px]">
+          <div class="border-l-2 border-amber-300 pl-2">
+            <div class="font-semibold text-slate-700">#1 Zou et al.</div>
+            <span class="inline-block px-1.5 py-0.5 rounded bg-orange-50 text-orange-700 border border-orange-200 font-medium text-[9px]">MISREPRESENTED</span>
+            <div class="text-slate-500 text-[9px] mt-0.5">置信度: 0.75</div>
+            <div class="text-slate-400 text-[9px]">建议: 调整攻击成功率表述</div>
+          </div>
+          <div class="border-l-2 border-red-300 pl-2">
+            <div class="font-semibold text-slate-700">#2 Johnson &amp; Lee</div>
+            <span class="inline-block px-1.5 py-0.5 rounded bg-red-50 text-red-700 border border-red-200 font-medium text-[9px]">FABRICATED</span>
+            <div class="text-slate-500 text-[9px] mt-0.5">置信度: 0.95</div>
+            <div class="text-slate-400 text-[9px]">建议: 删除或替换为真实文献</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- 案例小结 -->
+    <div class="mt-4 flex justify-center">
+      <div class="bg-slate-50 border border-slate-200 rounded-lg px-5 py-2.5 inline-flex items-center gap-6 text-[11px]">
+        <span class="text-slate-400">最终报告</span>
+        <span class="text-slate-600">共 <span class="font-semibold">2</span> 条引用</span>
+        <span class="text-orange-600 font-medium">1 MISREPRESENTED</span>
+        <span class="text-red-600 font-medium">1 FABRICATED</span>
+        <span class="text-emerald-600">0 VERIFIED</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

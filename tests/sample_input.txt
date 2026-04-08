@@ -1,0 +1,15 @@
+大语言模型的幻觉问题与缓解方法综述
+
+近年来，大语言模型（LLM）在自然语言处理领域取得了显著进展。Vaswani et al. (2017) 提出了Transformer架构，奠定了现代LLM的基础。该工作发表于NeurIPS，提出的自注意力机制彻底改变了序列建模的范式。
+
+然而，LLM在生成文本时经常产生幻觉（hallucination）。Ji et al. (2023) 在其综述"Survey of Hallucination in Natural Language Generation"中系统性地分析了幻觉的类型和成因，指出幻觉可分为内在幻觉和外在幻觉两大类。
+
+在事实性验证方面，Min et al. (2023) 提出了FActScore方法，通过将长文本分解为原子事实并逐一验证的方式来评估生成文本的事实精度。该工作发表于EMNLP 2023。
+
+为了缓解幻觉问题，Lewis et al. (2020) 提出了检索增强生成（RAG）框架，通过在生成过程中引入外部知识来提高事实准确性。该论文"Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks"发表于NeurIPS 2020。
+
+此外，Zhang and Chen (2024) 在其论文"Eliminating Hallucinations with Recursive Self-Verification"中提出了一种递归自验证方法，声称能够将幻觉率降低95%。该方法在GPT-4上取得了显著效果。
+
+在中文LLM方面，Wang et al. (2023) 的研究"Chinese Language Model Hallucination Benchmark"构建了首个中文幻觉评测基准，涵盖了事实性、一致性和忠实性三个维度的评估。
+
+最近，Brown et al. (2020) 在"Language Models are Few-Shot Learners"中展示了GPT-3的few-shot学习能力，该论文证明了大规模语言模型可以通过少量示例完成各种任务。

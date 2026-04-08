@@ -1,0 +1,1237 @@
+{
+  "total_citations": 10,
+  "verified": 3,
+  "fabricated": 6,
+  "metadata_error": 0,
+  "misrepresented": 0,
+  "unverifiable": 1,
+  "details": [
+    {
+      "citation_id": "ref_001",
+      "raw_text": "现代自然语言处理的核心架构源于 Vaswani et al. (2017) 提出的 Transformer 模型，其论文 \"Attention Is All You Need\" 发表于 NeurIPS 2017，通过自注意力机制取代了传统的循环神经网络，大幅提升了并行训练效率。",
+      "verdict": "VERIFIED",
+      "confidence": 0.9,
+      "evidence": "论文存在, 元数据一致, 内容核查通过",
+      "suggestion": "",
+      "retrieval": {
+        "citation_id": "ref_001",
+        "found": true,
+        "confidence": "HIGH",
+        "best_match": {
+          "source": "semantic_scholar",
+          "title": "Attention is All you Need",
+          "authors": [
+            "Ashish Vaswani",
+            "Noam Shazeer",
+            "Niki Parmar",
+            "Jakob Uszkoreit",
+            "Llion Jones",
+            "Aidan N. Gomez",
+            "Lukasz Kaiser",
+            "I. Polosukhin"
+          ],
+          "year": 2017,
+          "venue": "Neural Information Processing Systems",
+          "doi": null,
+          "abstract": "The dominant sequence transduction models are based on complex recurrent or convolutional neural networks in an encoder-decoder configuration. The best performing models also connect the encoder and decoder through an attention mechanism. We propose a new simple network architecture, the Transformer, based solely on attention mechanisms, dispensing with recurrence and convolutions entirely. Experiments on two machine translation tasks show these models to be superior in quality while being more parallelizable and requiring significantly less time to train. Our model achieves 28.4 BLEU on the WMT 2014 English-to-German translation task, improving over the existing best results, including ensembles by over 2 BLEU. On the WMT 2014 English-to-French translation task, our model establishes a new single-model state-of-the-art BLEU score of 41.8 after training for 3.5 days on eight GPUs, a small fraction of the training costs of the best models from the literature. We show that the Transformer generalizes well to other tasks by applying it successfully to English constituency parsing both with large and limited training data.",
+          "url": "https://www.semanticscholar.org/paper/204e3073870fae3d05bcbc2f6a8e263d9b72e776"
+        },
+        "all_candidates": [
+          {
+            "source": "semantic_scholar",
+            "title": "Attention is All you Need",
+            "authors": [
+              "Ashish Vaswani",
+              "Noam Shazeer",
+              "Niki Parmar",
+              "Jakob Uszkoreit",
+              "Llion Jones",
+              "Aidan N. Gomez",
+              "Lukasz Kaiser",
+              "I. Polosukhin"
+            ],
+            "year": 2017,
+            "venue": "Neural Information Processing Systems",
+            "doi": null,
+            "abstract": "The dominant sequence transduction models are based on complex recurrent or convolutional neural networks in an encoder-decoder configuration. The best performing models also connect the encoder and decoder through an attention mechanism. We propose a new simple network architecture, the Transformer, based solely on attention mechanisms, dispensing with recurrence and convolutions entirely. Experiments on two machine translation tasks show these models to be superior in quality while being more parallelizable and requiring significantly less time to train. Our model achieves 28.4 BLEU on the WMT 2014 English-to-German translation task, improving over the existing best results, including ensembles by over 2 BLEU. On the WMT 2014 English-to-French translation task, our model establishes a new single-model state-of-the-art BLEU score of 41.8 after training for 3.5 days on eight GPUs, a small fraction of the training costs of the best models from the literature. We show that the Transformer generalizes well to other tasks by applying it successfully to English constituency parsing both with large and limited training data.",
+            "url": "https://www.semanticscholar.org/paper/204e3073870fae3d05bcbc2f6a8e263d9b72e776"
+          },
+          {
+            "source": "semantic_scholar",
+            "title": "Attention Is All You Need In Speech Separation",
+            "authors": [
+              "Cem Subakan",
+              "M. Ravanelli",
+              "Samuele Cornell",
+              "Mirko Bronzi",
+              "Jianyuan Zhong"
+            ],
+            "year": 2020,
+            "venue": "IEEE International Conference on Acoustics, Speech, and Signal Processing",
+            "doi": "10.1109/ICASSP39728.2021.9413901",
+            "abstract": "Recurrent Neural Networks (RNNs) have long been the dominant architecture in sequence-to-sequence learning. RNNs, however, are inherently sequential models that do not allow parallelization of their computations. Transformers are emerging as a natural alternative to standard RNNs, replacing recurrent computations with a multi-head attention mechanism.In this paper, we propose the SepFormer, a novel RNN-free Transformer-based neural network for speech separation. The Sep-Former learns short and long-term dependencies with a multi-scale approach that employs transformers. The proposed model achieves state-of-the-art (SOTA) performance on the standard WSJ0-2/3mix datasets. It reaches an SI-SNRi of 22.3 dB on WSJ0-2mix and an SI-SNRi of 19.5 dB on WSJ0-3mix. The SepFormer inherits the parallelization advantages of Transformers and achieves a competitive performance even when downsampling the encoded representation by a factor of 8. It is thus significantly faster and it is less memory-demanding than the latest speech separation systems with comparable performance.",
+            "url": "https://www.semanticscholar.org/paper/51c9d4d2f50ac5707c1f889aa97f08350d549132"
+          },
+          {
+            "source": "semantic_scholar",
+            "title": "Tensor Product Attention Is All You Need",
+            "authors": [
+              "Yifan Zhang",
+              "Yifeng Liu",
+              "Huizhuo Yuan",
+              "Zhen Qin",
+              "Yang Yuan",
+              "Quanquan Gu",
+              "A. C. Yao"
+            ],
+            "year": 2025,
+            "venue": "arXiv.org",
+            "doi": "10.48550/arXiv.2501.06425",
+            "abstract": "Scaling language models to handle longer input sequences typically necessitates large key-value (KV) caches, resulting in substantial memory overhead during inference. In this paper, we propose Tensor Product Attention (TPA), a novel attention mechanism that uses tensor decompositions to represent queries, keys, and values compactly, substantially shrinking the KV cache size at inference time. By factorizing these representations into contextual low-rank components and seamlessly integrating with Rotary Position Embedding (RoPE), TPA achieves improved model quality alongside memory efficiency. Based on TPA, we introduce the Tensor ProducT ATTenTion Transformer (T6), a new model architecture for sequence modeling. Through extensive empirical evaluation on language modeling tasks, we demonstrate that T6 surpasses or matches the performance of standard Transformer baselines including Multi-Head Attention (MHA), Multi-Query Attention (MQA), Grouped-Query Attention (GQA), and Multi-Head Latent Attention (MLA) across various metrics, including perplexity and a range of established evaluation benchmarks. Notably, TPA's memory efficiency and computational efficiency at decoding stage enables processing longer sequences under fixed resource constraints, addressing a critical scalability challenge in modern language models. Project Page: https://github.com/tensorgi/TPA.",
+            "url": "https://www.semanticscholar.org/paper/b4f9e9130b29754c526c454ab54043b49bdd387d"
+          },
+          {
+            "source": "semantic_scholar",
+            "title": "Channel Attention Is All You Need for Video Frame Interpolation",
+            "authors": [
+              "Myungsub Choi",
+              "Heewon Kim",
+              "Bohyung Han",
+              "N. Xu",
+              "Kyoung Mu Lee"
+            ],
+            "year": 2020,
+            "venue": "AAAI Conference on Artificial Intelligence",
+            "doi": "10.1609/AAAI.V34I07.6693",
+            "abstract": "Prevailing video frame interpolation techniques rely heavily on optical flow estimation and require additional model complexity and computational cost; it is also susceptible to error propagation in challenging scenarios with large motion and heavy occlusion. To alleviate the limitation, we propose a simple but effective deep neural network for video frame interpolation, which is end-to-end trainable and is free from a motion estimation network component. Our algorithm employs a special feature reshaping operation, referred to as PixelShuffle, with a channel attention, which replaces the optical flow computation module. The main idea behind the design is to distribute the information in a feature map into multiple channels and extract motion information by attending the channels for pixel-level frame synthesis. The model given by this principle turns out to be effective in the presence of challenging motion and occlusion. We construct a comprehensive evaluation benchmark and demonstrate that the proposed approach achieves outstanding performance compared to the existing models with a component for optical flow computation.",
+            "url": "https://www.semanticscholar.org/paper/bb4a9650ca3946c70a7e92007cc61dc0dfd75522"
+          },
+          {
+            "source": "semantic_scholar",
+            "title": "[CLS] Attention is All You Need for Training-Free Visual Token Pruning: Make VLM Inference Faster",
+            "authors": [
+              "Qizhe Zhang",
+              "Aosong Cheng",
+              "Ming Lu",
+              "Zhiyong Zhuo",
+              "Minqi Wang",
+              "Jiajun Cao",
+              "Shaobo Guo",
+              "Qi She",
+              "Shanghang Zhang"
+            ],
+            "year": 2024,
+            "venue": "arXiv.org",
+            "doi": "10.48550/arXiv.2412.01818",
+            "abstract": null,
+            "url": "https://www.semanticscholar.org/paper/b02159650df9813f25db4afd4f094e53bccd526c"
+          }
+        ]
+      },
+      "metadata": {
+        "citation_id": "ref_001",
+        "fields": [
+          {
+            "field": "title",
+            "claimed": "Attention Is All You Need",
+            "actual": "Attention is All you Need",
+            "status": "MATCH",
+            "similarity": 1.0
+          },
+          {
+            "field": "authors",
+            "claimed": "Vaswani, et al.",
+            "actual": "Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones, Aidan N. Gomez, Lukasz Kaiser, I. Polosukhin",
+            "status": "MATCH",
+            "similarity": 0.8
+          },
+          {
+            "field": "year",
+            "claimed": "2017",
+            "actual": "2017",
+            "status": "MATCH",
+            "similarity": 1.0
+          },
+          {
+            "field": "venue",
+            "claimed": "NeurIPS",
+            "actual": "Neural Information Processing Systems",
+            "status": "MATCH",
+            "similarity": 1.0
+          }
+        ],
+        "mismatch_count": 0,
+        "has_major_mismatch": false
+      },
+      "content_check": {
+        "citation_id": "ref_001",
+        "consistency": "CONSISTENT",
+        "reasoning": "引用声明准确反映了摘要的核心内容：Transformer模型基于注意力机制，摒弃了循环神经网络，并提高了并行训练效率。",
+        "claim": "提出了Transformer模型，通过自注意力机制取代了传统的循环神经网络，大幅提升了并行训练效率。",
+        "abstract": "The dominant sequence transduction models are based on complex recurrent or convolutional neural networks in an encoder-decoder configuration. The best performing models also connect the encoder and decoder through an attention mechanism. We propose a new simple network architecture, the Transformer, based solely on attention mechanisms, dispensing with recurrence and convolutions entirely. Experiments on two machine translation tasks show these models to be superior in quality while being more parallelizable and requiring significantly less time to train. Our model achieves 28.4 BLEU on the WMT 2014 English-to-German translation task, improving over the existing best results, including ensembles by over 2 BLEU. On the WMT 2014 English-to-French translation task, our model establishes a new single-model state-of-the-art BLEU score of 41.8 after training for 3.5 days on eight GPUs, a small fraction of the training costs of the best models from the literature. We show that the Transformer generalizes well to other tasks by applying it successfully to English constituency parsing both with large and limited training data."
+      }
+    },
+    {
+      "citation_id": "ref_002",
+      "raw_text": "在预训练语言模型方面，Devlin et al. (2019) 提出了 BERT 模型，论文 \"BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding\" 发表于 NAACL 2019，通过掩码语言模型和下一句预测任务实现了深度双向预训练。",
+      "verdict": "UNVERIFIABLE",
+      "confidence": 0.5,
+      "evidence": "仅凭摘要无法验证引用声明的准确性",
+      "suggestion": "建议人工核实原文全文",
+      "retrieval": {
+        "citation_id": "ref_002",
+        "found": true,
+        "confidence": "HIGH",
+        "best_match": {
+          "source": "semantic_scholar",
+          "title": "BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding",
+          "authors": [
+            "Jacob Devlin",
+            "Ming-Wei Chang",
+            "Kenton Lee",
+            "Kristina Toutanova"
+          ],
+          "year": 2019,
+          "venue": "North American Chapter of the Association for Computational Linguistics",
+          "doi": "10.18653/v1/N19-1423",
+          "abstract": "We introduce a new language representation model called BERT, which stands for Bidirectional Encoder Representations from Transformers. Unlike recent language representation models (Peters et al., 2018a; Radford et al., 2018), BERT is designed to pre-train deep bidirectional representations from unlabeled text by jointly conditioning on both left and right context in all layers. As a result, the pre-trained BERT model can be fine-tuned with just one additional output layer to create state-of-the-art models for a wide range of tasks, such as question answering and language inference, without substantial task-specific architecture modifications. BERT is conceptually simple and empirically powerful. It obtains new state-of-the-art results on eleven natural language processing tasks, including pushing the GLUE score to 80.5 (7.7 point absolute improvement), MultiNLI accuracy to 86.7% (4.6% absolute improvement), SQuAD v1.1 question answering Test F1 to 93.2 (1.5 point absolute improvement) and SQuAD v2.0 Test F1 to 83.1 (5.1 point absolute improvement).",
+          "url": "https://www.semanticscholar.org/paper/df2b0e26d0599ce3e70df8a9da02e51594e0e992"
+        },
+        "all_candidates": [
+          {
+            "source": "semantic_scholar",
+            "title": "BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding",
+            "authors": [
+              "Jacob Devlin",
+              "Ming-Wei Chang",
+              "Kenton Lee",
+              "Kristina Toutanova"
+            ],
+            "year": 2019,
+            "venue": "North American Chapter of the Association for Computational Linguistics",
+            "doi": "10.18653/v1/N19-1423",
+            "abstract": "We introduce a new language representation model called BERT, which stands for Bidirectional Encoder Representations from Transformers. Unlike recent language representation models (Peters et al., 2018a; Radford et al., 2018), BERT is designed to pre-train deep bidirectional representations from unlabeled text by jointly conditioning on both left and right context in all layers. As a result, the pre-trained BERT model can be fine-tuned with just one additional output layer to create state-of-the-art models for a wide range of tasks, such as question answering and language inference, without substantial task-specific architecture modifications. BERT is conceptually simple and empirically powerful. It obtains new state-of-the-art results on eleven natural language processing tasks, including pushing the GLUE score to 80.5 (7.7 point absolute improvement), MultiNLI accuracy to 86.7% (4.6% absolute improvement), SQuAD v1.1 question answering Test F1 to 93.2 (1.5 point absolute improvement) and SQuAD v2.0 Test F1 to 83.1 (5.1 point absolute improvement).",
+            "url": "https://www.semanticscholar.org/paper/df2b0e26d0599ce3e70df8a9da02e51594e0e992"
+          },
+          {
+            "source": "semantic_scholar",
+            "title": "5分で分かる!? 有名論文ナナメ読み：Jacob Devlin et al. : BERT : Pre-training of Deep Bidirectional Transformers for Language Understanding",
+            "authors": [
+              "知秀 柴田"
+            ],
+            "year": 2020,
+            "venue": "",
+            "doi": null,
+            "abstract": null,
+            "url": "https://www.semanticscholar.org/paper/43f2ad297941db230c089ba353efc3f281ab678c"
+          },
+          {
+            "source": "semantic_scholar",
+            "title": "Reducing BERT Pre-Training Time from 3 Days to 76 Minutes",
+            "authors": [
+              "Yang You",
+              "Jing Li",
+              "Jonathan Hseu",
+              "Xiaodan Song",
+              "J. Demmel",
+              "Cho-Jui Hsieh"
+            ],
+            "year": 2019,
+            "venue": "arXiv.org",
+            "doi": null,
+            "abstract": null,
+            "url": "https://www.semanticscholar.org/paper/3c6dca9041f54583aeab60587c9e6e9272104dc1"
+          },
+          {
+            "source": "semantic_scholar",
+            "title": "Prediction of Skin Cancer Using Pre-Trained Language Models from Patient Symptoms",
+            "authors": [
+              "D. Deepa",
+              "R. Yaswanth",
+              "C. Suganth"
+            ],
+            "year": 2023,
+            "venue": "Applied and Computational Engineering",
+            "doi": "10.54254/2755-2721/2/20220626",
+            "abstract": "Automatic feature extraction and processing of greater data is now possible because of advances in Deep Learning. To pre-train from a wider corpus and comprehend the language feature for sentiment classification work, transformers Generalized Autoregressive Pre-training for Language Understanding and Bidirectional Encoder Representations from Transformers (BERT) have been proposed. These language models learn the context in both ways. In the proposed work, we have examined and tested our text dataset of skin cancer cases using the BERTbase model. When determining whether a patient's symptoms are compatible with cancer or not the model has a 97.3 percent accuracy rate.",
+            "url": "https://www.semanticscholar.org/paper/803846e022702f39af0fe95d5f30002100dad874"
+          },
+          {
+            "source": "semantic_scholar",
+            "title": "BERT for Joint Intent Classification and Slot Filling",
+            "authors": [
+              "Qian Chen",
+              "Zhu Zhuo",
+              "Wen Wang"
+            ],
+            "year": 2019,
+            "venue": "arXiv.org",
+            "doi": null,
+            "abstract": "Intent classification and slot filling are two essential tasks for natural language understanding. They often suffer from small-scale human-labeled training data, resulting in poor generalization capability, especially for rare words. Recently a new language representation model, BERT (Bidirectional Encoder Representations from Transformers), facilitates pre-training deep bidirectional representations on large-scale unlabeled corpora, and has created state-of-the-art models for a wide variety of natural language processing tasks after simple fine-tuning. However, there has not been much effort on exploring BERT for natural language understanding. In this work, we propose a joint intent classification and slot filling model based on BERT. Experimental results demonstrate that our proposed model achieves significant improvement on intent classification accuracy, slot filling F1, and sentence-level semantic frame accuracy on several public benchmark datasets, compared to the attention-based recurrent neural network models and slot-gated models.",
+            "url": "https://www.semanticscholar.org/paper/476029ac9be26bf7f121a388f5c1e45d204efe52"
+          }
+        ]
+      },
+      "metadata": {
+        "citation_id": "ref_002",
+        "fields": [
+          {
+            "field": "title",
+            "claimed": "BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding",
+            "actual": "BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding",
+            "status": "MATCH",
+            "similarity": 1.0
+          },
+          {
+            "field": "authors",
+            "claimed": "Devlin, et al.",
+            "actual": "Jacob Devlin, Ming-Wei Chang, Kenton Lee, Kristina Toutanova",
+            "status": "MATCH",
+            "similarity": 0.8
+          },
+          {
+            "field": "year",
+            "claimed": "2019",
+            "actual": "2019",
+            "status": "MATCH",
+            "similarity": 1.0
+          },
+          {
+            "field": "venue",
+            "claimed": "NAACL",
+            "actual": "North American Chapter of the Association for Computational Linguistics",
+            "status": "MATCH",
+            "similarity": 1.0
+          }
+        ],
+        "mismatch_count": 0,
+        "has_major_mismatch": false
+      },
+      "content_check": {
+        "citation_id": "ref_002",
+        "consistency": "UNVERIFIABLE",
+        "reasoning": "摘要中提到了BERT使用深度双向表示进行预训练，但未具体说明预训练任务（掩码语言模型和下一句预测），这些细节可能出现在论文正文中。",
+        "claim": "提出了BERT模型，通过掩码语言模型和下一句预测任务实现了深度双向预训练。",
+        "abstract": "We introduce a new language representation model called BERT, which stands for Bidirectional Encoder Representations from Transformers. Unlike recent language representation models (Peters et al., 2018a; Radford et al., 2018), BERT is designed to pre-train deep bidirectional representations from unlabeled text by jointly conditioning on both left and right context in all layers. As a result, the pre-trained BERT model can be fine-tuned with just one additional output layer to create state-of-the-art models for a wide range of tasks, such as question answering and language inference, without substantial task-specific architecture modifications. BERT is conceptually simple and empirically powerful. It obtains new state-of-the-art results on eleven natural language processing tasks, including pushing the GLUE score to 80.5 (7.7 point absolute improvement), MultiNLI accuracy to 86.7% (4.6% absolute improvement), SQuAD v1.1 question answering Test F1 to 93.2 (1.5 point absolute improvement) and SQuAD v2.0 Test F1 to 83.1 (5.1 point absolute improvement)."
+      }
+    },
+    {
+      "citation_id": "ref_003",
+      "raw_text": "Brown et al. (2020) 在 \"Language Models are Few-Shot Learners\" 中展示了 GPT-3 的 few-shot 学习能力，该论文发表于 NeurIPS 2020，首次证明了足够大规模的语言模型可以通过上下文学习完成多种任务。",
+      "verdict": "VERIFIED",
+      "confidence": 0.9,
+      "evidence": "论文存在, 元数据一致, 内容核查通过",
+      "suggestion": "",
+      "retrieval": {
+        "citation_id": "ref_003",
+        "found": true,
+        "confidence": "HIGH",
+        "best_match": {
+          "source": "semantic_scholar",
+          "title": "Language Models are Few-Shot Learners",
+          "authors": [
+            "Tom B. Brown",
+            "Benjamin Mann",
+            "Nick Ryder",
+            "Melanie Subbiah",
+            "J. Kaplan",
+            "Prafulla Dhariwal",
+            "Arvind Neelakantan",
+            "Pranav Shyam",
+            "G. Sastry",
+            "Amanda Askell",
+            "S. Agarwal",
+            "Ariel Herbert-Voss",
+            "Gretchen Krueger",
+            "T. Henighan",
+            "R. Child",
+            "A. Ramesh",
+            "Daniel M. Ziegler",
+            "Jeff Wu",
+            "Clemens Winter",
+            "Christopher Hesse",
+            "Mark Chen",
+            "Eric Sigler",
+            "Ma-teusz Litwin",
+            "Scott Gray",
+            "Benjamin Chess",
+            "Jack Clark",
+            "Christopher Berner",
+            "Sam McCandlish",
+            "Alec Radford",
+            "I. Sutskever",
+            "Dario Amodei"
+          ],
+          "year": 2020,
+          "venue": "Neural Information Processing Systems",
+          "doi": null,
+          "abstract": "Recent work has demonstrated substantial gains on many NLP tasks and benchmarks by pre-training on a large corpus of text followed by fine-tuning on a specific task. While typically task-agnostic in architecture, this method still requires task-specific fine-tuning datasets of thousands or tens of thousands of examples. By contrast, humans can generally perform a new language task from only a few examples or from simple instructions - something which current NLP systems still largely struggle to do. Here we show that scaling up language models greatly improves task-agnostic, few-shot performance, sometimes even reaching competitiveness with prior state-of-the-art fine-tuning approaches. Specifically, we train GPT-3, an autoregressive language model with 175 billion parameters, 10x more than any previous non-sparse language model, and test its performance in the few-shot setting. For all tasks, GPT-3 is applied without any gradient updates or fine-tuning, with tasks and few-shot demonstrations specified purely via text interaction with the model. GPT-3 achieves strong performance on many NLP datasets, including translation, question-answering, and cloze tasks, as well as several tasks that require on-the-fly reasoning or domain adaptation, such as unscrambling words, using a novel word in a sentence, or performing 3-digit arithmetic. At the same time, we also identify some datasets where GPT-3's few-shot learning still struggles, as well as some datasets where GPT-3 faces methodological issues related to training on large web corpora. Finally, we find that GPT-3 can generate samples of news articles which human evaluators have difficulty distinguishing from articles written by humans. We discuss broader societal impacts of this finding and of GPT-3 in general.",
+          "url": "https://www.semanticscholar.org/paper/90abbc2cf38462b954ae1b772fac9532e2ccd8b0"
+        },
+        "all_candidates": [
+          {
+            "source": "semantic_scholar",
+            "title": "Language Models are Few-Shot Learners",
+            "authors": [
+              "Tom B. Brown",
+              "Benjamin Mann",
+              "Nick Ryder",
+              "Melanie Subbiah",
+              "J. Kaplan",
+              "Prafulla Dhariwal",
+              "Arvind Neelakantan",
+              "Pranav Shyam",
+              "G. Sastry",
+              "Amanda Askell",
+              "S. Agarwal",
+              "Ariel Herbert-Voss",
+              "Gretchen Krueger",
+              "T. Henighan",
+              "R. Child",
+              "A. Ramesh",
+              "Daniel M. Ziegler",
+              "Jeff Wu",
+              "Clemens Winter",
+              "Christopher Hesse",
+              "Mark Chen",
+              "Eric Sigler",
+              "Ma-teusz Litwin",
+              "Scott Gray",
+              "Benjamin Chess",
+              "Jack Clark",
+              "Christopher Berner",
+              "Sam McCandlish",
+              "Alec Radford",
+              "I. Sutskever",
+              "Dario Amodei"
+            ],
+            "year": 2020,
+            "venue": "Neural Information Processing Systems",
+            "doi": null,
+            "abstract": "Recent work has demonstrated substantial gains on many NLP tasks and benchmarks by pre-training on a large corpus of text followed by fine-tuning on a specific task. While typically task-agnostic in architecture, this method still requires task-specific fine-tuning datasets of thousands or tens of thousands of examples. By contrast, humans can generally perform a new language task from only a few examples or from simple instructions - something which current NLP systems still largely struggle to do. Here we show that scaling up language models greatly improves task-agnostic, few-shot performance, sometimes even reaching competitiveness with prior state-of-the-art fine-tuning approaches. Specifically, we train GPT-3, an autoregressive language model with 175 billion parameters, 10x more than any previous non-sparse language model, and test its performance in the few-shot setting. For all tasks, GPT-3 is applied without any gradient updates or fine-tuning, with tasks and few-shot demonstrations specified purely via text interaction with the model. GPT-3 achieves strong performance on many NLP datasets, including translation, question-answering, and cloze tasks, as well as several tasks that require on-the-fly reasoning or domain adaptation, such as unscrambling words, using a novel word in a sentence, or performing 3-digit arithmetic. At the same time, we also identify some datasets where GPT-3's few-shot learning still struggles, as well as some datasets where GPT-3 faces methodological issues related to training on large web corpora. Finally, we find that GPT-3 can generate samples of news articles which human evaluators have difficulty distinguishing from articles written by humans. We discuss broader societal impacts of this finding and of GPT-3 in general.",
+            "url": "https://www.semanticscholar.org/paper/90abbc2cf38462b954ae1b772fac9532e2ccd8b0"
+          },
+          {
+            "source": "semantic_scholar",
+            "title": "MiMo-Audio: Audio Language Models are Few-Shot Learners",
+            "authors": [
+              "X. Zhang",
+              "Gang Wang",
+              "Jinlong Xue",
+              "Kai Fang",
+              "Liang Zhao",
+              "Rui Ma",
+              "Shu-Qin Ren",
+              "Shuo Liu",
+              "Tao Guo",
+              "Weiji Zhuang",
+              "Xin Zhang",
+              "Xi-Na Song",
+              "Yihan Yan",
+              "Yongzhe He",
+              "Cici",
+              "Bowen Shen",
+              "Chengxuan Zhu",
+              "Chong Ma",
+              "Chun Chen",
+              "Heyu Chen",
+              "Jiawei Li",
+              "Lei Li",
+              "Menghang Zhu",
+              "Peidian Li",
+              "Qiying Wang",
+              "Sirui Deng",
+              "Weimin Xiong",
+              "Wen Huang",
+              "Wenyu Yang",
+              "Yilin Jiang",
+              "Yixin Yang",
+              "Yu-Shi Tian",
+              "Yue Ma",
+              "Yue Yu",
+              "Zihan Zhang",
+              "Zihao Yue",
+              "Bangjun Xiao",
+              "Bin Xia",
+              "Bofei Gao",
+              "Bowen Ye",
+              "C. Cai",
+              "Chang Liu",
+              "Chenhong He",
+              "Chunan Li",
+              "Dawei Zhu",
+              "Duo Zhang",
+              "Fengyuan Shi",
+              "Guoan Wang",
+              "Hailin Zhang",
+              "Hanglong Lv",
+              "Hanyu Li",
+              "Hao Tian",
+              "Hengxu Qu",
+              "Hong-Mei Xu",
+              "Houbin Zhang",
+              "Huaqiu Liu",
+              "Jiangshan Duo",
+              "Jia Zuo",
+              "Jianyu Wei",
+              "Jiebao Xiao",
+              "Jinhao Dong",
+              "Jun Shi",
+              "Junhao Hu",
+              "Kainan Bao",
+              "Kang Zhou",
+              "Linghao Zhang",
+              "Meng Chen",
+              "Nuo Chen",
+              "Peng Zhang",
+              "Qian Chen",
+              "Qiantong Wang",
+              "Rang Li",
+              "Shao-yang Liu",
+              "Shengfan Wang",
+              "Shicheng Li",
+              "Shi-liang Yu",
+              "Shijie Cao",
+              "Shimao Chen",
+              "Shuhao Gu",
+              "Weikun Wang",
+              "Wen-Juan Ma",
+              "Xia Deng",
+              "Xing Yong",
+              "Xing Zhang",
+              "Xu Wang",
+              "Yi-Hao Song",
+              "Yihao Zhao",
+              "Yingbo Zhao",
+              "Yizhao Gao",
+              "Yu Cheng",
+              "Yuanfang Tu",
+              "Yudong Wang",
+              "Zhaojun Huang",
+              "Zheng-Yu Tang",
+              "Zhenrui Lin",
+              "Zhichao Song",
+              "Zhi-Yue Xu",
+              "Zhixian Zheng",
+              "Zi-Cheng Jiang"
+            ],
+            "year": 2025,
+            "venue": "arXiv.org",
+            "doi": "10.48550/arXiv.2512.23808",
+            "abstract": "Existing audio language models typically rely on task-specific fine-tuning to accomplish particular audio tasks. In contrast, humans are able to generalize to new audio tasks with only a few examples or simple instructions. GPT-3 has shown that scaling next-token prediction pretraining enables strong generalization capabilities in text, and we believe this paradigm is equally applicable to the audio domain. By scaling MiMo-Audio's pretraining data to over one hundred million of hours, we observe the emergence of few-shot learning capabilities across a diverse set of audio tasks. We develop a systematic evaluation of these capabilities and find that MiMo-Audio-7B-Base achieves SOTA performance on both speech intelligence and audio understanding benchmarks among open-source models. Beyond standard metrics, MiMo-Audio-7B-Base generalizes to tasks absent from its training data, such as voice conversion, style transfer, and speech editing. MiMo-Audio-7B-Base also demonstrates powerful speech continuation capabilities, capable of generating highly realistic talk shows, recitations, livestreaming and debates. At the post-training stage, we curate a diverse instruction-tuning corpus and introduce thinking mechanisms into both audio understanding and generation. MiMo-Audio-7B-Instruct achieves open-source SOTA on audio understanding benchmarks (MMSU, MMAU, MMAR, MMAU-Pro), spoken dialogue benchmarks (Big Bench Audio, MultiChallenge Audio) and instruct-TTS evaluations, approaching or surpassing closed-source models. Model checkpoints and full evaluation suite are available at https://github.com/XiaomiMiMo/MiMo-Audio.",
+            "url": "https://www.semanticscholar.org/paper/cb53b0b4f46205148a6f5a5ad5ff2631c5633329"
+          },
+          {
+            "source": "semantic_scholar",
+            "title": "Language Models are Few-shot Learners for Prognostic Prediction",
+            "authors": [
+              "Zekai Chen",
+              "Mariann Micsinai Balan",
+              "Kevin Brown"
+            ],
+            "year": 2023,
+            "venue": "arXiv.org",
+            "doi": "10.48550/arXiv.2302.12692",
+            "abstract": "Clinical prediction is an essential task in the healthcare industry. However, the recent success of transformers, on which large language models are built, has not been extended to this domain. In this research, we explore the use of transformers and language models in prognostic prediction for immunotherapy using real-world patients' clinical data and molecular profiles. This paper investigates the potential of transformers to improve clinical prediction compared to conventional machine learning approaches and addresses the challenge of few-shot learning in predicting rare disease areas. The study benchmarks the efficacy of baselines and language models on prognostic prediction across multiple cancer types and investigates the impact of different pretrained language models under few-shot regimes. The results demonstrate significant improvements in accuracy and highlight the potential of NLP in clinical research to improve early detection and intervention for different diseases.",
+            "url": "https://www.semanticscholar.org/paper/236445f0a3b1e30b2542e5e64616ff6a8af7e3ea"
+          },
+          {
+            "source": "semantic_scholar",
+            "title": "Finetuned Language Models Are Zero-Shot Learners",
+            "authors": [
+              "Jason Wei",
+              "Maarten Bosma",
+              "Vincent Y. Zhao",
+              "Kelvin Guu",
+              "Adams Wei Yu",
+              "Brian Lester",
+              "Nan Du",
+              "Andrew M. Dai",
+              "Quoc V. Le"
+            ],
+            "year": 2021,
+            "venue": "International Conference on Learning Representations",
+            "doi": null,
+            "abstract": "This paper explores a simple method for improving the zero-shot learning abilities of language models. We show that instruction tuning -- finetuning language models on a collection of tasks described via instructions -- substantially improves zero-shot performance on unseen tasks. We take a 137B parameter pretrained language model and instruction-tune it on over 60 NLP tasks verbalized via natural language instruction templates. We evaluate this instruction-tuned model, which we call FLAN, on unseen task types. FLAN substantially improves the performance of its unmodified counterpart and surpasses zero-shot 175B GPT-3 on 20 of 25 tasks that we evaluate. FLAN even outperforms few-shot GPT-3 by a large margin on ANLI, RTE, BoolQ, AI2-ARC, OpenbookQA, and StoryCloze. Ablation studies reveal that number of finetuning datasets, model scale, and natural language instructions are key to the success of instruction tuning.",
+            "url": "https://www.semanticscholar.org/paper/ff0b2681d7b05e16c46dfb71d980cc2f605907cd"
+          },
+          {
+            "source": "semantic_scholar",
+            "title": "It’s Not Just Size That Matters: Small Language Models Are Also Few-Shot Learners",
+            "authors": [
+              "Timo Schick",
+              "Hinrich Schütze"
+            ],
+            "year": 2020,
+            "venue": "North American Chapter of the Association for Computational Linguistics",
+            "doi": "10.18653/V1/2021.NAACL-MAIN.185",
+            "abstract": "When scaled to hundreds of billions of parameters, pretrained language models such as GPT-3 (Brown et al., 2020) achieve remarkable few-shot performance. However, enormous amounts of compute are required for training and applying such big models, resulting in a large carbon footprint and making it difficult for researchers and practitioners to use them. We show that performance similar to GPT-3 can be obtained with language models that are much “greener” in that their parameter count is several orders of magnitude smaller. This is achieved by converting textual inputs into cloze questions that contain a task description, combined with gradient-based optimization; exploiting unlabeled data gives further improvements. We identify key factors required for successful natural language understanding with small language models.",
+            "url": "https://www.semanticscholar.org/paper/f30444fbb6ad806168e2564db4815cd27faa7fd9"
+          }
+        ]
+      },
+      "metadata": {
+        "citation_id": "ref_003",
+        "fields": [
+          {
+            "field": "title",
+            "claimed": "Language Models are Few-Shot Learners",
+            "actual": "Language Models are Few-Shot Learners",
+            "status": "MATCH",
+            "similarity": 1.0
+          },
+          {
+            "field": "authors",
+            "claimed": "Brown, et al.",
+            "actual": "Tom B. Brown, Benjamin Mann, Nick Ryder, Melanie Subbiah, J. Kaplan, Prafulla Dhariwal, Arvind Neelakantan, Pranav Shyam, G. Sastry, Amanda Askell, S. Agarwal, Ariel Herbert-Voss, Gretchen Krueger, T. Henighan, R. Child, A. Ramesh, Daniel M. Ziegler, Jeff Wu, Clemens Winter, Christopher Hesse, Mark Chen, Eric Sigler, Ma-teusz Litwin, Scott Gray, Benjamin Chess, Jack Clark, Christopher Berner, Sam McCandlish, Alec Radford, I. Sutskever, Dario Amodei",
+            "status": "MATCH",
+            "similarity": 0.8
+          },
+          {
+            "field": "year",
+            "claimed": "2020",
+            "actual": "2020",
+            "status": "MATCH",
+            "similarity": 1.0
+          },
+          {
+            "field": "venue",
+            "claimed": "NeurIPS",
+            "actual": "Neural Information Processing Systems",
+            "status": "MATCH",
+            "similarity": 1.0
+          }
+        ],
+        "mismatch_count": 0,
+        "has_major_mismatch": false
+      },
+      "content_check": {
+        "citation_id": "ref_003",
+        "consistency": "CONSISTENT",
+        "reasoning": "引用声明准确概括了论文的核心发现：GPT-3通过大规模参数扩展实现了few-shot学习能力，无需梯度更新即可通过上下文完成多种任务，这与摘要中'GPT-3 is applied without any gradient updates'和'achieves strong performance on many NLP datasets'的描述完全一致。",
+        "claim": "展示了GPT-3的few-shot学习能力，首次证明了足够大规模的语言模型可以通过上下文学习完成多种任务。",
+        "abstract": "Recent work has demonstrated substantial gains on many NLP tasks and benchmarks by pre-training on a large corpus of text followed by fine-tuning on a specific task. While typically task-agnostic in architecture, this method still requires task-specific fine-tuning datasets of thousands or tens of thousands of examples. By contrast, humans can generally perform a new language task from only a few examples or from simple instructions - something which current NLP systems still largely struggle to do. Here we show that scaling up language models greatly improves task-agnostic, few-shot performance, sometimes even reaching competitiveness with prior state-of-the-art fine-tuning approaches. Specifically, we train GPT-3, an autoregressive language model with 175 billion parameters, 10x more than any previous non-sparse language model, and test its performance in the few-shot setting. For all tasks, GPT-3 is applied without any gradient updates or fine-tuning, with tasks and few-shot demonstrations specified purely via text interaction with the model. GPT-3 achieves strong performance on many NLP datasets, including translation, question-answering, and cloze tasks, as well as several tasks that require on-the-fly reasoning or domain adaptation, such as unscrambling words, using a novel word in a sentence, or performing 3-digit arithmetic. At the same time, we also identify some datasets where GPT-3's few-shot learning still struggles, as well as some datasets where GPT-3 faces methodological issues related to training on large web corpora. Finally, we find that GPT-3 can generate samples of news articles which human evaluators have difficulty distinguishing from articles written by humans. We discuss broader societal impacts of this finding and of GPT-3 in general."
+      }
+    },
+    {
+      "citation_id": "ref_004",
+      "raw_text": "随后，Touvron et al. (2023) 发布了开源的 LLaMA 模型，论文 \"LLaMA: Open and Efficient Foundation Language Models\" 发表于 arXiv，为开源社区提供了高性能的基础模型。",
+      "verdict": "VERIFIED",
+      "confidence": 0.9,
+      "evidence": "论文存在, 元数据一致, 内容核查通过",
+      "suggestion": "",
+      "retrieval": {
+        "citation_id": "ref_004",
+        "found": true,
+        "confidence": "HIGH",
+        "best_match": {
+          "source": "semantic_scholar",
+          "title": "LLaMA: Open and Efficient Foundation Language Models",
+          "authors": [
+            "Hugo Touvron",
+            "Thibaut Lavril",
+            "Gautier Izacard",
+            "X. Martinet",
+            "M. Lachaux",
+            "Timothée Lacroix",
+            "Baptiste Rozière",
+            "Naman Goyal",
+            "Eric Hambro",
+            "Faisal Azhar",
+            "Aur'elien Rodriguez",
+            "Armand Joulin",
+            "Edouard Grave",
+            "Guillaume Lample"
+          ],
+          "year": 2023,
+          "venue": "arXiv.org",
+          "doi": null,
+          "abstract": "We introduce LLaMA, a collection of foundation language models ranging from 7B to 65B parameters. We train our models on trillions of tokens, and show that it is possible to train state-of-the-art models using publicly available datasets exclusively, without resorting to proprietary and inaccessible datasets. In particular, LLaMA-13B outperforms GPT-3 (175B) on most benchmarks, and LLaMA-65B is competitive with the best models, Chinchilla-70B and PaLM-540B. We release all our models to the research community.",
+          "url": "https://www.semanticscholar.org/paper/57e849d0de13ed5f91d086936296721d4ff75a75"
+        },
+        "all_candidates": [
+          {
+            "source": "semantic_scholar",
+            "title": "LLaMA: Open and Efficient Foundation Language Models",
+            "authors": [
+              "Hugo Touvron",
+              "Thibaut Lavril",
+              "Gautier Izacard",
+              "X. Martinet",
+              "M. Lachaux",
+              "Timothée Lacroix",
+              "Baptiste Rozière",
+              "Naman Goyal",
+              "Eric Hambro",
+              "Faisal Azhar",
+              "Aur'elien Rodriguez",
+              "Armand Joulin",
+              "Edouard Grave",
+              "Guillaume Lample"
+            ],
+            "year": 2023,
+            "venue": "arXiv.org",
+            "doi": null,
+            "abstract": "We introduce LLaMA, a collection of foundation language models ranging from 7B to 65B parameters. We train our models on trillions of tokens, and show that it is possible to train state-of-the-art models using publicly available datasets exclusively, without resorting to proprietary and inaccessible datasets. In particular, LLaMA-13B outperforms GPT-3 (175B) on most benchmarks, and LLaMA-65B is competitive with the best models, Chinchilla-70B and PaLM-540B. We release all our models to the research community.",
+            "url": "https://www.semanticscholar.org/paper/57e849d0de13ed5f91d086936296721d4ff75a75"
+          },
+          {
+            "source": "semantic_scholar",
+            "title": "NiftyLLaMA: An open information extraction system integrated with sentiment analysis for Nifty-50 companies using LLaMa-2",
+            "authors": [
+              "Varsha Yadav",
+              "K. K. Kumar"
+            ],
+            "year": 2024,
+            "venue": "2024 2nd International Conference on Foundation and Large Language Models (FLLM)",
+            "doi": "10.1109/FLLM63129.2024.10852501",
+            "abstract": "The paper examines the use of large language models (LLaMa-2) in analyzing one of the fastest emerging stock markets, Indian financial exchange, National Stock Exchange. The main contribution of the paper is the development of a model specifically for the Indian market, targeting the NIFTY50 blue chip companies. This involved creating a unique dataset that includes stock prices, Wikipedia and news articles. Further the paper conducts sentiment analysis using FinBERT and fine-tunes the LLaMa-2 model with advanced techniques like Parameter Efficient Fine-Tuning (PEFT) and Low-Rank Adaptation (LoRA). The methodology encompassed data collection, integration, and model optimization. The findings demonstrate the effectiveness of the model in summarizing data and addressing new questions, showing its potential for financial investment strategies. The paper concludes by suggesting future enhancements and positions the NiftyLLaMa model as a notable step in applying LLMs to financial analysis in emerging markets, indicating a direction for future data-driven decision-making in various sectors.",
+            "url": "https://www.semanticscholar.org/paper/69312aab925453f0a85d1efe392b019c0318e734"
+          },
+          {
+            "source": "semantic_scholar",
+            "title": "Chinese-Vicuna: A Chinese Instruction-following Llama-based Model",
+            "authors": [
+              "Chenghao Fan",
+              "Zhenyi Lu",
+              "Jie Tian"
+            ],
+            "year": 2025,
+            "venue": "arXiv.org",
+            "doi": "10.48550/arXiv.2504.12737",
+            "abstract": "Chinese-Vicuna is an open-source, resource-efficient language model designed to bridge the gap in Chinese instruction-following capabilities by fine-tuning Meta's LLaMA architecture using Low-Rank Adaptation (LoRA). Targeting low-resource environments, it enables cost-effective deployment on consumer GPUs (e.g., RTX-2080Ti for 7B models) and supports domain-specific adaptation in fields like healthcare and law. By integrating hybrid datasets (BELLE and Guanaco) and 4-bit quantization (QLoRA), the model achieves competitive performance in tasks such as translation, code generation, and domain-specific Q\\&A. The project provides a comprehensive toolkit for model conversion, CPU inference, and multi-turn dialogue interfaces, emphasizing accessibility for researchers and developers. Evaluations indicate competitive performance across medical tasks, multi-turn dialogue coherence, and real-time legal updates. Chinese-Vicuna's modular design, open-source ecosystem, and community-driven enhancements position it as a versatile foundation for Chinese LLM applications.",
+            "url": "https://www.semanticscholar.org/paper/c38809bab2679910c232a5fb8d5f5dadfbca9bb3"
+          },
+          {
+            "source": "semantic_scholar",
+            "title": "PowerPulse: Power energy chat model with LLaMA model fine‐tuned on Chinese and power sector domain knowledge",
+            "authors": [
+              "Chunlin Yin",
+              "Kunpeng Du",
+              "Qiong-Yuan Nong",
+              "Hongcheng Zhang",
+              "Li Yang",
+              "Bin Yan",
+              "Xiang Huang",
+              "Xiaobo Wang",
+              "Xuan Zhang"
+            ],
+            "year": 2023,
+            "venue": "Expert Syst. J. Knowl. Eng.",
+            "doi": "10.1111/exsy.13513",
+            "abstract": "Recently, large‐scale language models (LLMs) such as chat generative pre‐trained transformer and generative pre‐trained transformer 4 have demonstrated remarkable performance in the general domain. However, inadaptability in a particular domain has led to hallucination for these LLMs when responding in specific domain contexts. The issue has attracted widespread attention, existing domain‐centered fine‐tuning efforts have predominantly focused on sectors like medical, financial, and legal, leaving critical areas such as power energy relatively unexplored. To bridge this gap, this paper introduces a novel power energy chat model called PowerPulse. Built upon the open and efficient foundation language models (LLaMA) architecture, PowerPulse is fine‐tuned specifically on Chinese Power Sector Domain Knowledge. This work marks the inaugural application of the LLaMA model in the field of power energy. By leveraging pertinent pre‐training data and instruction fine‐tuning datasets tailored for the power energy domain, the PowerPulse model showcases exceptional performance in tasks such as text generation, summary extraction, and topic classification. Experimental results validate the efficacy of the PowerPulse model, making significant contributions to the advancement of specialized language models in specific domains.",
+            "url": "https://www.semanticscholar.org/paper/b87906b53933a8e442c54bd448821f9a869c6332"
+          },
+          {
+            "source": "semantic_scholar",
+            "title": "SoTaNa: An Open-Source Software Engineering Instruction-Tuned Model",
+            "authors": [
+              "Ensheng Shi",
+              "Yanlin Wang",
+              "Fengji Zhang",
+              "Bei Chen",
+              "Hongyu Zhang",
+              "Yanlin Wang",
+              "Daya Guo",
+              "Lun Du",
+              "Shi Han",
+              "Dongmei Zhang",
+              "Hongbin Sun"
+            ],
+            "year": 2025,
+            "venue": "2025 IEEE/ACM Second International Conference on AI Foundation Models and Software Engineering (Forge)",
+            "doi": "10.1109/Forge66646.2025.00010",
+            "abstract": "Software development plays a crucial role in driving innovation and efficiency in modern societies. To meet the demands of this dynamic field, there is a growing need for an effective software development assistant. However, existing large language models represented by ChatGPT suffer from limited accessibility, including training data and model weights. Although other large open-source models like LLaMA have shown promise, they still struggle with understanding human intent. In this paper, we present SoTaNa, an open-source software engineering instruction-tuned model. SoTaNa utilizes ChatGPT to generate high-quality instruction-based data for the domain of software engineering and employs a parameter-efficient fine-tuning approach to enhance the open-source foundation model, LLaMA. We evaluate the effectiveness of SoTaNa in answering Stack Overflow questions and demonstrate its capabilities. Additionally, we discuss its capabilities in code summarization and generation, as well as the impact of varying the volume of generated data on model performance. Notably, SoTaNa can run on a single GPU, making it accessible to a broader range of researchers. Our code, model weights, and data are publicly available at https://github.com/DeepSoftwareAnalytics/SoTaNa.",
+            "url": "https://www.semanticscholar.org/paper/a6b8c7462c8c488d6f29676bdd40e564e6252858"
+          }
+        ]
+      },
+      "metadata": {
+        "citation_id": "ref_004",
+        "fields": [
+          {
+            "field": "title",
+            "claimed": "LLaMA: Open and Efficient Foundation Language Models",
+            "actual": "LLaMA: Open and Efficient Foundation Language Models",
+            "status": "MATCH",
+            "similarity": 1.0
+          },
+          {
+            "field": "authors",
+            "claimed": "Touvron, et al.",
+            "actual": "Hugo Touvron, Thibaut Lavril, Gautier Izacard, X. Martinet, M. Lachaux, Timothée Lacroix, Baptiste Rozière, Naman Goyal, Eric Hambro, Faisal Azhar, Aur'elien Rodriguez, Armand Joulin, Edouard Grave, Guillaume Lample",
+            "status": "MATCH",
+            "similarity": 0.8
+          },
+          {
+            "field": "year",
+            "claimed": "2023",
+            "actual": "2023",
+            "status": "MATCH",
+            "similarity": 1.0
+          },
+          {
+            "field": "venue",
+            "claimed": "arXiv",
+            "actual": "arXiv.org",
+            "status": "PARTIAL",
+            "similarity": 0.7692307692307692
+          }
+        ],
+        "mismatch_count": 0,
+        "has_major_mismatch": false
+      },
+      "content_check": {
+        "citation_id": "ref_004",
+        "consistency": "CONSISTENT",
+        "reasoning": "论文摘要明确提到'We release all our models to the research community'，这与引用声明中'发布了开源的LLaMA模型，为开源社区提供了高性能的基础模型'的内容完全一致。",
+        "claim": "发布了开源的LLaMA模型，为开源社区提供了高性能的基础模型。",
+        "abstract": "We introduce LLaMA, a collection of foundation language models ranging from 7B to 65B parameters. We train our models on trillions of tokens, and show that it is possible to train state-of-the-art models using publicly available datasets exclusively, without resorting to proprietary and inaccessible datasets. In particular, LLaMA-13B outperforms GPT-3 (175B) on most benchmarks, and LLaMA-65B is competitive with the best models, Chinchilla-70B and PaLM-540B. We release all our models to the research community."
+      }
+    },
+    {
+      "citation_id": "ref_005",
+      "raw_text": "在幻觉检测方面，Li et al. (2024) 提出了 \"HalluDetect: A Unified Framework for Real-time Hallucination Detection in Large Language Models\"，发表于 ACL 2024，该方法通过多层验证机制实现了实时幻觉检测，在多个基准上达到了 98% 的检测准确率。",
+      "verdict": "FABRICATED",
+      "confidence": 0.95,
+      "evidence": "在所有学术数据源中均未检索到该论文",
+      "suggestion": "建议删除该引用或替换为真实文献",
+      "retrieval": {
+        "citation_id": "ref_005",
+        "found": false,
+        "confidence": "NONE",
+        "best_match": null,
+        "all_candidates": []
+      },
+      "metadata": {
+        "citation_id": "ref_005",
+        "fields": [],
+        "mismatch_count": 0,
+        "has_major_mismatch": false
+      },
+      "content_check": {
+        "citation_id": "ref_005",
+        "consistency": "UNVERIFIABLE",
+        "reasoning": "论文未检索到, 无法进行内容核查",
+        "claim": "",
+        "abstract": ""
+      }
+    },
+    {
+      "citation_id": "ref_006",
+      "raw_text": "此外，Zhang and Liu (2023) 在其论文 \"Recursive Fact Verification for Eliminating LLM Hallucinations\" 中提出了递归事实验证框架，发表于 EMNLP 2023，声称可以将幻觉率降低 90%。",
+      "verdict": "FABRICATED",
+      "confidence": 0.95,
+      "evidence": "在所有学术数据源中均未检索到该论文",
+      "suggestion": "建议删除该引用或替换为真实文献",
+      "retrieval": {
+        "citation_id": "ref_006",
+        "found": false,
+        "confidence": "NONE",
+        "best_match": null,
+        "all_candidates": []
+      },
+      "metadata": {
+        "citation_id": "ref_006",
+        "fields": [],
+        "mismatch_count": 0,
+        "has_major_mismatch": false
+      },
+      "content_check": {
+        "citation_id": "ref_006",
+        "consistency": "UNVERIFIABLE",
+        "reasoning": "论文未检索到, 无法进行内容核查",
+        "claim": "",
+        "abstract": ""
+      }
+    },
+    {
+      "citation_id": "ref_007",
+      "raw_text": "Lewis et al. (2020) 提出了 RAG 框架，论文 \"Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks\" 发表于 NeurIPS 2020，通过在生成过程中引入外部检索的文档来提高事实准确性。",
+      "verdict": "FABRICATED",
+      "confidence": 0.95,
+      "evidence": "在所有学术数据源中均未检索到该论文",
+      "suggestion": "建议删除该引用或替换为真实文献",
+      "retrieval": {
+        "citation_id": "ref_007",
+        "found": false,
+        "confidence": "NONE",
+        "best_match": null,
+        "all_candidates": []
+      },
+      "metadata": {
+        "citation_id": "ref_007",
+        "fields": [],
+        "mismatch_count": 0,
+        "has_major_mismatch": false
+      },
+      "content_check": {
+        "citation_id": "ref_007",
+        "consistency": "UNVERIFIABLE",
+        "reasoning": "论文未检索到, 无法进行内容核查",
+        "claim": "",
+        "abstract": ""
+      }
+    },
+    {
+      "citation_id": "ref_008",
+      "raw_text": "在 RAG 的改进方面，Gao et al. (2024) 发表了综述 \"Retrieval-Augmented Generation for Large Language Models: A Survey\"，系统总结了 RAG 技术的发展脉络与未来方向。",
+      "verdict": "FABRICATED",
+      "confidence": 0.9,
+      "evidence": "在学术数据源中检索到 5 条候选, 但标题匹配度均低于阈值, 疑似捏造",
+      "suggestion": "建议删除该引用或替换为真实文献",
+      "retrieval": {
+        "citation_id": "ref_008",
+        "found": false,
+        "confidence": "NONE",
+        "best_match": null,
+        "all_candidates": [
+          {
+            "source": "semantic_scholar",
+            "title": "Correction: Li et al. Optimizing Soil Health and Sorghum Productivity through Crop Rotation with Quinoa. Life 2024, 14, 745",
+            "authors": [
+              "Guang Li",
+              "Aixia Ren",
+              "Sumera Anwar",
+              "Lijuan Shi",
+              "Wenbin Bai",
+              "Yali Zhang",
+              "Zhiqiang Gao"
+            ],
+            "year": 2024,
+            "venue": "Life",
+            "doi": "10.3390/life14070866",
+            "abstract": "The author Wenbin Bai has been changed to the second corresponding author [...].",
+            "url": "https://www.semanticscholar.org/paper/1aa72c3bca4f7a3706c80dcd13f6f23b5b391f55"
+          },
+          {
+            "source": "semantic_scholar",
+            "title": "Correction: Wang et al. Effects of Heat-Treated Bifidobacterium longum CECT-7347 Combined with Fibersol-2 on the Intestinal Health of Cats Submitted to an Abrupt Dietary Change: A Randomized Controlled Study. Animals 2024, 14, 2179",
+            "authors": [
+              "Fan Wang",
+              "Siyuan Gao",
+              "Qianqian Peng",
+              "Lili Tan",
+              "Siyu Chen",
+              "Zhaofei Xia"
+            ],
+            "year": 2024,
+            "venue": "Animals",
+            "doi": "10.3390/ani14182668",
+            "abstract": "In the original publication [...].",
+            "url": "https://www.semanticscholar.org/paper/8828061933f70ee561a0d2a6937f274fe6e628ef"
+          },
+          {
+            "source": "semantic_scholar",
+            "title": "Correction: Zhao et al. Research on the Formation Conditions and Preventive Measures of Uranium Precipitates during the Service Process of Medical Isotope Production Reactors. Materials 2024, 17, 945",
+            "authors": [
+              "Yanli Zhao",
+              "Yuan Gao",
+              "Xinyue Li",
+              "Yi Le",
+              "Yang Zhang",
+              "Jie Qiu",
+              "Yong Xin"
+            ],
+            "year": 2024,
+            "venue": "Materials",
+            "doi": "10.3390/ma17194932",
+            "abstract": "There were two errors in the original publication [...].",
+            "url": "https://www.semanticscholar.org/paper/6d4f4a747d6a843b4ff53b2212c49582f6e51d8a"
+          },
+          {
+            "source": "semantic_scholar",
+            "title": "Correction: Zhao et al. Plasma Spraying NiCoCrAlY-Cr2O3-AgMo Coatings: Fabrication and Tribological Mechanisms. Coatings 2024, 14, 1233",
+            "authors": [
+              "Yafei Zhao",
+              "Yanping Gao",
+              "Zhaoyang Zhai",
+              "Yanchao Zhang",
+              "Dongya Zhang"
+            ],
+            "year": 2024,
+            "venue": "Coatings",
+            "doi": "10.3390/coatings14121477",
+            "abstract": "In the published paper [...]",
+            "url": "https://www.semanticscholar.org/paper/acce38b2dc8cc99b075bc1e03340863acbf9cc6f"
+          },
+          {
+            "source": "semantic_scholar",
+            "title": "Correction: Zhou et al. Optimization of Blasting Parameters Considering Both Vibration Reduction and Profile Control: A Case Study in a Mountain Hard Rock Tunnel. Buildings 2024, 14, 1421",
+            "authors": [
+              "Junjie Zhou",
+              "Shan Gao",
+              "Pingkuang Luo",
+              "Jiale Fan",
+              "Congcong Zhao"
+            ],
+            "year": 2024,
+            "venue": "Buildings",
+            "doi": "10.3390/buildings14113500",
+            "abstract": "Missing Citation [...]",
+            "url": "https://www.semanticscholar.org/paper/3df53a0816ee0f6b38a682269f43bcd838e33dba"
+          }
+        ]
+      },
+      "metadata": {
+        "citation_id": "ref_008",
+        "fields": [],
+        "mismatch_count": 0,
+        "has_major_mismatch": false
+      },
+      "content_check": {
+        "citation_id": "ref_008",
+        "consistency": "UNVERIFIABLE",
+        "reasoning": "论文未检索到, 无法进行内容核查",
+        "claim": "",
+        "abstract": ""
+      }
+    },
+    {
+      "citation_id": "ref_009",
+      "raw_text": "Ouyang et al. (2022) 在 \"Training language models to follow instructions with human feedback\" 中提出了 InstructGPT，发表于 NeurIPS 2022，通过基于人类反馈的强化学习（RLHF）使语言模型更好地遵循人类指令。",
+      "verdict": "FABRICATED",
+      "confidence": 0.9,
+      "evidence": "在学术数据源中检索到 5 条候选, 但标题匹配度均低于阈值, 疑似捏造",
+      "suggestion": "建议删除该引用或替换为真实文献",
+      "retrieval": {
+        "citation_id": "ref_009",
+        "found": false,
+        "confidence": "NONE",
+        "best_match": null,
+        "all_candidates": [
+          {
+            "source": "semantic_scholar",
+            "title": "Correction: Wang et al. TERT Promoter Revertant Mutation Inhibits Melanoma Growth through Intrinsic Apoptosis. Biology 2022, 11, 141",
+            "authors": [
+              "Yanbing Wang",
+              "Yiwu Chen",
+              "Chang Li",
+              "Zhi-Hong Xiao",
+              "Hongming Yuan",
+              "Yuanzhu Zhang",
+              "D. Pang",
+              "Xiaochun Tang",
+              "Mengjing Li",
+              "Hongsheng Ouyang"
+            ],
+            "year": 2022,
+            "venue": "Biology",
+            "doi": "10.3390/biology11101400",
+            "abstract": "The authors would like to make the following correction to the published paper [...].",
+            "url": "https://www.semanticscholar.org/paper/973b9326a9aae8f6243366e63381464804a6cd09"
+          },
+          {
+            "source": "semantic_scholar",
+            "title": "Correction: Liu et al. A Predictive Model for the Risk of Posterior Circulation Stroke in Patients with Intracranial Atherosclerosis Based on High Resolution MRI. Diagnostics 2022, 12, 812",
+            "authors": [
+              "Zhenxing Liu",
+              "Feiyang Zhong",
+              "Yu Xie",
+              "Xuanzhen Lu",
+              "Botong Hou",
+              "K. Ouyang",
+              "Ji-xing Fang",
+              "Meiyan Liao",
+              "Yumin Liu"
+            ],
+            "year": 2022,
+            "venue": "Diagnostics",
+            "doi": "10.3390/diagnostics12092088",
+            "abstract": "Errors occurred in the number of patients in the posterior circulation ischemic stroke (PCIS) group and non-PCIS group described in the original publication [...].",
+            "url": "https://www.semanticscholar.org/paper/3e9c93ed6eee5df8891536631bbe59e859b037dd"
+          },
+          {
+            "source": "semantic_scholar",
+            "title": "Retraction for Sun et al., “Gut Microbiota Mediates the Therapeutic Effect of Monoclonal Anti-TLR4 Antibody on Acetaminophen-Induced Acute Liver Injury in Mice”",
+            "authors": [
+              "Xuewei Sun",
+              "Qian Cui",
+              "J. Ni",
+              "Xiaoguang Liu",
+              "Jin-Zhi Zhu",
+              "Tingting Zhou",
+              "Hua-Li Huang",
+              "Ke Ouyang",
+              "Yulong Wu",
+              "Zhan Yang"
+            ],
+            "year": 2022,
+            "venue": "Microbiology spectrum",
+            "doi": "10.1128/spectrum.03116-22",
+            "abstract": "Volume 10, no. 3, e00647-22, 2022, https://doi.org/10.1128/spectrum.00647-22. We hereby retract this article due to the method for administering the monoclonal anti-TLR4 antibody (ATAB) described in the original paper being inaccurate, as this may influence the readers' understanding of the effect of the ATAB. This inaccuracy was brought to our attention by a Letter to the Editor (https://doi.org/10.1128/spectrum.01863-22). We have responded to the concerns regarding the original paper in our reply to the letter (https://doi.org/10.1128/ spectrum.02377-22). We apologize for any inconvenience caused to the readers.",
+            "url": "https://www.semanticscholar.org/paper/ffd23a20a4d6e9c6e5b3e58eed1fdfccb786b5b4"
+          },
+          {
+            "source": "semantic_scholar",
+            "title": "Large language models are few-shot clinical information extractors",
+            "authors": [
+              "Monica Agrawal",
+              "S. Hegselmann",
+              "Hunter Lang",
+              "Yoon Kim",
+              "D. Sontag"
+            ],
+            "year": 2022,
+            "venue": "Conference on Empirical Methods in Natural Language Processing",
+            "doi": "10.18653/v1/2022.emnlp-main.130",
+            "abstract": "A long-running goal of the clinical NLP community is the extraction of important variables trapped in clinical notes. However, roadblocks have included dataset shift from the general domain and a lack of public clinical corpora and annotations. In this work, we show that large language models, such as InstructGPT (Ouyang et al., 2022), perform well at zero- and few-shot information extraction from clinical text despite not being trained specifically for the clinical domain. Whereas text classification and generation performance have already been studied extensively in such models, here we additionally demonstrate how to leverage them to tackle a diverse set of NLP tasks which require more structured outputs, including span identification, token-level sequence classification, and relation extraction. Further, due to the dearth of available data to evaluate these systems, we introduce new datasets for benchmarking few-shot clinical information extraction based on a manual re-annotation of the CASI dataset (Moon et al., 2014) for new tasks. On the clinical extraction tasks we studied, the GPT-3 systems significantly outperform existing zero- and few-shot baselines.",
+            "url": "https://www.semanticscholar.org/paper/686d9ee744fa013cc21cdd86acd864c936e9e456"
+          },
+          {
+            "source": "semantic_scholar",
+            "title": "Towards Better and Healthier Air Quality: Implementation of WHO 2021 Global Air Quality Guidelines in Asia",
+            "authors": [
+              "Huiling Ouyang",
+              "Xu Tang",
+              "Rajesh Kumar",
+              "Renhe Zhang",
+              "G. Brasseur",
+              "Ben Churchill",
+              "M. Alam",
+              "Haidong Kan",
+              "H. Liao",
+              "Tong Zhu",
+              "Emily Ying Yang Chan",
+              "R. Sokhi",
+              "Jiacan Yuan",
+              "A. Baklanov",
+              "Jianmin Chen",
+              "Maria Katherina Patdu"
+            ],
+            "year": 2022,
+            "venue": "Bulletin of The American Meteorological Society - (BAMS)",
+            "doi": "10.1175/bams-d-22-0040.1",
+            "abstract": "\nAir pollution is estimated to contribute to approximately 7 million premature deaths, of which around 4.5 million deaths are linked to ambient (outdoor) air pollution (Murray et al. 2020). The deaths attributed to air pollution rank the highest in the Asian Region and thus the implementation of the stricter World Health Organization (WHO) Global Air Quality Guidelines (AQGs) released on 22 Sep 2021 will generate the greatest health benefits in the Asian region. Here we present some key messages and recommendations at national, regional, and global level to promote the strategies for implementation of the ambitious WHO 2021 AQGs in the Asian region.",
+            "url": "https://www.semanticscholar.org/paper/9a99cd52d1686619eab9e467aa11b4a5d83d9c5d"
+          }
+        ]
+      },
+      "metadata": {
+        "citation_id": "ref_009",
+        "fields": [],
+        "mismatch_count": 0,
+        "has_major_mismatch": false
+      },
+      "content_check": {
+        "citation_id": "ref_009",
+        "consistency": "UNVERIFIABLE",
+        "reasoning": "论文未检索到, 无法进行内容核查",
+        "claim": "",
+        "abstract": ""
+      }
+    },
+    {
+      "citation_id": "ref_010",
+      "raw_text": "最后，Chen and Wang (2024) 在 \"SafeAlign: Comprehensive Alignment for Trustworthy AI Generation\" 中提出了一种全面的对齐方法，发表于 ICML 2024，号称在安全性和有用性之间取得了完美平衡。",
+      "verdict": "FABRICATED",
+      "confidence": 0.9,
+      "evidence": "在学术数据源中检索到 5 条候选, 但标题匹配度均低于阈值, 疑似捏造",
+      "suggestion": "建议删除该引用或替换为真实文献",
+      "retrieval": {
+        "citation_id": "ref_010",
+        "found": false,
+        "confidence": "NONE",
+        "best_match": null,
+        "all_candidates": [
+          {
+            "source": "semantic_scholar",
+            "title": "Comprehensive Evaluation of AI Hallucination and Novel UV-Oriented Framework toward Safe and Trustworthy AI",
+            "authors": [
+              "Zhenyao Liu",
+              "Jieren Kou",
+              "Wuyang Zhang",
+              "Chuqiao Gu",
+              "Xinyi Fang",
+              "Zhenqian Huang",
+              "Hao Yuan",
+              "Hanxia Li",
+              "Xiuyuan Lu",
+              "Aobing Yin",
+              "Chang Liu",
+              "Chenjun Zhao",
+              "Wenjie Lin",
+              "Lifeng Zhang",
+              "Zhongda Wang",
+              "Haoyang Huang",
+              "Xiaoman Duan",
+              "Yajun Fang"
+            ],
+            "year": 2024,
+            "venue": "International Conference on Universal Village",
+            "doi": "10.1109/UV63228.2024.11189137",
+            "abstract": "this work, we present a comprehensive evaluation of hallucination phenomena in LLMs and multimodal systems. First, we propose a structured taxonomy encompassing factuality-based, faithfulness-based, logical-based, and emergent hybrid forms, extending to multimodal-specific risks such as cross-modal inconsistencies, visual overinterpretation, and modality dominance effects. Second, we conduct a mechanistic analysis that traces hallucinations across the full model lifecycle—data-level origins (knowledge gaps, misinformation, annotation noise), training-induced mechanisms (distributional mimicry, reward bias, alignment forgetting), and inference-time vulnerabilities (confidence miscalibration, decoding failures, prompt-induced errors). This perspective reveals how independent mechanisms interact to produce cascade effects, amplifying initial flaws into elaborate but unreliable narratives. Third, we critically assess existing detection and evaluation approaches, highlighting limitations of current benchmarks, taxonomic ambiguities, and the lack of mechanism-aware evaluation protocols. We argue that future evaluation must integrate both surface-level manifestations and their generative causes to achieve more robust measurement.Beyond evaluation, we survey mitigation strategies organized into mechanism-based, phase-based, and hybrid approaches. These range from lightweight prompt engineering and decoding constraints to resource-augmented methods such as retrieval-augmented generation and knowledge graph integration, as well as higher-level frameworks for controllability and uncertainty calibration. We analyze the trade-offs among effectiveness, scalability, interpretability, and creative freedom, emphasizing the importance of context-specific tolerances: hallucinations that are unacceptable in medicine or finance may be tolerable, or even beneficial, in creative applications.Building on these insights, we propose a novel UV-oriented framework for safe and trustworthy AI, inspired by the Universal Village vision of harmonizing human, technological, and environmental systems. In this framework, hallucination is conceptualized not only as an isolated model error but as a systemic vulnerability in information flow and decision-making loops. We design a multi-level dynamic system integrating sensing, communication, decision-making, action, and evaluation, supported by closed feedback loops and user-specific hallucination tolerance levels. This architecture enables adaptive mitigation through mechanism-informed strategies, retrieval and verification integration, and consensus mechanisms, ensuring resilience across diverse application contexts.Our contributions are threefold: (1) we present the most comprehensive taxonomy of hallucination to date, linking manifestations with mechanistic drivers; (2) we unify detection, evaluation, and mitigation strategies into a coherent survey that highlights both current progress and pressing gaps; and (3) we introduce a UV-oriented framework that reframes hallucination control as part of a broader, feedback-driven ecosystem for reliable AI. We conclude by outlining open challenges, including classification ambiguities, multimodal alignment risks, deployment-specific vulnerabilities, and the need to reconcile reliability with creativity. Addressing these challenges is essential to advancing from powerful yet fallible generative models toward AI systems that are not only safe and responsible but also aligned with human values and societal needs.",
+            "url": "https://www.semanticscholar.org/paper/03bb360196b18912ce051ee8c8ebae243626a360"
+          },
+          {
+            "source": "semantic_scholar",
+            "title": "Trustworthy Agentic Supply Chains: A Governance Framework for Digital Twin Orchestrated AI Decisioning Under Compliance, Auditability, and Data Sovereignty Constraints",
+            "authors": [
+              "Arunraju Chinnaraju",
+              "Kannan Avalurpet Loganathan"
+            ],
+            "year": 2026,
+            "venue": "International Journal of Latest Technology in Engineering Management &amp; Applied Science",
+            "doi": "10.51583/ijltemas.2026.150100018",
+            "abstract": "The rapid increase of Artificial Intelligence (AI) within Supply Chain Management (SCM), has transitioned SCM from using primarily Predictive Analytics & Decision Support, toward increased Autonomy of Decision Execution. However, although there are many examples of AI-driven SCM systems currently being used, they generally suffer from low levels of Trust, poor Governance structures, inadequate Auditability, and unresolved Data Sovereignty issues; all of which limit their potential deployment in High Consequence & Regulated Operational Environments. In an effort to address this important gap, this research introduces a comprehensive Governance First Framework for Trustworthy Agentic Supply Chains; where Autonomous AI Agents use Digital Twin Orchestrated Decision Intelligence to make decisions in accordance with explicit Compliance, Auditability, and Sovereignty Constraints. Agentic Supply Chains are defined as Socio Technical Systems, where Decision Authority is delegated to AI Agents that Continuously Sense, Simulate, Decide, and Act Across Dynamic Supply Networks. Digital Twins are redefined from Passive Visualization Tools to Active Orchestration Substrates that facilitate Real Time State Synchronization, Policy Execution, and Controlled Interaction Between Autonomous Agents and Enterprise Systems. On top of this base, the paper provides a Layered Reference Architecture for integrating Agentic Decision Intelligence, Bounded Autonomy, Governance by Design, and Human Oversight into a Unified Operational Model. \nThe Framework addresses Key Adoption Barriers via Explicit Mechanisms for Regulatory Alignment, Decision Traceability, Data Sovereignty Preservation, and Risk Containment. The Architectural Constructs provided include Agent Drift Detection, Rollback and Safe Recovery, Simulation Based Stress Testing, and Resilience under Adversarial and Extreme Disruption Scenarios. Through the embedding of Governance within the Decision Architecture, the proposed model allows Autonomous Supply Chain Systems to be Auditable, Compliant, and Strategically Controllable while Retaining Adaptive Intelligence. Additionally, beyond technical design, the paper outlines Evaluation Metrics, Organizational Integration Principles, Ethical Considerations, and Strategic Implications related to Delegating Decision Authority to Agentic AI Systems. Finally, the Study identifies a Forward-Looking Research Agenda addressing Multi-Agent Coordination, Cross-Enterprise Autonomy, and Next Generation Optimization Paradigms. Overall, this Work establishes Trustworthy Agentic Supply Chains as a Distinct and Necessary Evolution of Supply Chain Intelligence, providing a Reusable Reference Framework for Researchers, Practitioners, and Policymakers looking to operationalize Autonomous Decision Systems Responsibly and at Scale.",
+            "url": "https://www.semanticscholar.org/paper/e4c96e97b8eb12955a000f657695efa275030986"
+          },
+          {
+            "source": "semantic_scholar",
+            "title": "The Evolution of AI: From Classical Machine Learning to Modern Large Language Models",
+            "authors": [
+              "Rahul Mundlamuri",
+              "G. Gunnam",
+              "Nikhil Kumar Mysari",
+              "Jayakanth Pujuri"
+            ],
+            "year": 2025,
+            "venue": "IEEE Access",
+            "doi": "10.1109/ACCESS.2025.3621344",
+            "abstract": "This paper provides a comprehensive review of the evolution of artificial intelligence from early symbolic, rule-based systems to modern large language models (LLMs) and retrieval-augmented generation (RAG) architectures. Early AI was dominated by symbolic reasoning and expert systems using hand-crafted rules, before a paradigm shift toward data-driven learning occurred with the advent of machine learning, notably the backpropagation algorithm that enabled training of multi-layer neural networks to learn complex tasks. This breakthrough ushered in the deep learning era: convolutional neural networks (CNNs) achieved landmark results in computer vision, recurrent neural networks (RNNs such as LSTM) excelled at sequential data processing, and deep reinforcement learning (RL) systems mastered challenging decision-making tasks. In natural language processing (NLP), distributed word embedding models like Word2Vec and GloVe replaced sparse representations, capturing semantic relationships in vector space. To handle rare and out-of-vocabulary words, subword tokenization techniques such as Byte Pair Encoding (BPE) and WordPiece were introduced. These advances culminated in the Transformer architecture, based on self-attention mechanisms, which now underpins most state-of-the-art LLMs. Transformer-based LLMs, pre-trained on large text corpora, demonstrate advanced capabilities in language generation and understanding. Beyond model architectures, the review highlights how LLMs are augmented with external knowledge via RAG. Retrieval-augmented generation combines an LLM with a vector database of text embeddings, allowing the model to retrieve relevant external information to ground its outputs. This approach significantly improves factual accuracy and relevance, mitigating issues like hallucination, though ensuring complete truthfulness remains challenging. Additional obstacles include the limited context windows of LLMs (on the order of a few thousand tokens) and the computational complexity and latency of inference. The review also examines societal implications of advanced AI, such as bias amplification from training data and other ethical considerations in deployment. Finally, it outlines future directions, including extended context lengths, improved interpretability and alignment, greater efficiency, and neuro-symbolic hybrid approaches, aiming to develop more robust and trustworthy AI systems.",
+            "url": "https://www.semanticscholar.org/paper/2dc41d9ba58751beeb30eafa45b54450c0cb2b9f"
+          },
+          {
+            "source": "semantic_scholar",
+            "title": "GovGPT: An Ethics-Integrated Governance Architecture for Curriculum-Aligned, Child-Centric Educational AI Systems",
+            "authors": [
+              "Kinshuk Dutta",
+              "S. Paul",
+              "Ankit Anand"
+            ],
+            "year": 2024,
+            "venue": "International Journal of Artificial Intelligence, Data Science, and Machine Learning",
+            "doi": "10.63282/3050-9262.ijaidsml-v5i1p118",
+            "abstract": "This paper introduces GovGPT, a comprehensive governance architecture for educational AI systems that integrates ethical constraints directly into system design. Building upon prior work on curriculum alignment and hallucination mitigation, we formalize child-centric safety and pedagogical appropriateness as first-class architectural concerns. The framework operationalizes emerging IEEE standards (P7004/P7008) through a multi-layered governance stack comprising: (1) a Policy Interpretation Layer translating ethical guidelines to executable constraints, (2) a Curriculum Authority Layer enforcing syllabus boundaries via retrieval-augmented generation, (3) a Child-Safety Filtering Layer implementing age-appropriate content screening, and (4) an Audit Layer providing explainable compliance verification. We introduce formal definitions for governance failures in educational contexts, prove bounded deviation properties under policy constraints, and validate the architecture through simulated deployment scenarios. Experimental results demonstrate a 47% reduction in policy violations and 92% compliance with child-safety standards compared to baseline systems, while maintaining pedagogical efficacy. This work establishes a foundation for systematically trustworthy educational AI that balances generative capability with ethical responsibility.",
+            "url": "https://www.semanticscholar.org/paper/dc768bd1a79701a00ec68a4a22e9fc54c2e0bac7"
+          },
+          {
+            "source": "semantic_scholar",
+            "title": "From Strings to Semantics: A Methodology for the Automated Semantic Validation for Conversational AI",
+            "authors": [
+              "Anuj Nagpal"
+            ],
+            "year": 2025,
+            "venue": "European Modern Studies Journal",
+            "doi": "10.59573/emsj.9(5).2025.53",
+            "abstract": "Conversational AI systems have transformed enterprise software applications, yet their non-deterministic nature challenges traditional quality assurance frameworks that rely on exact string matching. This technical review presents a comprehensive semantic validation framework that addresses critical gaps in automated testing for AI-generated content. The solution transforms subjective meaning assessment into objective mathematical processes through sentence-level vector embeddings and high-dimensional geometric representations. Pre-trained Sentence Transformer models generate dense vector representations that capture contextual semantic relationships, while cosine similarity metrics provide robust mathematical foundations for comparing AI responses against curated knowledge repositories. The framework employs systematic algorithmic procedures, including text segmentation, embedding generation, similarity computation, and threshold-based validation decisions. Experimental validation across diverse data analytics platforms demonstrates exceptional alignment with human expert judgment while maintaining consistent performance across AI systems exhibiting markedly different response characteristics. The deterministic nature ensures reproducible testing conditions essential for regulatory compliance, addressing fundamental challenges where traditional lexical metrics consistently fail to capture semantic equivalence in paraphrased content. The framework provides engineering and quality assurance teams with practical, scalable solutions for building trustworthy AI applications that can operate reliably at enterprise scale across healthcare, financial services, educational technology, and customer service domains. \n ",
+            "url": "https://www.semanticscholar.org/paper/77436c6768cf615a798efebdeeb2e7544d0d4dd1"
+          }
+        ]
+      },
+      "metadata": {
+        "citation_id": "ref_010",
+        "fields": [],
+        "mismatch_count": 0,
+        "has_major_mismatch": false
+      },
+      "content_check": {
+        "citation_id": "ref_010",
+        "consistency": "UNVERIFIABLE",
+        "reasoning": "论文未检索到, 无法进行内容核查",
+        "claim": "",
+        "abstract": ""
+      }
+    }
+  ]
+}

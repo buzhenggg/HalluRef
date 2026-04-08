@@ -1,0 +1,239 @@
+"""级联检索编排器 (Cascade Retriever)
+
+策略:
+    Tier 1  OpenAlex + CrossRef         学术 API, 并行
+    Tier 2  Serper / SerpAPI            Google Web Search, 二选一 (Serper 优先)
+    Tier 3  Google Scholar 直爬          浏览器检索
+
+执行规则:
+    - 任一 tier 命中阈值, 立即返回, 后续 tier 跳过 (省请求)
+    - 任一 tier 未配置 (is_configured=False) 自动跳过
+    - Tier 2 同时传入 serper + serpapi 时, 仅使用 Serper (优先级更高)
+    - 每个 tier 的所有候选累积到最终结果, 供下游元数据/内容比对使用
+    - 单个检索器抛异常不阻塞同 tier 其他检索器或后续 tier
+
+匹配优先级 (并列分时的 tiebreak):
+    openalex > crossref > serper > serpapi > google_scholar
+"""
+
+from __future__ import annotations
+
+import asyncio
+from dataclasses import dataclass, field
+
+from loguru import logger
+
+from src.models.schemas import MatchConfidence, RetrievedPaper
+from src.retrievers.base import BaseRetriever
+from src.utils.text_similarity import title_similarity
+
+
+# 来源优先级: 数字越小越靠前 (用于同分时 tiebreak 与最终候选排序)
+_SOURCE_PRIORITY = {
+    "openalex": 0,
+    "crossref": 1,
+    "serper": 2,
+    "serpapi": 3,
+    "google_scholar": 4,
+}
+
+
+@dataclass
+class CascadeSearchResult:
+    found: bool = False
+    confidence: MatchConfidence = MatchConfidence.NONE
+    best_match: RetrievedPaper | None = None
+    score: float = 0.0
+    hit_tier: str | None = None  # 命中所在 tier 名 ('academic' / 'serper' / 'scholar')
+    candidates: list[RetrievedPaper] = field(default_factory=list)
+    tiers_run: list[str] = field(default_factory=list)
+
+
+class CascadeRetriever:
+    """级联检索器
+
+    Args:
+        openalex / crossref / serper / scholar:
+            可选传入对应的检索器实例。任何为 None 或 is_configured=False 的会被跳过。
+        title_exact_threshold: 高置信阈值, 命中即停止级联
+        title_fuzzy_threshold: 中置信阈值, 命中即停止级联
+        per_request_timeout: 单次检索器调用超时秒数 (兜底, 防某 tier 卡死)
+    """
+
+    def __init__(
+        self,
+        openalex: BaseRetriever | None = None,
+        crossref: BaseRetriever | None = None,
+        serper: BaseRetriever | None = None,
+        serpapi: BaseRetriever | None = None,
+        scholar=None,  # GoogleScholarRetriever, 不继承 BaseRetriever
+        title_exact_threshold: float = 0.95,
+        title_fuzzy_threshold: float = 0.85,
+        per_request_timeout: float = 30.0,
+    ):
+        self.exact_thresh = title_exact_threshold
+        self.fuzzy_thresh = title_fuzzy_threshold
+        self.per_request_timeout = per_request_timeout
+
+        # ── 构建有效 tier 列表 ───────────────────────
+        # 每个 tier: (tier_name, retrievers, parallel)
+        self.tiers: list[tuple[str, list, bool]] = []
+
+        # Tier 1: 学术 API 并行
+        academic = [
+            r for r in (openalex, crossref)
+            if r is not None and self._is_configured(r)
+        ]
+        if academic:
+            self.tiers.append(("academic", academic, True))
+
+        # Tier 2: Web 搜索, Serper 优先, 二选一 (不同时启用)
+        web_search = None
+        if serper is not None and self._is_configured(serper):
+            web_search = serper
+        elif serpapi is not None and self._is_configured(serpapi):
+            web_search = serpapi
+        if web_search is not None:
+            self.tiers.append(("web_search", [web_search], False))
+
+        # Tier 3: Google Scholar 直爬
+        if scholar is not None and self._is_configured(scholar):
+            self.tiers.append(("scholar", [scholar], False))
+
+        logger.info(
+            f"[Cascade] active tiers: "
+            f"{[(name, [r.source_name for r in rs]) for name, rs, _ in self.tiers]}"
+        )
+
+    @staticmethod
+    def _is_configured(retriever) -> bool:
+        check = getattr(retriever, "is_configured", None)
+        return bool(check()) if callable(check) else True
+
+    async def _safe_search(self, retriever, title, authors, year) -> list[RetrievedPaper]:
+        """单检索器调用, 异常吞掉返回 []"""
+        try:
+            return await asyncio.wait_for(
+                retriever.search(title=title, authors=authors, year=year),
+                timeout=self.per_request_timeout,
+            )
+        except asyncio.TimeoutError:
+            logger.warning(f"[Cascade] {retriever.source_name} timeout")
+            return []
+        except Exception as e:
+            logger.warning(f"[Cascade] {retriever.source_name} error: {e}")
+            return []
+
+    def _confidence_for(self, score: float) -> MatchConfidence:
+        if score >= self.exact_thresh:
+            return MatchConfidence.HIGH
+        if score >= self.fuzzy_thresh:
+            return MatchConfidence.MEDIUM
+        if score >= 0.6:
+            return MatchConfidence.LOW
+        return MatchConfidence.NONE
+
+    def _pick_best(
+        self, title: str, candidates: list[RetrievedPaper]
+    ) -> tuple[RetrievedPaper | None, float]:
+        """从候选中选最佳匹配; 同分时按 _SOURCE_PRIORITY 决出"""
+        best: RetrievedPaper | None = None
+        best_score = 0.0
+        best_priority = 999
+
+        for paper in candidates:
+            if not paper.title or not title:
+                continue
+            score = title_similarity(title, paper.title)
+            prio = _SOURCE_PRIORITY.get(paper.source, 999)
+            if score > best_score or (score == best_score and prio < best_priority):
+                best = paper
+                best_score = score
+                best_priority = prio
+
+        return best, best_score
+
+    async def search(
+        self,
+        title: str = "",
+        authors: list[str] | None = None,
+        year: int | None = None,
+    ) -> CascadeSearchResult:
+        """级联检索一个引用
+
+        Returns: CascadeSearchResult
+        """
+        authors = authors or []
+        result = CascadeSearchResult()
+
+        if not title and not authors:
+            logger.warning("[Cascade] empty query (no title/authors)")
+            return result
+
+        for tier_name, retrievers, parallel in self.tiers:
+            result.tiers_run.append(tier_name)
+            logger.debug(
+                f"[Cascade] tier '{tier_name}' "
+                f"({'parallel' if parallel else 'serial'}, "
+                f"{len(retrievers)} retriever(s))"
+            )
+
+            # ── 执行该 tier ────────────────
+            if parallel:
+                tier_results = await asyncio.gather(
+                    *[self._safe_search(r, title, authors, year) for r in retrievers]
+                )
+            else:
+                tier_results = [
+                    await self._safe_search(retrievers[0], title, authors, year)
+                ]
+
+            tier_papers: list[RetrievedPaper] = []
+            for papers in tier_results:
+                tier_papers.extend(papers)
+
+            result.candidates.extend(tier_papers)
+
+            # ── 评估匹配, 命中阈值即停 ─────
+            best, score = self._pick_best(title, result.candidates)
+            confidence = self._confidence_for(score)
+
+            logger.info(
+                f"[Cascade] tier '{tier_name}' done: "
+                f"+{len(tier_papers)} candidates, best_score={score:.2f}, "
+                f"confidence={confidence.value}"
+            )
+
+            if confidence in (MatchConfidence.HIGH, MatchConfidence.MEDIUM):
+                # 截断候选, 标记命中
+                result.found = True
+                result.confidence = confidence
+                result.best_match = best
+                result.score = score
+                result.hit_tier = tier_name
+                # 候选按来源优先级稳定排序, 限 10 条
+                result.candidates = sorted(
+                    result.candidates,
+                    key=lambda p: _SOURCE_PRIORITY.get(p.source, 999),
+                )[:10]
+                return result
+
+        # ── 全部 tier 跑完仍未命中 ──
+        best, score = self._pick_best(title, result.candidates)
+        result.confidence = self._confidence_for(score)
+        result.best_match = best
+        result.score = score
+        result.found = False
+        result.candidates = sorted(
+            result.candidates,
+            key=lambda p: _SOURCE_PRIORITY.get(p.source, 999),
+        )[:10]
+        return result
+
+    async def close(self):
+        for _, retrievers, _ in self.tiers:
+            for r in retrievers:
+                try:
+                    await r.close()
+                except Exception:
+                    pass

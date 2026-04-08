@@ -1,0 +1,1417 @@
+{
+  "total_citations": 7,
+  "verified": 2,
+  "fabricated": 3,
+  "metadata_error": 0,
+  "misrepresented": 1,
+  "unverifiable": 1,
+  "details": [
+    {
+      "citation_id": "ref_001",
+      "raw_text": "Vaswani et al. (2017) 提出了Transformer架构，奠定了现代LLM的基础。",
+      "verdict": "MISREPRESENTED",
+      "confidence": 0.75,
+      "evidence": "观点夸大: 摘要确实提出了Transformer架构，但未提及'奠定了现代LLM的基础'或'彻底改变了序列建模的范式'这类对历史影响的评价，这些是后验的、超越原文范围的论断。",
+      "suggestion": "引用声明夸大了论文结论, 建议调整表述",
+      "retrieval": {
+        "citation_id": "ref_001",
+        "found": true,
+        "confidence": "HIGH",
+        "best_match": {
+          "source": "semantic_scholar",
+          "title": "Attention is All you Need",
+          "authors": [
+            "Ashish Vaswani",
+            "Noam Shazeer",
+            "Niki Parmar",
+            "Jakob Uszkoreit",
+            "Llion Jones",
+            "Aidan N. Gomez",
+            "Lukasz Kaiser",
+            "I. Polosukhin"
+          ],
+          "year": 2017,
+          "venue": "Neural Information Processing Systems",
+          "doi": null,
+          "abstract": "The dominant sequence transduction models are based on complex recurrent or convolutional neural networks in an encoder-decoder configuration. The best performing models also connect the encoder and decoder through an attention mechanism. We propose a new simple network architecture, the Transformer, based solely on attention mechanisms, dispensing with recurrence and convolutions entirely. Experiments on two machine translation tasks show these models to be superior in quality while being more parallelizable and requiring significantly less time to train. Our model achieves 28.4 BLEU on the WMT 2014 English-to-German translation task, improving over the existing best results, including ensembles by over 2 BLEU. On the WMT 2014 English-to-French translation task, our model establishes a new single-model state-of-the-art BLEU score of 41.8 after training for 3.5 days on eight GPUs, a small fraction of the training costs of the best models from the literature. We show that the Transformer generalizes well to other tasks by applying it successfully to English constituency parsing both with large and limited training data.",
+          "url": "https://www.semanticscholar.org/paper/204e3073870fae3d05bcbc2f6a8e263d9b72e776"
+        },
+        "all_candidates": [
+          {
+            "source": "semantic_scholar",
+            "title": "Attention is All you Need",
+            "authors": [
+              "Ashish Vaswani",
+              "Noam Shazeer",
+              "Niki Parmar",
+              "Jakob Uszkoreit",
+              "Llion Jones",
+              "Aidan N. Gomez",
+              "Lukasz Kaiser",
+              "I. Polosukhin"
+            ],
+            "year": 2017,
+            "venue": "Neural Information Processing Systems",
+            "doi": null,
+            "abstract": "The dominant sequence transduction models are based on complex recurrent or convolutional neural networks in an encoder-decoder configuration. The best performing models also connect the encoder and decoder through an attention mechanism. We propose a new simple network architecture, the Transformer, based solely on attention mechanisms, dispensing with recurrence and convolutions entirely. Experiments on two machine translation tasks show these models to be superior in quality while being more parallelizable and requiring significantly less time to train. Our model achieves 28.4 BLEU on the WMT 2014 English-to-German translation task, improving over the existing best results, including ensembles by over 2 BLEU. On the WMT 2014 English-to-French translation task, our model establishes a new single-model state-of-the-art BLEU score of 41.8 after training for 3.5 days on eight GPUs, a small fraction of the training costs of the best models from the literature. We show that the Transformer generalizes well to other tasks by applying it successfully to English constituency parsing both with large and limited training data.",
+            "url": "https://www.semanticscholar.org/paper/204e3073870fae3d05bcbc2f6a8e263d9b72e776"
+          },
+          {
+            "source": "semantic_scholar",
+            "title": "Attention Is All You Need In Speech Separation",
+            "authors": [
+              "Cem Subakan",
+              "M. Ravanelli",
+              "Samuele Cornell",
+              "Mirko Bronzi",
+              "Jianyuan Zhong"
+            ],
+            "year": 2020,
+            "venue": "IEEE International Conference on Acoustics, Speech, and Signal Processing",
+            "doi": "10.1109/ICASSP39728.2021.9413901",
+            "abstract": "Recurrent Neural Networks (RNNs) have long been the dominant architecture in sequence-to-sequence learning. RNNs, however, are inherently sequential models that do not allow parallelization of their computations. Transformers are emerging as a natural alternative to standard RNNs, replacing recurrent computations with a multi-head attention mechanism.In this paper, we propose the SepFormer, a novel RNN-free Transformer-based neural network for speech separation. The Sep-Former learns short and long-term dependencies with a multi-scale approach that employs transformers. The proposed model achieves state-of-the-art (SOTA) performance on the standard WSJ0-2/3mix datasets. It reaches an SI-SNRi of 22.3 dB on WSJ0-2mix and an SI-SNRi of 19.5 dB on WSJ0-3mix. The SepFormer inherits the parallelization advantages of Transformers and achieves a competitive performance even when downsampling the encoded representation by a factor of 8. It is thus significantly faster and it is less memory-demanding than the latest speech separation systems with comparable performance.",
+            "url": "https://www.semanticscholar.org/paper/51c9d4d2f50ac5707c1f889aa97f08350d549132"
+          },
+          {
+            "source": "semantic_scholar",
+            "title": "Tensor Product Attention Is All You Need",
+            "authors": [
+              "Yifan Zhang",
+              "Yifeng Liu",
+              "Huizhuo Yuan",
+              "Zhen Qin",
+              "Yang Yuan",
+              "Quanquan Gu",
+              "A. C. Yao"
+            ],
+            "year": 2025,
+            "venue": "arXiv.org",
+            "doi": "10.48550/arXiv.2501.06425",
+            "abstract": "Scaling language models to handle longer input sequences typically necessitates large key-value (KV) caches, resulting in substantial memory overhead during inference. In this paper, we propose Tensor Product Attention (TPA), a novel attention mechanism that uses tensor decompositions to represent queries, keys, and values compactly, substantially shrinking the KV cache size at inference time. By factorizing these representations into contextual low-rank components and seamlessly integrating with Rotary Position Embedding (RoPE), TPA achieves improved model quality alongside memory efficiency. Based on TPA, we introduce the Tensor ProducT ATTenTion Transformer (T6), a new model architecture for sequence modeling. Through extensive empirical evaluation on language modeling tasks, we demonstrate that T6 surpasses or matches the performance of standard Transformer baselines including Multi-Head Attention (MHA), Multi-Query Attention (MQA), Grouped-Query Attention (GQA), and Multi-Head Latent Attention (MLA) across various metrics, including perplexity and a range of established evaluation benchmarks. Notably, TPA's memory efficiency and computational efficiency at decoding stage enables processing longer sequences under fixed resource constraints, addressing a critical scalability challenge in modern language models. Project Page: https://github.com/tensorgi/TPA.",
+            "url": "https://www.semanticscholar.org/paper/b4f9e9130b29754c526c454ab54043b49bdd387d"
+          },
+          {
+            "source": "semantic_scholar",
+            "title": "Channel Attention Is All You Need for Video Frame Interpolation",
+            "authors": [
+              "Myungsub Choi",
+              "Heewon Kim",
+              "Bohyung Han",
+              "N. Xu",
+              "Kyoung Mu Lee"
+            ],
+            "year": 2020,
+            "venue": "AAAI Conference on Artificial Intelligence",
+            "doi": "10.1609/AAAI.V34I07.6693",
+            "abstract": "Prevailing video frame interpolation techniques rely heavily on optical flow estimation and require additional model complexity and computational cost; it is also susceptible to error propagation in challenging scenarios with large motion and heavy occlusion. To alleviate the limitation, we propose a simple but effective deep neural network for video frame interpolation, which is end-to-end trainable and is free from a motion estimation network component. Our algorithm employs a special feature reshaping operation, referred to as PixelShuffle, with a channel attention, which replaces the optical flow computation module. The main idea behind the design is to distribute the information in a feature map into multiple channels and extract motion information by attending the channels for pixel-level frame synthesis. The model given by this principle turns out to be effective in the presence of challenging motion and occlusion. We construct a comprehensive evaluation benchmark and demonstrate that the proposed approach achieves outstanding performance compared to the existing models with a component for optical flow computation.",
+            "url": "https://www.semanticscholar.org/paper/bb4a9650ca3946c70a7e92007cc61dc0dfd75522"
+          },
+          {
+            "source": "semantic_scholar",
+            "title": "[CLS] Attention is All You Need for Training-Free Visual Token Pruning: Make VLM Inference Faster",
+            "authors": [
+              "Qizhe Zhang",
+              "Aosong Cheng",
+              "Ming Lu",
+              "Zhiyong Zhuo",
+              "Minqi Wang",
+              "Jiajun Cao",
+              "Shaobo Guo",
+              "Qi She",
+              "Shanghang Zhang"
+            ],
+            "year": 2024,
+            "venue": "arXiv.org",
+            "doi": "10.48550/arXiv.2412.01818",
+            "abstract": null,
+            "url": "https://www.semanticscholar.org/paper/b02159650df9813f25db4afd4f094e53bccd526c"
+          }
+        ]
+      },
+      "metadata": {
+        "citation_id": "ref_001",
+        "fields": [
+          {
+            "field": "title",
+            "claimed": "Attention Is All You Need",
+            "actual": "Attention is All you Need",
+            "status": "MATCH",
+            "similarity": 1.0
+          },
+          {
+            "field": "authors",
+            "claimed": "Vaswani, et al.",
+            "actual": "Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones, Aidan N. Gomez, Lukasz Kaiser, I. Polosukhin",
+            "status": "MATCH",
+            "similarity": 0.8
+          },
+          {
+            "field": "year",
+            "claimed": "2017",
+            "actual": "2017",
+            "status": "MATCH",
+            "similarity": 1.0
+          },
+          {
+            "field": "venue",
+            "claimed": "NeurIPS",
+            "actual": "Neural Information Processing Systems",
+            "status": "MATCH",
+            "similarity": 1.0
+          }
+        ],
+        "mismatch_count": 0,
+        "has_major_mismatch": false
+      },
+      "content_check": {
+        "citation_id": "ref_001",
+        "consistency": "EXAGGERATED",
+        "reasoning": "摘要确实提出了Transformer架构，但未提及'奠定了现代LLM的基础'或'彻底改变了序列建模的范式'这类对历史影响的评价，这些是后验的、超越原文范围的论断。",
+        "claim": "提出了Transformer架构，奠定了现代LLM的基础，其自注意力机制彻底改变了序列建模的范式。",
+        "abstract": "The dominant sequence transduction models are based on complex recurrent or convolutional neural networks in an encoder-decoder configuration. The best performing models also connect the encoder and decoder through an attention mechanism. We propose a new simple network architecture, the Transformer, based solely on attention mechanisms, dispensing with recurrence and convolutions entirely. Experiments on two machine translation tasks show these models to be superior in quality while being more parallelizable and requiring significantly less time to train. Our model achieves 28.4 BLEU on the WMT 2014 English-to-German translation task, improving over the existing best results, including ensembles by over 2 BLEU. On the WMT 2014 English-to-French translation task, our model establishes a new single-model state-of-the-art BLEU score of 41.8 after training for 3.5 days on eight GPUs, a small fraction of the training costs of the best models from the literature. We show that the Transformer generalizes well to other tasks by applying it successfully to English constituency parsing both with large and limited training data."
+      }
+    },
+    {
+      "citation_id": "ref_002",
+      "raw_text": "Ji et al. (2023) 在其综述\"Survey of Hallucination in Natural Language Generation\"中系统性地分析了幻觉的类型和成因，指出幻觉可分为内在幻觉和外在幻觉两大类。",
+      "verdict": "UNVERIFIABLE",
+      "confidence": 0.5,
+      "evidence": "仅凭摘要无法验证引用声明的准确性",
+      "suggestion": "建议人工核实原文全文",
+      "retrieval": {
+        "citation_id": "ref_002",
+        "found": true,
+        "confidence": "HIGH",
+        "best_match": {
+          "source": "openalex",
+          "title": "Survey of Hallucination in Natural Language Generation",
+          "authors": [
+            "Ziwei Ji",
+            "Nayeon Lee",
+            "Rita Frieske",
+            "Tiezheng Yu",
+            "Dan Su",
+            "Yan Xu",
+            "Etsuko Ishii",
+            "Ye Jin Bang",
+            "Andrea Madotto",
+            "Pascale Fung"
+          ],
+          "year": 2022,
+          "venue": "ACM Computing Surveys",
+          "doi": "10.1145/3571730",
+          "abstract": "Natural Language Generation (NLG) has improved exponentially in recent years thanks to the development of sequence-to-sequence deep learning technologies such as Transformer-based language models. This advancement has led to more fluent and coherent NLG, leading to improved development in downstream tasks such as abstractive summarization, dialogue generation, and data-to-text generation. However, it is also apparent that deep learning based generation is prone to hallucinate unintended text, which degrades the system performance and fails to meet user expectations in many real-world scenarios. To address this issue, many studies have been presented in measuring and mitigating hallucinated texts, but these have never been reviewed in a comprehensive manner before. In this survey, we thus provide a broad overview of the research progress and challenges in the hallucination problem in NLG. The survey is organized into two parts: (1) a general overview of metrics, mitigation methods, and future directions, and (2) an overview of task-specific research progress on hallucinations in the following downstream tasks, namely abstractive summarization, dialogue generation, generative question answering, data-to-text generation, and machine translation. This survey serves to facilitate collaborative efforts among researchers in tackling the challenge of hallucinated texts in NLG.",
+          "url": "https://openalex.org/W4309674289"
+        },
+        "all_candidates": [
+          {
+            "source": "openalex",
+            "title": "Survey of Hallucination in Natural Language Generation",
+            "authors": [
+              "Ziwei Ji",
+              "Nayeon Lee",
+              "Rita Frieske",
+              "Tiezheng Yu",
+              "Dan Su",
+              "Yan Xu",
+              "Etsuko Ishii",
+              "Ye Jin Bang",
+              "Andrea Madotto",
+              "Pascale Fung"
+            ],
+            "year": 2022,
+            "venue": "ACM Computing Surveys",
+            "doi": "10.1145/3571730",
+            "abstract": "Natural Language Generation (NLG) has improved exponentially in recent years thanks to the development of sequence-to-sequence deep learning technologies such as Transformer-based language models. This advancement has led to more fluent and coherent NLG, leading to improved development in downstream tasks such as abstractive summarization, dialogue generation, and data-to-text generation. However, it is also apparent that deep learning based generation is prone to hallucinate unintended text, which degrades the system performance and fails to meet user expectations in many real-world scenarios. To address this issue, many studies have been presented in measuring and mitigating hallucinated texts, but these have never been reviewed in a comprehensive manner before. In this survey, we thus provide a broad overview of the research progress and challenges in the hallucination problem in NLG. The survey is organized into two parts: (1) a general overview of metrics, mitigation methods, and future directions, and (2) an overview of task-specific research progress on hallucinations in the following downstream tasks, namely abstractive summarization, dialogue generation, generative question answering, data-to-text generation, and machine translation. This survey serves to facilitate collaborative efforts among researchers in tackling the challenge of hallucinated texts in NLG.",
+            "url": "https://openalex.org/W4309674289"
+          },
+          {
+            "source": "openalex",
+            "title": "Survey of Hallucination in Natural Language Generation",
+            "authors": [
+              "Ziwei Ji",
+              "Nayeon Lee",
+              "Rita Frieske",
+              "Tiezheng Yu",
+              "Dan Su",
+              "Yan Xu",
+              "Etsuko Ishii",
+              "Yejin Bang",
+              "Andrea Madotto",
+              "Pascale Fung",
+              "Chan, Ho Shu",
+              "Madotto, Andrea",
+              "Fung, Pascale"
+            ],
+            "year": 2022,
+            "venue": "arXiv (Cornell University)",
+            "doi": "10.48550/arxiv.2202.03629",
+            "abstract": "Natural Language Generation (NLG) has improved exponentially in recent years thanks to the development of sequence-to-sequence deep learning technologies such as Transformer-based language models. This advancement has led to more fluent and coherent NLG, leading to improved development in downstream tasks such as abstractive summarization, dialogue generation and data-to-text generation. However, it is also apparent that deep learning based generation is prone to hallucinate unintended text, which degrades the system performance and fails to meet user expectations in many real-world scenarios. To address this issue, many studies have been presented in measuring and mitigating hallucinated texts, but these have never been reviewed in a comprehensive manner before. In this survey, we thus provide a broad overview of the research progress and challenges in the hallucination problem in NLG. The survey is organized into two parts: (1) a general overview of metrics, mitigation methods, and future directions; (2) an overview of task-specific research progress on hallucinations in the following downstream tasks, namely abstractive summarization, dialogue generation, generative question answering, data-to-text generation, machine translation, and visual-language generation; and (3) hallucinations in large language models (LLMs). This survey serves to facilitate collaborative efforts among researchers in tackling the challenge of hallucinated texts in NLG.",
+            "url": "https://openalex.org/W4221163727"
+          },
+          {
+            "source": "openalex",
+            "title": "A Survey of Automatic Hallucination Evaluation on Natural Language Generation",
+            "authors": [
+              "Siya Qi",
+              "Yulan He",
+              "Zheng Yuan",
+              "Yuan, Zheng"
+            ],
+            "year": 2024,
+            "venue": "arXiv (Cornell University)",
+            "doi": "10.48550/arxiv.2404.12041",
+            "abstract": "The rapid advancement of Large Language Models (LLMs) has brought a pressing challenge: how to reliably assess hallucinations to guarantee model trustworthiness. Although Automatic Hallucination Evaluation (AHE) has become an indispensable component of this effort, the field remains fragmented in its methodologies, limiting both conceptual clarity and practical progress. This survey addresses this critical gap through a systematic analysis of 105 evaluation methods, revealing that 77.1% specifically target LLMs, a paradigm shift that demands new evaluation frameworks. We formulate a structured framework to organize the field, based on a survey of foundational datasets and benchmarks and a taxonomy of evaluation methodologies, which together systematically document the evolution from pre-LLM to post-LLM approaches. Beyond taxonomical organization, we identify fundamental limitations in current approaches and their implications for real-world deployment. To guide future research, we delineate key challenges and propose strategic directions, including enhanced interpretability mechanisms and integration of application-specific evaluation criteria, ultimately providing a roadmap for developing more robust and practical hallucination evaluation systems.",
+            "url": "https://openalex.org/W4394973527"
+          },
+          {
+            "source": "openalex",
+            "title": "Artificial Hallucinations in ChatGPT: Implications in Scientific Writing",
+            "authors": [
+              "Hussam Alkaissi",
+              "Samy I. McFarlane"
+            ],
+            "year": 2023,
+            "venue": "Cureus",
+            "doi": "10.7759/cureus.35179",
+            "abstract": "While still in its infancy, ChatGPT (Generative Pretrained Transformer), introduced in November 2022, is bound to hugely impact many industries, including healthcare, medical education, biomedical research, and scientific writing. Implications of ChatGPT, that new chatbot introduced by OpenAI on academic writing, is largely unknown. In response to the Journal of Medical Science (Cureus) Turing Test - call for case reports written with the assistance of ChatGPT, we present two cases one of homocystinuria-associated osteoporosis, and the other is on late-onset Pompe disease (LOPD), a rare metabolic disorder. We tested ChatGPT to write about the pathogenesis of these conditions. We documented the positive, negative, and rather troubling aspects of our newly introduced chatbot's performance.",
+            "url": "https://openalex.org/W4321351832"
+          },
+          {
+            "source": "openalex",
+            "title": "Deep Learning Approaches on Image Captioning: A Review",
+            "authors": [
+              "Taraneh Ghandi",
+              "Hamid Reza Pourreza",
+              "Hamidreza Mahyar"
+            ],
+            "year": 2023,
+            "venue": "ACM Computing Surveys",
+            "doi": "10.1145/3617592",
+            "abstract": "Image captioning is a research area of immense importance, aiming to generate natural language descriptions for visual content in the form of still images. The advent of deep learning and more recently vision-language pre-training techniques has revolutionized the field, leading to more sophisticated methods and improved performance. In this survey article, we provide a structured review of deep learning methods in image captioning by presenting a comprehensive taxonomy and discussing each method category in detail. Additionally, we examine the datasets commonly employed in image captioning research, as well as the evaluation metrics used to assess the performance of different captioning models. We address the challenges faced in this field by emphasizing issues such as object hallucination, missing context, illumination conditions, contextual understanding, and referring expressions. We rank different deep learning methods’ performance according to widely used evaluation metrics, giving insight into the current state-of-the-art. Furthermore, we identify several potential future directions for research in this area, which include tackling the information misalignment problem between image and text modalities, mitigating dataset bias, incorporating vision-language pre-training methods to enhance caption generation, and developing improved evaluation tools to accurately measure the quality of image captions.",
+            "url": "https://openalex.org/W4386162736"
+          }
+        ]
+      },
+      "metadata": {
+        "citation_id": "ref_002",
+        "fields": [
+          {
+            "field": "title",
+            "claimed": "Survey of Hallucination in Natural Language Generation",
+            "actual": "Survey of Hallucination in Natural Language Generation",
+            "status": "MATCH",
+            "similarity": 1.0
+          },
+          {
+            "field": "authors",
+            "claimed": "Ji, et al.",
+            "actual": "Ziwei Ji, Nayeon Lee, Rita Frieske, Tiezheng Yu, Dan Su, Yan Xu, Etsuko Ishii, Ye Jin Bang, Andrea Madotto, Pascale Fung",
+            "status": "MATCH",
+            "similarity": 0.8
+          },
+          {
+            "field": "year",
+            "claimed": "2023",
+            "actual": "2022",
+            "status": "PARTIAL",
+            "similarity": 0.8
+          }
+        ],
+        "mismatch_count": 0,
+        "has_major_mismatch": false
+      },
+      "content_check": {
+        "citation_id": "ref_002",
+        "consistency": "UNVERIFIABLE",
+        "reasoning": "摘要中未提及幻觉的具体类型分类（如内在幻觉和外在幻觉），仅凭摘要无法验证该声明是否忠实于论文全文内容。",
+        "claim": "系统性地分析了幻觉的类型和成因，指出幻觉可分为内在幻觉和外在幻觉两大类。",
+        "abstract": "Natural Language Generation (NLG) has improved exponentially in recent years thanks to the development of sequence-to-sequence deep learning technologies such as Transformer-based language models. This advancement has led to more fluent and coherent NLG, leading to improved development in downstream tasks such as abstractive summarization, dialogue generation, and data-to-text generation. However, it is also apparent that deep learning based generation is prone to hallucinate unintended text, which degrades the system performance and fails to meet user expectations in many real-world scenarios. To address this issue, many studies have been presented in measuring and mitigating hallucinated texts, but these have never been reviewed in a comprehensive manner before. In this survey, we thus provide a broad overview of the research progress and challenges in the hallucination problem in NLG. The survey is organized into two parts: (1) a general overview of metrics, mitigation methods, and future directions, and (2) an overview of task-specific research progress on hallucinations in the following downstream tasks, namely abstractive summarization, dialogue generation, generative question answering, data-to-text generation, and machine translation. This survey serves to facilitate collaborative efforts among researchers in tackling the challenge of hallucinated texts in NLG."
+      }
+    },
+    {
+      "citation_id": "ref_003",
+      "raw_text": "Min et al. (2023) 提出了FActScore方法，通过将长文本分解为原子事实并逐一验证的方式来评估生成文本的事实精度。",
+      "verdict": "FABRICATED",
+      "confidence": 0.9,
+      "evidence": "在学术数据源中检索到 7 条候选, 但标题匹配度均低于阈值, 疑似捏造",
+      "suggestion": "建议删除该引用或替换为真实文献",
+      "retrieval": {
+        "citation_id": "ref_003",
+        "found": false,
+        "confidence": "NONE",
+        "best_match": null,
+        "all_candidates": [
+          {
+            "source": "openalex",
+            "title": "FActScore: Fine-grained Atomic Evaluation of Factual Precision in Long Form Text Generation",
+            "authors": [
+              "Sewon Min",
+              "Kalpesh Krishna",
+              "Xinxi Lyu",
+              "Mike Lewis",
+              "Wen-tau Yih",
+              "Pang Wei Koh",
+              "Mohit Iyyer",
+              "Luke Zettlemoyer",
+              "Hannaneh Hajishirzi"
+            ],
+            "year": 2023,
+            "venue": null,
+            "doi": "10.18653/v1/2023.emnlp-main.741",
+            "abstract": "Sewon Min, Kalpesh Krishna, Xinxi Lyu, Mike Lewis, Wen-tau Yih, Pang Koh, Mohit Iyyer, Luke Zettlemoyer, Hannaneh Hajishirzi. Proceedings of the 2023 Conference on Empirical Methods in Natural Language Processing. 2023.",
+            "url": "https://openalex.org/W4389519598"
+          },
+          {
+            "source": "openalex",
+            "title": "FActScore: Fine-grained Atomic Evaluation of Factual Precision in Long Form Text Generation",
+            "authors": [
+              "Sewon Min",
+              "Kalpesh Krishna",
+              "Xinxi Lyu",
+              "Mike Lewis",
+              "Wen-tau Yih",
+              "Pang Wei Koh",
+              "Mohit Iyyer",
+              "Luke Zettlemoyer",
+              "Hannaneh Hajishirzi"
+            ],
+            "year": 2023,
+            "venue": "arXiv (Cornell University)",
+            "doi": "10.48550/arxiv.2305.14251",
+            "abstract": "Evaluating the factuality of long-form text generated by large language models (LMs) is non-trivial because (1) generations often contain a mixture of supported and unsupported pieces of information, making binary judgments of quality inadequate, and (2) human evaluation is time-consuming and costly. In this paper, we introduce FACTSCORE, a new evaluation that breaks a generation into a series of atomic facts and computes the percentage of atomic facts supported by a reliable knowledge source. We conduct an extensive human evaluation to obtain FACTSCOREs of people biographies generated by several state-of-the-art commercial LMs -- InstructGPT, ChatGPT, and the retrieval-augmented PerplexityAI -- and report new analysis demonstrating the need for such a fine-grained score (e.g., ChatGPT only achieves 58%). Since human evaluation is costly, we also introduce an automated model that estimates FACTSCORE using retrieval and a strong language model, with less than a 2% error rate. Finally, we use this automated metric to evaluate 6,500 generations from a new set of 13 recent LMs that would have cost $26K if evaluated by humans, with various findings: GPT-4 and ChatGPT are more factual than public models, and Vicuna and Alpaca are some of the best public models. FACTSCORE is available for public use via `pip install factscore`.",
+            "url": "https://openalex.org/W4378509270"
+          },
+          {
+            "source": "openalex",
+            "title": "An Analysis of Multilingual FActScore",
+            "authors": [
+              "V. Kim",
+              "Michael Krumdick",
+              "Varshini Reddy",
+              "Franck Dernoncourt",
+              "Viet Dac Lai"
+            ],
+            "year": 2024,
+            "venue": null,
+            "doi": "10.18653/v1/2024.emnlp-main.247",
+            "abstract": "FActScore has gained popularity as a metric to estimate the factuality of long-form texts generated by Large Language Models (LLMs) in English.However, there has not been any work in studying the behavior of FActScore in other languages.This paper studies the limitations of each component in the fourcomponent pipeline of FActScore in the multilingual setting.We introduce a new dataset for FActScore on texts generated by strong multilingual LLMs.Our evaluation shows that LLMs exhibit distinct behaviors in both fact extraction and fact scoring tasks.No LLM produces consistent and reliable FActScore across languages with varying levels of resources.We also find that the knowledge source plays an important role in the quality of the estimated FActScore.Using Wikipedia as the knowledge source may hinder the true FActScore of longform text due to its limited coverage in mediumand low-resource languages.We also incorporate three mitigations to our knowledge source that ultimately improve FActScore estimation across all languages.",
+            "url": "https://openalex.org/W4404783350"
+          },
+          {
+            "source": "openalex",
+            "title": "Multi-FAct: Assessing Factuality of Multilingual LLMs using FActScore",
+            "authors": [
+              "Sheikh Shafayat",
+              "Eunsu Kim",
+              "Juhyun Oh",
+              "Alice Oh"
+            ],
+            "year": 2024,
+            "venue": "arXiv (Cornell University)",
+            "doi": "10.48550/arxiv.2402.18045",
+            "abstract": "Evaluating the factuality of long-form large language model (LLM)-generated text is an important challenge. Recently there has been a surge of interest in factuality evaluation for English, but little is known about the factuality evaluation of multilingual LLMs, specially when it comes to long-form generation. %This paper systematically evaluates multilingual LLMs' factual accuracy across languages and geographic regions. We introduce a simple pipeline for multilingual factuality evaluation, by applying FActScore (Min et al., 2023) for diverse languages. In addition to evaluating multilingual factual generation, we evaluate the factual accuracy of long-form text generation in topics that reflect regional diversity. We also examine the feasibility of running the FActScore pipeline using non-English Wikipedia and provide comprehensive guidelines on multilingual factual evaluation for regionally diverse topics.",
+            "url": "https://openalex.org/W4392429443"
+          },
+          {
+            "source": "openalex",
+            "title": "Retrieval-Augmented Generation (RAG) in Healthcare: A Comprehensive Review",
+            "authors": [
+              "Fnu Neha",
+              "Deepshikha Bhati",
+              "Deepak Kumar Shukla"
+            ],
+            "year": 2025,
+            "venue": "AI",
+            "doi": "10.3390/ai6090226",
+            "abstract": "Retrieval-Augmented Generation (RAG) enhances large language models (LLMs) by integrating external knowledge retrieval to improve factual consistency and reduce hallucinations. Despite growing interest, its use in healthcare remains fragmented. This paper presents a Systematic Literature Review (SLR) following PRISMA guidelines, synthesizing 30 peer-reviewed studies on RAG in clinical domains, focusing on three of its most prevalent and promising applications in diagnostic support, electronic health record (EHR) summarization, and medical question answering. We synthesize the existing architectural variants (naïve, advanced, and modular) and examine their deployment across these applications. Persistent challenges are identified, including retrieval noise (irrelevant or low-quality retrieved information), domain shift (performance degradation when models are applied to data distributions different from their training set), generation latency, and limited explainability. Evaluation strategies are compared using both standard metrics and clinical-specific metrics, FactScore, RadGraph-F1, and MED-F1, which are particularly critical for ensuring factual accuracy, medical validity, and clinical relevance. This synthesis offers a domain-focused perspective to guide researchers, healthcare providers, and policymakers in developing reliable, interpretable, and clinically aligned AI systems, laying the groundwork for future innovation in RAG-based healthcare solutions.",
+            "url": "https://openalex.org/W4414128336"
+          },
+          {
+            "source": "crossref",
+            "title": "An Analysis of Multilingual FActScore",
+            "authors": [
+              "Vu Trong Kim",
+              "Michael Krumdick",
+              "Varshini Reddy",
+              "Franck Dernoncourt",
+              "Viet Dac Lai"
+            ],
+            "year": 2024,
+            "venue": "Proceedings of the 2024 Conference on Empirical Methods in Natural Language Processing",
+            "doi": "10.18653/v1/2024.emnlp-main.247",
+            "abstract": null,
+            "url": "https://doi.org/10.18653/v1/2024.emnlp-main.247"
+          },
+          {
+            "source": "crossref",
+            "title": "FActScore: Fine-grained Atomic Evaluation of Factual Precision in Long Form Text Generation",
+            "authors": [
+              "Sewon Min",
+              "Kalpesh Krishna",
+              "Xinxi Lyu",
+              "Mike Lewis",
+              "Wen-tau Yih",
+              "Pang Koh",
+              "Mohit Iyyer",
+              "Luke Zettlemoyer",
+              "Hannaneh Hajishirzi"
+            ],
+            "year": 2023,
+            "venue": "Proceedings of the 2023 Conference on Empirical Methods in Natural Language Processing",
+            "doi": "10.18653/v1/2023.emnlp-main.741",
+            "abstract": null,
+            "url": "https://doi.org/10.18653/v1/2023.emnlp-main.741"
+          }
+        ]
+      },
+      "metadata": {
+        "citation_id": "ref_003",
+        "fields": [],
+        "mismatch_count": 0,
+        "has_major_mismatch": false
+      },
+      "content_check": {
+        "citation_id": "ref_003",
+        "consistency": "UNVERIFIABLE",
+        "reasoning": "论文未检索到, 无法进行内容核查",
+        "claim": "",
+        "abstract": ""
+      }
+    },
+    {
+      "citation_id": "ref_004",
+      "raw_text": "Lewis et al. (2020) 提出了检索增强生成（RAG）框架，通过在生成过程中引入外部知识来提高事实准确性。",
+      "verdict": "VERIFIED",
+      "confidence": 0.9,
+      "evidence": "论文存在, 元数据一致, 内容核查通过",
+      "suggestion": "",
+      "retrieval": {
+        "citation_id": "ref_004",
+        "found": true,
+        "confidence": "HIGH",
+        "best_match": {
+          "source": "openalex",
+          "title": "Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks",
+          "authors": [
+            "Patrick Lewis",
+            "Ethan Perez",
+            "Aleksandra Piktus",
+            "Fabio Petroni",
+            "Vladimir Karpukhin",
+            "Naman Goyal",
+            "Heinrich Küttler",
+            "Mike Lewis",
+            "Wen-tau Yih",
+            "Tim Rocktäschel",
+            "Sebastian Riedel",
+            "Douwe Kiela"
+          ],
+          "year": 2020,
+          "venue": "UCL Discovery (University College London)",
+          "doi": null,
+          "abstract": "Large pre-trained language models have been shown to store factual knowledge in their parameters, and achieve state-of-the-art results when fine-tuned on downstream NLP tasks. However, their ability to access and precisely manipulate knowledge is still limited, and hence on knowledge-intensive tasks, their performance lags behind task-specific architectures. Additionally, providing provenance for their decisions and updating their world knowledge remain open research problems. Pre-trained models with a differentiable access mechanism to explicit non-parametric memory can overcome this issue, but have so far been only investigated for extractive downstream tasks. We explore a general-purpose fine-tuning recipe for retrieval-augmented generation (RAG) -- models which combine pre-trained parametric and non-parametric memory for language generation. We introduce RAG models where the parametric memory is a pre-trained seq2seq model and the non-parametric memory is a dense vector index of Wikipedia, accessed with a pre-trained neural retriever. We compare two RAG formulations, one which conditions on the same retrieved passages across the whole generated sequence, the other can use different passages per token. We fine-tune and evaluate our models on a wide range of knowledge-intensive NLP tasks and set the state-of-the-art on three open domain QA tasks, outperforming parametric seq2seq models and task-specific retrieve-and-extract architectures. For language generation tasks, we find that RAG models generate more specific, diverse and factual language than a state-of-the-art parametric-only seq2seq baseline.",
+          "url": "https://openalex.org/W3098425262"
+        },
+        "all_candidates": [
+          {
+            "source": "semantic_scholar",
+            "title": "Human mimic voice cortical processing (Talkington et al., 2020)",
+            "authors": [
+              "William J. Talkington",
+              "Jeremy J. Donai",
+              "A. Kadner",
+              "Molly L. Layne",
+              "Andrew Forino",
+              "S. Wen",
+              "Si Gao",
+              "Margeaux M. Gray",
+              "Alexandria J Ashraf",
+              "Gabriela N. Valencia",
+              "Brandon D. Smith",
+              "Stephanie K. Khoo",
+              "Stephen J. Gray",
+              "N. Lass",
+              "J. Brefczynski-Lewis",
+              "S. Engdahl",
+              "David W. Graham",
+              "C. Frum",
+              "JamesW. Lewis"
+            ],
+            "year": 2020,
+            "venue": "",
+            "doi": "10.23641/ASHA.12903839.V1",
+            "abstract": null,
+            "url": "https://www.semanticscholar.org/paper/7a793de7844197fa07290cd0d84d83a02c211e0f"
+          },
+          {
+            "source": "semantic_scholar",
+            "title": "Acquired CAPD in service members and veterans (Tepe et al., 2020)",
+            "authors": [
+              "Victoria Tepe",
+              "Melissa A Papesh",
+              "Shoshannah Russell",
+              "M. Lewis",
+              "Nina J. Pryor",
+              "Lisa Guillory"
+            ],
+            "year": 2020,
+            "venue": "",
+            "doi": "10.23641/ASHA.12071232.V1",
+            "abstract": null,
+            "url": "https://www.semanticscholar.org/paper/553b79276e3e3aa76a864d862dbfa1ffd64346fd"
+          },
+          {
+            "source": "semantic_scholar",
+            "title": "Commentary on Ferguson, et al., “Impact of Non-pharmaceutical Interventions (NPIs) to Reduce COVID-19 Mortality and Healthcare Demand”",
+            "authors": [
+              "S. Eubank",
+              "I. Eckstrand",
+              "B. Lewis",
+              "S. Venkatramanan",
+              "M. Marathe",
+              "C. Barrett"
+            ],
+            "year": 2020,
+            "venue": "Bulletin of Mathematical Biology",
+            "doi": "10.1007/s11538-020-00726-x",
+            "abstract": "A recent manuscript (Ferguson et al. in Impact of non-pharmaceutical interventions (NPIs) to reduce COVID-19 mortality and healthcare demand, Imperial College COVID-19 Response Team, London, 2020. https://www.imperial.ac.uk/media/imperial-college/medicine/sph/ide/gida-fellowships/Imperial-College-COVID19-NPI-modelling-16-03-2020.pdf) from Imperial College modelers examining ways to mitigate and control the spread of COVID-19 has attracted much attention. In this paper, we will discuss a coarse taxonomy of models and explore the context and significance of the Imperial College and other models in contributing to the analysis of COVID-19.",
+            "url": "https://www.semanticscholar.org/paper/b1ce0a1cd9cb416b95a2ca2bd955b6a3be8592b0"
+          },
+          {
+            "source": "semantic_scholar",
+            "title": "2020 ESC Guidelines for the management of acute coronary syndromes in patients presenting without persistent ST-segment elevation.",
+            "authors": [
+              "J. Collet",
+              "H. Thiele",
+              "E. Barbato",
+              "O. Barthelemy",
+              "J. Bauersachs",
+              "Deepak L. Bhatt",
+              "P. Dendale",
+              "M. Dorobanțu",
+              "T. Edvardsen",
+              "T. Folliguet",
+              "C. Gale",
+              "M. Gilard",
+              "A. Jobs",
+              "P. Jüni",
+              "E. Lambrinou",
+              "B. Lewis",
+              "J. Mehilli",
+              "E. Meliga",
+              "B. Merkely",
+              "C. Mueller",
+              "M. Roffi",
+              "F. Rutten",
+              "D. Sibbing",
+              "G. Siontis"
+            ],
+            "year": 2020,
+            "venue": "European Heart Journal",
+            "doi": "10.1093/eurheartj/ehaa575",
+            "abstract": "Authors/Task Force Members: Jean-Philippe Collet * (Chairperson) (France), Holger Thiele * (Chairperson) (Germany), Emanuele Barbato (Italy), Olivier Barthélémy (France), Johann Bauersachs (Germany), Deepak L. Bhatt (United States of America), Paul Dendale (Belgium), Maria Dorobantu (Romania), Thor Edvardsen (Norway), Thierry Folliguet (France), Chris P. Gale (United Kingdom), Martine Gilard (France), Alexander Jobs (Germany), Peter Jüni (Canada), Ekaterini Lambrinou (Cyprus), Basil S. Lewis (Israel), Julinda Mehilli (Germany), Emanuele Meliga (Italy), Béla Merkely (Hungary), Christian Mueller (Switzerland), Marco Roffi (Switzerland), Frans H. Rutten (Netherlands), Dirk Sibbing (Germany), George C.M. Siontis (Switzerland)",
+            "url": "https://www.semanticscholar.org/paper/4c6ee5300c9560cea529f037593d933e0b3422a8"
+          },
+          {
+            "source": "semantic_scholar",
+            "title": "Multilingual Denoising Pre-training for Neural Machine Translation",
+            "authors": [
+              "Yinhan Liu",
+              "Jiatao Gu",
+              "Naman Goyal",
+              "Xian Li",
+              "Sergey Edunov",
+              "Marjan Ghazvininejad",
+              "M. Lewis",
+              "Luke Zettlemoyer"
+            ],
+            "year": 2020,
+            "venue": "Transactions of the Association for Computational Linguistics",
+            "doi": "10.1162/tacl_a_00343",
+            "abstract": "Abstract This paper demonstrates that multilingual denoising pre-training produces significant performance gains across a wide variety of machine translation (MT) tasks. We present mBART—a sequence-to-sequence denoising auto-encoder pre-trained on large-scale monolingual corpora in many languages using the BART objective (Lewis et al., 2019). mBART is the first method for pre-training a complete sequence-to-sequence model by denoising full texts in multiple languages, whereas previous approaches have focused only on the encoder, decoder, or reconstructing parts of the text. Pre-training a complete model allows it to be directly fine-tuned for supervised (both sentence-level and document-level) and unsupervised machine translation, with no task- specific modifications. We demonstrate that adding mBART initialization produces performance gains in all but the highest-resource settings, including up to 12 BLEU points for low resource MT and over 5 BLEU points for many document-level and unsupervised models. We also show that it enables transfer to language pairs with no bi-text or that were not in the pre-training corpus, and present extensive analysis of which factors contribute the most to effective pre-training.1",
+            "url": "https://www.semanticscholar.org/paper/495da6f19baa09c6db3697d839e10432cdc25934"
+          },
+          {
+            "source": "openalex",
+            "title": "Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks",
+            "authors": [
+              "Patrick Lewis",
+              "Ethan Perez",
+              "Aleksandra Piktus",
+              "Fabio Petroni",
+              "Vladimir Karpukhin",
+              "Naman Goyal",
+              "Heinrich Küttler",
+              "Mike Lewis",
+              "Wen-tau Yih",
+              "Tim Rocktäschel",
+              "Sebastian Riedel",
+              "Douwe Kiela"
+            ],
+            "year": 2020,
+            "venue": "UCL Discovery (University College London)",
+            "doi": null,
+            "abstract": "Large pre-trained language models have been shown to store factual knowledge in their parameters, and achieve state-of-the-art results when fine-tuned on downstream NLP tasks. However, their ability to access and precisely manipulate knowledge is still limited, and hence on knowledge-intensive tasks, their performance lags behind task-specific architectures. Additionally, providing provenance for their decisions and updating their world knowledge remain open research problems. Pre-trained models with a differentiable access mechanism to explicit non-parametric memory can overcome this issue, but have so far been only investigated for extractive downstream tasks. We explore a general-purpose fine-tuning recipe for retrieval-augmented generation (RAG) -- models which combine pre-trained parametric and non-parametric memory for language generation. We introduce RAG models where the parametric memory is a pre-trained seq2seq model and the non-parametric memory is a dense vector index of Wikipedia, accessed with a pre-trained neural retriever. We compare two RAG formulations, one which conditions on the same retrieved passages across the whole generated sequence, the other can use different passages per token. We fine-tune and evaluate our models on a wide range of knowledge-intensive NLP tasks and set the state-of-the-art on three open domain QA tasks, outperforming parametric seq2seq models and task-specific retrieve-and-extract architectures. For language generation tasks, we find that RAG models generate more specific, diverse and factual language than a state-of-the-art parametric-only seq2seq baseline.",
+            "url": "https://openalex.org/W3098425262"
+          },
+          {
+            "source": "openalex",
+            "title": "Retrieval-augmented Generation across Heterogeneous Knowledge",
+            "authors": [
+              "Wenhao Yu"
+            ],
+            "year": 2022,
+            "venue": null,
+            "doi": "10.18653/v1/2022.naacl-srw.7",
+            "abstract": "Retrieval-augmented generation (RAG) methods have been receiving increasing attention from the NLP community and achieved stateof-the-art performance on many NLP downstream tasks. Compared with conventional pretrained generation models, RAG methods have remarkable advantages such as easy knowledge acquisition, strong scalability, and low training cost. Although existing RAG models have been applied to various knowledge-intensive NLP tasks, such as open-domain QA and dialogue systems, most of the work has focused on retrieving unstructured text documents from Wikipedia. In this paper, I first elaborate on the current obstacles to retrieving knowledge from a single-source homogeneous corpus. Then, I demonstrate evidence from both existing literature and my experiments, and provide multiple solutions on retrieval-augmented generation methods across heterogeneous knowledge.",
+            "url": "https://openalex.org/W4287891177"
+          },
+          {
+            "source": "openalex",
+            "title": "Text Data Augmentation for Deep Learning",
+            "authors": [
+              "Connor Shorten",
+              "Taghi M. Khoshgoftaar",
+              "Borko Furht"
+            ],
+            "year": 2021,
+            "venue": "Journal Of Big Data",
+            "doi": "10.1186/s40537-021-00492-0",
+            "abstract": "Natural Language Processing (NLP) is one of the most captivating applications of Deep Learning. In this survey, we consider how the Data Augmentation training strategy can aid in its development. We begin with the major motifs of Data Augmentation summarized into strengthening local decision boundaries, brute force training, causality and counterfactual examples, and the distinction between meaning and form. We follow these motifs with a concrete list of augmentation frameworks that have been developed for text data. Deep Learning generally struggles with the measurement of generalization and characterization of overfitting. We highlight studies that cover how augmentations can construct test sets for generalization. NLP is at an early stage in applying Data Augmentation compared to Computer Vision. We highlight the key differences and promising ideas that have yet to be tested in NLP. For the sake of practical implementation, we describe tools that facilitate Data Augmentation such as the use of consistency regularization, controllers, and offline and online augmentation pipelines, to preview a few. Finally, we discuss interesting topics around Data Augmentation in NLP such as task-specific augmentations, the use of prior knowledge in self-supervised learning versus Data Augmentation, intersections with transfer and multi-task learning, and ideas for AI-GAs (AI-Generating Algorithms). We hope this paper inspires further research interest in Text Data Augmentation.",
+            "url": "https://openalex.org/W3176923149"
+          },
+          {
+            "source": "openalex",
+            "title": "What Makes Good In-Context Examples for GPT-3?",
+            "authors": [
+              "Jiachang Liu",
+              "Dinghan Shen",
+              "Yizhe Zhang",
+              "Bill Dolan",
+              "Lawrence Carin",
+              "Weizhu Chen"
+            ],
+            "year": 2022,
+            "venue": null,
+            "doi": "10.18653/v1/2022.deelio-1.10",
+            "abstract": "Jiachang Liu, Dinghan Shen, Yizhe Zhang, Bill Dolan, Lawrence Carin, Weizhu Chen. Proceedings of Deep Learning Inside Out (DeeLIO 2022): The 3rd Workshop on Knowledge Extraction and Integration for Deep Learning Architectures. 2022.",
+            "url": "https://openalex.org/W3122241445"
+          },
+          {
+            "source": "openalex",
+            "title": "Toward expert-level medical question answering with large language models",
+            "authors": [
+              "K. K. Singhal",
+              "Tao Tu",
+              "Juraj Gottweis",
+              "Rory Sayres",
+              "Ellery Wulczyn",
+              "Mohamed Amin",
+              "Le Hou",
+              "Kevin Clark",
+              "Stephen Pfohl",
+              "Heather Cole-Lewis",
+              "Darlene Neal",
+              "Qazi Mamunur Rashid",
+              "Mike Schaekermann",
+              "Amy Wang",
+              "Dev Dash",
+              "Jonathan H. Chen",
+              "Nigam H. Shah",
+              "Sami Lachgar",
+              "P. Mansfield",
+              "Sushant Prakash",
+              "Bradley Green",
+              "Ewa Dominowska",
+              "Blaise Agüera y Arcas",
+              "Nenad Tomašev",
+              "Yun Liu",
+              "Renee Wong",
+              "Christopher Semturs",
+              "S. Sara Mahdavi",
+              "Joëlle Barral",
+              "Dale R. Webster",
+              "Greg S. Corrado",
+              "Yossi Matias",
+              "Shekoofeh Azizi",
+              "Alan Karthikesalingam",
+              "Vivek Natarajan"
+            ],
+            "year": 2025,
+            "venue": "Nature Medicine",
+            "doi": "10.1038/s41591-024-03423-7",
+            "abstract": "Large language models (LLMs) have shown promise in medical question answering, with Med-PaLM being the first to exceed a 'passing' score in United States Medical Licensing Examination style questions. However, challenges remain in long-form medical question answering and handling real-world workflows. Here, we present Med-PaLM 2, which bridges these gaps with a combination of base LLM improvements, medical domain fine-tuning and new strategies for improving reasoning and grounding through ensemble refinement and chain of retrieval. Med-PaLM 2 scores up to 86.5% on the MedQA dataset, improving upon Med-PaLM by over 19%, and demonstrates dramatic performance increases across MedMCQA, PubMedQA and MMLU clinical topics datasets. Our detailed human evaluations framework shows that physicians prefer Med-PaLM 2 answers to those from other physicians on eight of nine clinical axes. Med-PaLM 2 also demonstrates significant improvements over its predecessor across all evaluation metrics, particularly on new adversarial datasets designed to probe LLM limitations (P < 0.001). In a pilot study using real-world medical questions, specialists preferred Med-PaLM 2 answers to generalist physician answers 65% of the time. While specialist answers were still preferred overall, both specialists and generalists rated Med-PaLM 2 to be as safe as physician answers, demonstrating its growing potential in real-world medical applications.",
+            "url": "https://openalex.org/W4406152279"
+          }
+        ]
+      },
+      "metadata": {
+        "citation_id": "ref_004",
+        "fields": [
+          {
+            "field": "title",
+            "claimed": "Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks",
+            "actual": "Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks",
+            "status": "MATCH",
+            "similarity": 1.0
+          },
+          {
+            "field": "authors",
+            "claimed": "Lewis, et al.",
+            "actual": "Patrick Lewis, Ethan Perez, Aleksandra Piktus, Fabio Petroni, Vladimir Karpukhin, Naman Goyal, Heinrich Küttler, Mike Lewis, Wen-tau Yih, Tim Rocktäschel, Sebastian Riedel, Douwe Kiela",
+            "status": "MATCH",
+            "similarity": 0.8
+          },
+          {
+            "field": "year",
+            "claimed": "2020",
+            "actual": "2020",
+            "status": "MATCH",
+            "similarity": 1.0
+          },
+          {
+            "field": "venue",
+            "claimed": "NeurIPS",
+            "actual": "UCL Discovery (University College London)",
+            "status": "MISMATCH",
+            "similarity": 0.34210526315789463
+          }
+        ],
+        "mismatch_count": 1,
+        "has_major_mismatch": false
+      },
+      "content_check": {
+        "citation_id": "ref_004",
+        "consistency": "CONSISTENT",
+        "reasoning": "引用声明准确概括了论文的核心贡献，即提出RAG框架通过结合参数化与非参数化记忆（外部知识）来增强语言生成的事实准确性，这与摘要中'generate more specific, diverse and factual language'的描述一致。",
+        "claim": "提出了检索增强生成（RAG）框架，通过在生成过程中引入外部知识来提高事实准确性。",
+        "abstract": "Large pre-trained language models have been shown to store factual knowledge in their parameters, and achieve state-of-the-art results when fine-tuned on downstream NLP tasks. However, their ability to access and precisely manipulate knowledge is still limited, and hence on knowledge-intensive tasks, their performance lags behind task-specific architectures. Additionally, providing provenance for their decisions and updating their world knowledge remain open research problems. Pre-trained models with a differentiable access mechanism to explicit non-parametric memory can overcome this issue, but have so far been only investigated for extractive downstream tasks. We explore a general-purpose fine-tuning recipe for retrieval-augmented generation (RAG) -- models which combine pre-trained parametric and non-parametric memory for language generation. We introduce RAG models where the parametric memory is a pre-trained seq2seq model and the non-parametric memory is a dense vector index of Wikipedia, accessed with a pre-trained neural retriever. We compare two RAG formulations, one which conditions on the same retrieved passages across the whole generated sequence, the other can use different passages per token. We fine-tune and evaluate our models on a wide range of knowledge-intensive NLP tasks and set the state-of-the-art on three open domain QA tasks, outperforming parametric seq2seq models and task-specific retrieve-and-extract architectures. For language generation tasks, we find that RAG models generate more specific, diverse and factual language than a state-of-the-art parametric-only seq2seq baseline."
+      }
+    },
+    {
+      "citation_id": "ref_005",
+      "raw_text": "Zhang and Chen (2024) 在其论文\"Eliminating Hallucinations with Recursive Self-Verification\"中提出了一种递归自验证方法，声称能够将幻觉率降低95%。",
+      "verdict": "FABRICATED",
+      "confidence": 0.9,
+      "evidence": "在学术数据源中检索到 10 条候选, 但标题匹配度均低于阈值, 疑似捏造",
+      "suggestion": "建议删除该引用或替换为真实文献",
+      "retrieval": {
+        "citation_id": "ref_005",
+        "found": false,
+        "confidence": "NONE",
+        "best_match": null,
+        "all_candidates": [
+          {
+            "source": "semantic_scholar",
+            "title": "HDLCoRe: A Training-Free Framework for Mitigating Hallucinations in LLM-Generated HDL",
+            "authors": [
+              "Heng Ping",
+              "Shixuan Li",
+              "Peiyu Zhang",
+              "Anzhe Cheng",
+              "Shukai Duan",
+              "Nikos Kanakaris",
+              "Xiongye Xiao",
+              "Wei Yang",
+              "Shahin Nazarian",
+              "Andrei Irimia",
+              "Paul Bogdan"
+            ],
+            "year": 2025,
+            "venue": "2025 IEEE International Conference on LLM-Aided Design (ICLAD)",
+            "doi": "10.1109/ICLAD65226.2025.00034",
+            "abstract": "Recent advances in large language models (LLMs) have demonstrated remarkable capabilities in code generation tasks. However, when applied to hardware description languages (HDL), these models exhibit significant limitations due to data scarcity, resulting in hallucinations and incorrect code generation. To address these challenges, we propose HDLCoRe, a training-free framework that enhances LLMs’ HDL generation capabilities through prompt engineering techniques and retrieval-augmented generation (RAG). Our approach consists of two main components: (1) an HDL-aware Chain-of-Thought (CoT) prompting technique with self-verification that classifies tasks by complexity and type, incorporates domain-specific knowledge, and guides LLMs through step-by-step self-simulation for error correction; and (2) a two-stage heterogeneous RAG system that addresses formatting inconsistencies through key component extraction and efficiently retrieves relevant HDL examples through sequential filtering and re-ranking. HDLCoRe eliminates the need for model fine-tuning while substantially improving LLMs’ HDL generation capabilities. Experimental results demonstrate that our framework achieves superior performance on the RTLLM2.0 benchmark, significantly reducing hallucinations and improving both syntactic and functional correctness.",
+            "url": "https://www.semanticscholar.org/paper/75399ae81cffb7926f86f95570558b8a3f844d5e"
+          },
+          {
+            "source": "semantic_scholar",
+            "title": "Auditing Meta-Cognitive Hallucinations in Reasoning Large Language Models",
+            "authors": [
+              "Haolang Lu",
+              "Yilian Liu",
+              "Jingxin Xu",
+              "Guoshun Nan",
+              "Yuanlong Yu",
+              "Zhican Chen",
+              "Kun Wang"
+            ],
+            "year": 2025,
+            "venue": "arXiv.org",
+            "doi": "10.48550/arXiv.2505.13143",
+            "abstract": "The development of Reasoning Large Language Models (RLLMs) has significantly improved multi-step reasoning capabilities, but it has also made hallucination problems more frequent and harder to eliminate. While existing approaches mitigate hallucinations through external knowledge integration, model parameter analysis, or self-verification, they often fail to capture how hallucinations emerge and evolve across the reasoning chain. In this work, we study the causality of hallucinations under constrained knowledge domains by auditing the Chain-of-Thought (CoT) trajectory and assessing the model's cognitive confidence in potentially erroneous or biased claims. Our analysis reveals that in long-CoT settings, RLLMs can iteratively reinforce biases and errors through flawed reflective reasoning, eventually leading to hallucinated reasoning paths. Surprisingly, even direct interventions at the origin of hallucinations often fail to reverse their effects, as reasoning chains exhibit'chain disloyalty'-- a resistance to correction and a tendency to preserve flawed logic. Furthermore, we show that existing hallucination detection methods are less reliable and interpretable than previously assumed in complex reasoning scenarios. Unlike methods such as circuit tracing that require access to model internals, our black-box auditing approach supports interpretable long-chain hallucination attribution, offering better generalizability and practical utility. Our code is available at: https://github.com/Winnie-Lian/AHa_Meta_Cognitive",
+            "url": "https://www.semanticscholar.org/paper/cc2d94962af803420dfc1343b23f3179ef4880fb"
+          },
+          {
+            "source": "semantic_scholar",
+            "title": "Stencil-Lifting: Hierarchical Recursive Lifting System for Extracting Summary of Stencil Kernel in Legacy Codes",
+            "authors": [
+              "Mingyi Li",
+              "Junmin Xiao",
+              "Siyan Chen",
+              "Hui Ma",
+              "Xi Chen",
+              "Peihua Bao",
+              "Liang Yuan",
+              "Guangming Tan"
+            ],
+            "year": 2025,
+            "venue": "Proc. ACM Program. Lang.",
+            "doi": "10.1145/3763159",
+            "abstract": "We introduce Stencil-Lifting, a novel system for automatically converting stencil kernels written in low-level languages in legacy code into semantically equivalent Domain-Specific Language (DSL) implementations. Targeting the efficiency bottlenecks of existing verified lifting systems, Stencil-Lifting achieves scalable stencil kernel abstraction through two key innovations. First, we propose a hierarchical recursive lifting theory that represents stencil kernels, structured as nested loops, using invariant subgraphs, which are customized data dependency graphs that capture loop-carried computation and structural invariants. Each vertex in the invariant subgraph is associated with a predicate-based summary, encoding its computational semantics. By enforcing self-consistency across these summaries, Stencil-Lifting ensures the derivation of correct loop invariants and postconditions for nested loops, eliminating the need for external verification. Second, we develop a hierarchical recursive lifting algorithm that guarantees termination through a convergent recursive process, avoiding the inefficiencies of search-based synthesis. The algorithm efficiently derives the valid summaries of stencil kernels, and its completeness is formally proven. We evaluate Stencil-Lifting on diverse stencil benchmarks from two different suites and on four real-world applications. Experimental results demonstrate that Stencil-Lifting achieves 31.62× and 5.8× speedups compared to the state-of-the-art verified lifting systems STNG and Dexter, respectively, while maintaining full semantic equivalence. Our work significantly enhances the translation efficiency of low-level stencil kernels to DSL implementations, effectively bridging the gap between legacy optimization techniques and modern DSL-based paradigms.",
+            "url": "https://www.semanticscholar.org/paper/1f95585367c6f0a3a813bc9335232393b3269604"
+          },
+          {
+            "source": "semantic_scholar",
+            "title": "Reliability by design: quantifying and eliminating fabrication risk in LLMs. From generative to consultative AI: a comparative analysis in the legal domain and lessons for high-stakes knowledge bases",
+            "authors": [
+              "Alex Dantart"
+            ],
+            "year": 2026,
+            "venue": "arXiv.org",
+            "doi": "10.48550/arXiv.2601.15476",
+            "abstract": "This paper examines how to make large language models reliable for high-stakes legal work by reducing hallucinations. It distinguishes three AI paradigms: (1) standalone generative models (\"creative oracle\"), (2) basic retrieval-augmented systems (\"expert archivist\"), and (3) an advanced, end-to-end optimized RAG system (\"rigorous archivist\"). The authors introduce two reliability metrics -False Citation Rate (FCR) and Fabricated Fact Rate (FFR)- and evaluate 2,700 judicial-style answers from 12 LLMs across 75 legal tasks using expert, double-blind review. Results show that standalone models are unsuitable for professional use (FCR above 30%), while basic RAG greatly reduces errors but still leaves notable misgrounding. Advanced RAG, using techniques such as embedding fine-tuning, re-ranking, and self-correction, reduces fabrication to negligible levels (below 0.2%). The study concludes that trustworthy legal AI requires rigor-focused, retrieval-based architectures emphasizing verification and traceability, and provides an evaluation framework applicable to other high-risk domains.",
+            "url": "https://www.semanticscholar.org/paper/04562f4dfef013f067f2fc2ea9f5a7b67433a452"
+          },
+          {
+            "source": "semantic_scholar",
+            "title": "Structured Elicitation Primitives for Reliable Multi-Agent Delegation and Recursive Planning",
+            "authors": [
+              "S. Karthik",
+              "Kota"
+            ],
+            "year": 2025,
+            "venue": "British Journal of Multidisciplinary Studies",
+            "doi": "10.32996/bjmss.2025.3.2.3",
+            "abstract": "The transition of Large Language Models (LLMs) from passive information retrieval interfaces to agentic systems capable of multi-step execution represents a significant paradigm shift in artificial intelligence. However, the reliability of these agents is frequently compromised by stochastic drift, hallucination, and the inability to maintain coherent context over extended planning horizons. This paper proposes a theoretical framework for Reliable Agent Delegation (RAD), focusing on structured elicitation techniques that constrain the probabilistic output of foundation models into deterministic workflows. We analyze role assignment mechanisms, meta-reasoning prompts, and self-corrective failure recovery loops. Drawing upon existing literature in Chain-of-Thought (CoT) reasoning, ReAct frameworks, and formal verification, we posit that imposing rigid syntactic and semantic constraints on elicitation allows for verifiable delegation between orchestrator and worker agents. We discuss the security implications of such architectures, specifically regarding indirect prompt injection and cascading logic failures, and outline a methodology for constructing robust, self-healing agentic systems.",
+            "url": "https://www.semanticscholar.org/paper/68c210b6af0f95a08b7d33818d33855716238bc1"
+          },
+          {
+            "source": "openalex",
+            "title": "Retrieval-Augmented Generation for Large Language Models: A Survey",
+            "authors": [
+              "Yunfan Gao",
+              "Yun Xiong",
+              "Xinyu Gao",
+              "Kangxiang Jia",
+              "Jinliu Pan",
+              "Yuxi Bi",
+              "Yi Dai",
+              "Jiawei Sun",
+              "Haofen Wang",
+              "Wang, Haofen"
+            ],
+            "year": 2023,
+            "venue": "arXiv (Cornell University)",
+            "doi": "10.48550/arxiv.2312.10997",
+            "abstract": "Large Language Models (LLMs) showcase impressive capabilities but encounter challenges like hallucination, outdated knowledge, and non-transparent, untraceable reasoning processes. Retrieval-Augmented Generation (RAG) has emerged as a promising solution by incorporating knowledge from external databases. This enhances the accuracy and credibility of the generation, particularly for knowledge-intensive tasks, and allows for continuous knowledge updates and integration of domain-specific information. RAG synergistically merges LLMs' intrinsic knowledge with the vast, dynamic repositories of external databases. This comprehensive review paper offers a detailed examination of the progression of RAG paradigms, encompassing the Naive RAG, the Advanced RAG, and the Modular RAG. It meticulously scrutinizes the tripartite foundation of RAG frameworks, which includes the retrieval, the generation and the augmentation techniques. The paper highlights the state-of-the-art technologies embedded in each of these critical components, providing a profound understanding of the advancements in RAG systems. Furthermore, this paper introduces up-to-date evaluation framework and benchmark. At the end, this article delineates the challenges currently faced and points out prospective avenues for research and development.",
+            "url": "https://openalex.org/W4389984066"
+          },
+          {
+            "source": "openalex",
+            "title": "Sparks of Artificial General Intelligence: Early experiments with GPT-4",
+            "authors": [
+              "Sébastien Bubeck",
+              "Varun Chandrasekaran",
+              "Ronen Eldan",
+              "Johannes Gehrke",
+              "Eric Horvitz",
+              "Ece Kamar",
+              "Peter Lee",
+              "Yin Tat Lee",
+              "Yuanzhi Li",
+              "Scott Lundberg",
+              "Harsha Nori",
+              "Hamid Palangi",
+              "Marco Túlio Ribeiro",
+              "Yi Zhang"
+            ],
+            "year": 2023,
+            "venue": "arXiv (Cornell University)",
+            "doi": "10.48550/arxiv.2303.12712",
+            "abstract": "Artificial intelligence (AI) researchers have been developing and refining large language models (LLMs) that exhibit remarkable capabilities across a variety of domains and tasks, challenging our understanding of learning and cognition. The latest model developed by OpenAI, GPT-4, was trained using an unprecedented scale of compute and data. In this paper, we report on our investigation of an early version of GPT-4, when it was still in active development by OpenAI. We contend that (this early version of) GPT-4 is part of a new cohort of LLMs (along with ChatGPT and Google's PaLM for example) that exhibit more general intelligence than previous AI models. We discuss the rising capabilities and implications of these models. We demonstrate that, beyond its mastery of language, GPT-4 can solve novel and difficult tasks that span mathematics, coding, vision, medicine, law, psychology and more, without needing any special prompting. Moreover, in all of these tasks, GPT-4's performance is strikingly close to human-level performance, and often vastly surpasses prior models such as ChatGPT. Given the breadth and depth of GPT-4's capabilities, we believe that it could reasonably be viewed as an early (yet still incomplete) version of an artificial general intelligence (AGI) system. In our exploration of GPT-4, we put special emphasis on discovering its limitations, and we discuss the challenges ahead for advancing towards deeper and more comprehensive versions of AGI, including the possible need for pursuing a new paradigm that moves beyond next-word prediction. We conclude with reflections on societal influences of the recent technological leap and future research directions.",
+            "url": "https://openalex.org/W4360836968"
+          },
+          {
+            "source": "openalex",
+            "title": "A Prompt Pattern Catalog to Enhance Prompt Engineering with ChatGPT",
+            "authors": [
+              "Jules White",
+              "Quchen Fu",
+              "Sam Hays",
+              "Michael Sandborn",
+              "Carlos Olea",
+              "Henry Gilbert",
+              "Ashraf Elnashar",
+              "Jesse Spencer-Smith",
+              "Douglas C. Schmidt"
+            ],
+            "year": 2023,
+            "venue": "arXiv (Cornell University)",
+            "doi": "10.48550/arxiv.2302.11382",
+            "abstract": "Prompt engineering is an increasingly important skill set needed to converse effectively with large language models (LLMs), such as ChatGPT. Prompts are instructions given to an LLM to enforce rules, automate processes, and ensure specific qualities (and quantities) of generated output. Prompts are also a form of programming that can customize the outputs and interactions with an LLM. This paper describes a catalog of prompt engineering techniques presented in pattern form that have been applied to solve common problems when conversing with LLMs. Prompt patterns are a knowledge transfer method analogous to software patterns since they provide reusable solutions to common problems faced in a particular context, i.e., output generation and interaction when working with LLMs. This paper provides the following contributions to research on prompt engineering that apply LLMs to automate software development tasks. First, it provides a framework for documenting patterns for structuring prompts to solve a range of problems so that they can be adapted to different domains. Second, it presents a catalog of patterns that have been applied successfully to improve the outputs of LLM conversations. Third, it explains how prompts can be built from multiple patterns and illustrates prompt patterns that benefit from combination with other prompt patterns.",
+            "url": "https://openalex.org/W4321649710"
+          },
+          {
+            "source": "openalex",
+            "title": "Harnessing the Power of LLMs in Practice: A Survey on ChatGPT and Beyond",
+            "authors": [
+              "Jingfeng Yang",
+              "Hongye Jin",
+              "Ruixiang Tang",
+              "Xiaotian Han",
+              "Qizhang Feng",
+              "Haoming Jiang",
+              "Shaochen Zhong",
+              "Bing Yin",
+              "Xia Hu"
+            ],
+            "year": 2024,
+            "venue": "ACM Transactions on Knowledge Discovery from Data",
+            "doi": "10.1145/3649506",
+            "abstract": "This article presents a comprehensive and practical guide for practitioners and end-users working with Large Language Models (LLMs) in their downstream Natural Language Processing (NLP) tasks. We provide discussions and insights into the usage of LLMs from the perspectives of models, data, and downstream tasks. First, we offer an introduction and brief summary of current language models. Then, we discuss the influence of pre-training data, training data, and test data. Most importantly, we provide a detailed discussion about the use and non-use cases of large language models for various natural language processing tasks, such as knowledge-intensive tasks, traditional natural language understanding tasks, generation tasks, emergent abilities, and considerations for specific tasks. We present various use cases and non-use cases to illustrate the practical applications and limitations of LLMs in real-world scenarios. We also try to understand the importance of data and the specific challenges associated with each NLP task. Furthermore, we explore the impact of spurious biases on LLMs and delve into other essential considerations, such as efficiency, cost, and latency, to ensure a comprehensive understanding of deploying LLMs in practice. This comprehensive guide aims to provide researchers and practitioners with valuable insights and best practices for working with LLMs, thereby enabling the successful implementation of these models in a wide range of NLP tasks. A curated list of practical guide resources of LLMs, regularly updated, can be found at https://github.com/Mooler0410/LLMsPracticalGuide . An LLMs evolutionary tree, editable yet regularly updated, can be found at llmtree.ai .",
+            "url": "https://openalex.org/W4392240262"
+          },
+          {
+            "source": "openalex",
+            "title": "Hallucination is Inevitable: An Innate Limitation of Large Language Models",
+            "authors": [
+              "Ziwei Xu",
+              "Sanjay Jain",
+              "Mohan Kankanhalli"
+            ],
+            "year": 2024,
+            "venue": "arXiv (Cornell University)",
+            "doi": "10.48550/arxiv.2401.11817",
+            "abstract": "Hallucination has been widely recognized to be a significant drawback for large language models (LLMs). There have been many works that attempt to reduce the extent of hallucination. These efforts have mostly been empirical so far, which cannot answer the fundamental question whether it can be completely eliminated. In this paper, we formalize the problem and show that it is impossible to eliminate hallucination in LLMs. Specifically, we define a formal world where hallucination is defined as inconsistencies between a computable LLM and a computable ground truth function. By employing results from learning theory, we show that LLMs cannot learn all the computable functions and will therefore inevitably hallucinate if used as general problem solvers. Since the formal world is a part of the real world which is much more complicated, hallucinations are also inevitable for real world LLMs. Furthermore, for real world LLMs constrained by provable time complexity, we describe the hallucination-prone tasks and empirically validate our claims. Finally, using the formal world framework, we discuss the possible mechanisms and efficacies of existing hallucination mitigators as well as the practical implications on the safe deployment of LLMs.",
+            "url": "https://openalex.org/W4391158659"
+          }
+        ]
+      },
+      "metadata": {
+        "citation_id": "ref_005",
+        "fields": [],
+        "mismatch_count": 0,
+        "has_major_mismatch": false
+      },
+      "content_check": {
+        "citation_id": "ref_005",
+        "consistency": "UNVERIFIABLE",
+        "reasoning": "论文未检索到, 无法进行内容核查",
+        "claim": "",
+        "abstract": ""
+      }
+    },
+    {
+      "citation_id": "ref_006",
+      "raw_text": "Wang et al. (2023) 的研究\"Chinese Language Model Hallucination Benchmark\"构建了首个中文幻觉评测基准，涵盖了事实性、一致性和忠实性三个维度的评估。",
+      "verdict": "FABRICATED",
+      "confidence": 0.9,
+      "evidence": "在学术数据源中检索到 10 条候选, 但标题匹配度均低于阈值, 疑似捏造",
+      "suggestion": "建议删除该引用或替换为真实文献",
+      "retrieval": {
+        "citation_id": "ref_006",
+        "found": false,
+        "confidence": "LOW",
+        "best_match": null,
+        "all_candidates": [
+          {
+            "source": "openalex",
+            "title": "UHGEval: Benchmarking the Hallucination of Chinese Large Language Models via Unconstrained Generation",
+            "authors": [
+              "Xun Liang",
+              "Shichao Song",
+              "Simin Niu",
+              "Zhiyu Li",
+              "Feiyu Xiong",
+              "Bo Tang",
+              "Yezhaohui Wang",
+              "Dawei He",
+              "Peng Cheng",
+              "Zhonghao Wang",
+              "Haiying Deng"
+            ],
+            "year": 2024,
+            "venue": null,
+            "doi": "10.18653/v1/2024.acl-long.288",
+            "abstract": "Xun Liang, Shichao Song, Simin Niu, Zhiyu Li, Feiyu Xiong, Bo Tang, Yezhaohui Wang, Dawei He, Cheng Peng, Zhonghao Wang, Haiying Deng. Proceedings of the 62nd Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers). 2024.",
+            "url": "https://openalex.org/W4402671633"
+          },
+          {
+            "source": "openalex",
+            "title": "Benchmarking Large Language Models in Retrieval-Augmented Generation",
+            "authors": [
+              "Jiawei Chen",
+              "Hongyu Lin",
+              "Xianpei Han",
+              "Le Sun"
+            ],
+            "year": 2024,
+            "venue": "Proceedings of the AAAI Conference on Artificial Intelligence",
+            "doi": "10.1609/aaai.v38i16.29728",
+            "abstract": "Retrieval-Augmented Generation (RAG) is a promising approach for mitigating the hallucination of large language models (LLMs). However, existing research lacks rigorous evaluation of the impact of retrieval-augmented generation on different large language models, which make it challenging to identify the potential bottlenecks in the capabilities of RAG for different LLMs. In this paper, we systematically investigate the impact of Retrieval-Augmented Generation on large language models. We analyze the performance of different large language models in 4 fundamental abilities required for RAG, including noise robustness, negative rejection, information integration, and counterfactual robustness. To this end, we establish Retrieval-Augmented Generation Benchmark (RGB), a new corpus for RAG evaluation in both English and Chinese. RGB divides the instances within the benchmark into 4 separate testbeds based on the aforementioned fundamental abilities required to resolve the case. Then we evaluate 6 representative LLMs on RGB to diagnose the challenges of current LLMs when applying RAG. Evaluation reveals that while LLMs exhibit a certain degree of noise robustness, they still struggle significantly in terms of negative rejection, information integration, and dealing with false information. The aforementioned assessment outcomes indicate that there is still a considerable journey ahead to effectively apply RAG to LLMs.",
+            "url": "https://openalex.org/W4393147129"
+          },
+          {
+            "source": "openalex",
+            "title": "UHGEval: Benchmarking the Hallucination of Chinese Large Language Models via Unconstrained Generation",
+            "authors": [
+              "Xun Liang",
+              "Shichao Song",
+              "Simin Niu",
+              "Zhiyu Li",
+              "Feiyu Xiong",
+              "Bo Tang",
+              "Zhaohui Wy",
+              "Dawei He",
+              "Peng Cheng",
+              "Zhonghao Wang",
+              "Haiying Deng"
+            ],
+            "year": 2023,
+            "venue": "arXiv (Cornell University)",
+            "doi": "10.48550/arxiv.2311.15296",
+            "abstract": "Large language models (LLMs) have emerged as pivotal contributors in contemporary natural language processing and are increasingly being applied across a diverse range of industries. However, these large-scale probabilistic statistical models cannot currently ensure the requisite quality in professional content generation. These models often produce hallucinated text, compromising their practical utility in professional contexts. To assess the authentic reliability of LLMs in text generation, numerous initiatives have developed benchmark evaluations for hallucination phenomena. Nevertheless, these benchmarks frequently utilize constrained generation techniques due to cost and temporal constraints. These techniques encompass the use of directed hallucination induction and strategies that deliberately alter authentic text to produce hallucinations. These approaches are not congruent with the unrestricted text generation demanded by real-world applications. Furthermore, a well-established Chinese-language dataset dedicated to the evaluation of hallucinations in text generation is presently lacking. Consequently, we have developed an Unconstrained Hallucination Generation Evaluation (UHGEval) benchmark, designed to compile outputs produced with minimal restrictions by LLMs. Concurrently, we have established a comprehensive benchmark evaluation framework to aid subsequent researchers in undertaking scalable and reproducible experiments. We have also executed extensive experiments, evaluating prominent Chinese language models and the GPT series models to derive professional performance insights regarding hallucination challenges.",
+            "url": "https://openalex.org/W4389115846"
+          },
+          {
+            "source": "openalex",
+            "title": "Benchmarking Large Language Models in Retrieval-Augmented Generation",
+            "authors": [
+              "Jiawei Chen",
+              "Hongyu Lin",
+              "Xianpei Han",
+              "Le Sun"
+            ],
+            "year": 2023,
+            "venue": "arXiv (Cornell University)",
+            "doi": "10.48550/arxiv.2309.01431",
+            "abstract": "Retrieval-Augmented Generation (RAG) is a promising approach for mitigating the hallucination of large language models (LLMs). However, existing research lacks rigorous evaluation of the impact of retrieval-augmented generation on different large language models, which make it challenging to identify the potential bottlenecks in the capabilities of RAG for different LLMs. In this paper, we systematically investigate the impact of Retrieval-Augmented Generation on large language models. We analyze the performance of different large language models in 4 fundamental abilities required for RAG, including noise robustness, negative rejection, information integration, and counterfactual robustness. To this end, we establish Retrieval-Augmented Generation Benchmark (RGB), a new corpus for RAG evaluation in both English and Chinese. RGB divides the instances within the benchmark into 4 separate testbeds based on the aforementioned fundamental abilities required to resolve the case. Then we evaluate 6 representative LLMs on RGB to diagnose the challenges of current LLMs when applying RAG. Evaluation reveals that while LLMs exhibit a certain degree of noise robustness, they still struggle significantly in terms of negative rejection, information integration, and dealing with false information. The aforementioned assessment outcomes indicate that there is still a considerable journey ahead to effectively apply RAG to LLMs.",
+            "url": "https://openalex.org/W4386556635"
+          },
+          {
+            "source": "openalex",
+            "title": "Generative AI chatbots for reliable cancer information: Evaluating web-search, multilingual, and reference capabilities of emerging large language models",
+            "authors": [
+              "Bradley D. Menz",
+              "Natansh D. Modi",
+              "Ahmad Y. Abuhelwa",
+              "Warit Ruanglertboon",
+              "Agnès Vitry",
+              "Yuan Gao",
+              "Lee X. Li",
+              "Rakchha Chhetri",
+              "Benjamin Chu",
+              "Stephen Bacchi",
+              "Ganessan Kichenadasse",
+              "Adel Shahnam",
+              "Andrew Rowland",
+              "Michael J. Sorich",
+              "Ashley M. Hopkins"
+            ],
+            "year": 2025,
+            "venue": "European Journal of Cancer",
+            "doi": "10.1016/j.ejca.2025.115274",
+            "abstract": "Recent advancements in large language models (LLMs) enable real-time web search, improved referencing, and multilingual support, yet ensuring they provide safe health information remains crucial. This perspective evaluates seven publicly accessible LLMs-ChatGPT, Co-Pilot, Gemini, MetaAI, Claude, Grok, Perplexity-on three simple cancer-related queries across eight languages (336 responses: English, French, Chinese, Thai, Hindi, Nepali, Vietnamese, and Arabic). None of the 42 English responses contained clinically meaningful hallucinations, whereas 7 of 294 non-English responses did. 48 % (162/336) of responses included valid references, but 39 % of the English references were.com links reflecting quality concerns. English responses frequently exceeded an eighth-grade level, and many non-English outputs were also complex. These findings reflect substantial progress over the past 2-years but reveal persistent gaps in multilingual accuracy, reliable reference inclusion, referral practices, and readability. Ongoing benchmarking is essential to ensure LLMs safely support global health information dichotomy and meet online information standards.",
+            "url": "https://openalex.org/W4407095344"
+          },
+          {
+            "source": "crossref",
+            "title": "Mitigating Hallucination in Visual Language Model Segmentation with Negative Sampling",
+            "authors": [
+              "Tong Lee Chung",
+              "Jun Cheng",
+              "Jianxin Pang"
+            ],
+            "year": 2024,
+            "venue": "2024 IEEE 14th International Symposium on Chinese Spoken Language Processing (ISCSLP)",
+            "doi": "10.1109/iscslp63861.2024.10800691",
+            "abstract": null,
+            "url": "https://doi.org/10.1109/iscslp63861.2024.10800691"
+          },
+          {
+            "source": "crossref",
+            "title": "Detection, Diagnosis, and Explanation: A Benchmark for Chinese Medical Hallucination Evaluation",
+            "authors": [
+              "Chengfeng Dou",
+              "Ying Zhang",
+              "Yanyuan Chen",
+              "Zhi Jin",
+              "Wenpin Jiao",
+              "Haiyan Zhao",
+              "Yongqiang Zhao",
+              "Zhenwei Tao",
+              "Yun Huang"
+            ],
+            "year": 2024,
+            "venue": "Proceedings of the 2024 Joint International Conference on Computational Linguistics, Language Resources and Evaluation (LREC-COLING 2024)",
+            "doi": "10.63317/3jpikqxueoo2",
+            "abstract": null,
+            "url": "https://doi.org/10.63317/3jpikqxueoo2"
+          },
+          {
+            "source": "crossref",
+            "title": "HaluEval: A Large-Scale Hallucination Evaluation Benchmark for Large Language Models",
+            "authors": [
+              "Junyi Li",
+              "Xiaoxue Cheng",
+              "Xin Zhao",
+              "Jian-Yun Nie",
+              "Ji-Rong Wen"
+            ],
+            "year": 2023,
+            "venue": "Proceedings of the 2023 Conference on Empirical Methods in Natural Language Processing",
+            "doi": "10.18653/v1/2023.emnlp-main.397",
+            "abstract": null,
+            "url": "https://doi.org/10.18653/v1/2023.emnlp-main.397"
+          },
+          {
+            "source": "crossref",
+            "title": "Controlling Large Language Model Hallucination Based on Agent AI with LangGraph",
+            "authors": [
+              "Jialin Wang",
+              "Zhihua Duan"
+            ],
+            "year": 2025,
+            "venue": null,
+            "doi": "10.33774/coe-2025-xkwl5",
+            "abstract": "<jats:p>As Large Language Models (LLMs) become integral to Natural Language Processing (NLP) applications, their tendency to generate hallucinations — outputs misaligned with input data or real-world facts — presents a significant challenge. This paper introduces a novel approach leveraging Agent AI within the LangGraph system to systematically detect and mitigate LLM hallucinations. The framework categorizes hallucinations into three distinct types: Hallucination Knowledge Positive (HK+), Hallucination Knowledge Negative (HK-), and normal responses. HK+ represents errors where the model has relevant knowledge but provides incorrect answers, while HK- denotes hallucinations arising from insufficient knowledge. Normal responses are accurate outputs requiring no intervention. The proposed method employs corrective Retrieval-Augmented Generation (RAG) to address HK- cases by supplementing missing knowledge. For HK+, a human-in-the-loop mechanism is activated to rectify errors and ensure accuracy. Normal responses proceed without additional processing. This structured approach improves the precision and reliability of LLMs across diverse application scenarios. By integrating Agent AI for dynamic classification and targeted intervention, the LangGraph system significantly reduces hallucination rates, offering a robust solution for enhancing LLM performance in real-world deployments. This research provides new perspectives and methodologies for advancing LLM stability and dependability.</jats:p>",
+            "url": "https://doi.org/10.33774/coe-2025-xkwl5"
+          },
+          {
+            "source": "crossref",
+            "title": "DiaHalu: A Dialogue-level Hallucination Evaluation Benchmark for Large Language Models",
+            "authors": [
+              "Kedi Chen",
+              "Qin Chen",
+              "Jie Zhou",
+              "He Yishen",
+              "Liang He"
+            ],
+            "year": 2024,
+            "venue": "Findings of the Association for Computational Linguistics: EMNLP 2024",
+            "doi": "10.18653/v1/2024.findings-emnlp.529",
+            "abstract": null,
+            "url": "https://doi.org/10.18653/v1/2024.findings-emnlp.529"
+          }
+        ]
+      },
+      "metadata": {
+        "citation_id": "ref_006",
+        "fields": [],
+        "mismatch_count": 0,
+        "has_major_mismatch": false
+      },
+      "content_check": {
+        "citation_id": "ref_006",
+        "consistency": "UNVERIFIABLE",
+        "reasoning": "论文未检索到, 无法进行内容核查",
+        "claim": "",
+        "abstract": ""
+      }
+    },
+    {
+      "citation_id": "ref_007",
+      "raw_text": "Brown et al. (2020) 在\"Language Models are Few-Shot Learners\"中展示了GPT-3的few-shot学习能力，该论文证明了大规模语言模型可以通过少量示例完成各种任务。",
+      "verdict": "VERIFIED",
+      "confidence": 0.9,
+      "evidence": "论文存在, 元数据一致, 内容核查通过",
+      "suggestion": "",
+      "retrieval": {
+        "citation_id": "ref_007",
+        "found": true,
+        "confidence": "HIGH",
+        "best_match": {
+          "source": "openalex",
+          "title": "Language Models are Few-Shot Learners",
+          "authors": [
+            "T. B. Brown",
+            "Benjamin Mann",
+            "Nick Ryder",
+            "Melanie Subbiah",
+            "Jared Kaplan",
+            "Prafulla Dhariwal",
+            "Arvind Neelakantan",
+            "Pranav Shyam",
+            "Girish Sastry",
+            "Amanda Askell",
+            "Sandhini Agarwal",
+            "Ariel Herbert-Voss",
+            "Gretchen Krueger",
+            "Tom Henighan",
+            "Rewon Child",
+            "Aditya Ramesh",
+            "Daniel M. Ziegler",
+            "Jeffrey Wu",
+            "Clemens Winter",
+            "Christopher Hesse",
+            "Mark Chen",
+            "Eric J. Sigler",
+            "Mateusz Litwin",
+            "Scott Gray",
+            "Benjamin Chess",
+            "Jack Clark",
+            "Christopher Berner",
+            "Sam McCandlish",
+            "Alec Radford",
+            "Ilya Sutskever",
+            "Dario Amodei"
+          ],
+          "year": 2020,
+          "venue": "arXiv (Cornell University)",
+          "doi": "10.48550/arxiv.2005.14165",
+          "abstract": "Recent work has demonstrated substantial gains on many NLP tasks and benchmarks by pre-training on a large corpus of text followed by fine-tuning on a specific task. While typically task-agnostic in architecture, this method still requires task-specific fine-tuning datasets of thousands or tens of thousands of examples. By contrast, humans can generally perform a new language task from only a few examples or from simple instructions - something which current NLP systems still largely struggle to do. Here we show that scaling up language models greatly improves task-agnostic, few-shot performance, sometimes even reaching competitiveness with prior state-of-the-art fine-tuning approaches. Specifically, we train GPT-3, an autoregressive language model with 175 billion parameters, 10x more than any previous non-sparse language model, and test its performance in the few-shot setting. For all tasks, GPT-3 is applied without any gradient updates or fine-tuning, with tasks and few-shot demonstrations specified purely via text interaction with the model. GPT-3 achieves strong performance on many NLP datasets, including translation, question-answering, and cloze tasks, as well as several tasks that require on-the-fly reasoning or domain adaptation, such as unscrambling words, using a novel word in a sentence, or performing 3-digit arithmetic. At the same time, we also identify some datasets where GPT-3's few-shot learning still struggles, as well as some datasets where GPT-3 faces methodological issues related to training on large web corpora. Finally, we find that GPT-3 can generate samples of news articles which human evaluators have difficulty distinguishing from articles written by humans. We discuss broader societal impacts of this finding and of GPT-3 in general.",
+          "url": "https://openalex.org/W3030163527"
+        },
+        "all_candidates": [
+          {
+            "source": "openalex",
+            "title": "Language Models are Few-Shot Learners",
+            "authors": [
+              "T. B. Brown",
+              "Benjamin Mann",
+              "Nick Ryder",
+              "Melanie Subbiah",
+              "Jared Kaplan",
+              "Prafulla Dhariwal",
+              "Arvind Neelakantan",
+              "Pranav Shyam",
+              "Girish Sastry",
+              "Amanda Askell",
+              "Sandhini Agarwal",
+              "Ariel Herbert-Voss",
+              "Gretchen Krueger",
+              "Tom Henighan",
+              "Rewon Child",
+              "Aditya Ramesh",
+              "Daniel M. Ziegler",
+              "Jeffrey Wu",
+              "Clemens Winter",
+              "Christopher Hesse",
+              "Mark Chen",
+              "Eric J. Sigler",
+              "Mateusz Litwin",
+              "Scott Gray",
+              "Benjamin Chess",
+              "Jack Clark",
+              "Christopher Berner",
+              "Sam McCandlish",
+              "Alec Radford",
+              "Ilya Sutskever",
+              "Dario Amodei"
+            ],
+            "year": 2020,
+            "venue": "arXiv (Cornell University)",
+            "doi": "10.48550/arxiv.2005.14165",
+            "abstract": "Recent work has demonstrated substantial gains on many NLP tasks and benchmarks by pre-training on a large corpus of text followed by fine-tuning on a specific task. While typically task-agnostic in architecture, this method still requires task-specific fine-tuning datasets of thousands or tens of thousands of examples. By contrast, humans can generally perform a new language task from only a few examples or from simple instructions - something which current NLP systems still largely struggle to do. Here we show that scaling up language models greatly improves task-agnostic, few-shot performance, sometimes even reaching competitiveness with prior state-of-the-art fine-tuning approaches. Specifically, we train GPT-3, an autoregressive language model with 175 billion parameters, 10x more than any previous non-sparse language model, and test its performance in the few-shot setting. For all tasks, GPT-3 is applied without any gradient updates or fine-tuning, with tasks and few-shot demonstrations specified purely via text interaction with the model. GPT-3 achieves strong performance on many NLP datasets, including translation, question-answering, and cloze tasks, as well as several tasks that require on-the-fly reasoning or domain adaptation, such as unscrambling words, using a novel word in a sentence, or performing 3-digit arithmetic. At the same time, we also identify some datasets where GPT-3's few-shot learning still struggles, as well as some datasets where GPT-3 faces methodological issues related to training on large web corpora. Finally, we find that GPT-3 can generate samples of news articles which human evaluators have difficulty distinguishing from articles written by humans. We discuss broader societal impacts of this finding and of GPT-3 in general.",
+            "url": "https://openalex.org/W3030163527"
+          },
+          {
+            "source": "openalex",
+            "title": "Making Pre-trained Language Models Better Few-shot Learners",
+            "authors": [
+              "Tianyu Gao",
+              "Adam Fisch",
+              "Danqi Chen"
+            ],
+            "year": 2021,
+            "venue": null,
+            "doi": "10.18653/v1/2021.acl-long.295",
+            "abstract": "Tianyu Gao, Adam Fisch, Danqi Chen. Proceedings of the 59th Annual Meeting of the Association for Computational Linguistics and the 11th International Joint Conference on Natural Language Processing (Volume 1: Long Papers). 2021.",
+            "url": "https://openalex.org/W3173777717"
+          },
+          {
+            "source": "openalex",
+            "title": "Making Pre-trained Language Models Better Few-shot Learners",
+            "authors": [
+              "Tianyu Gao",
+              "Adam Fisch",
+              "Danqi Chen"
+            ],
+            "year": 2020,
+            "venue": "arXiv (Cornell University)",
+            "doi": "10.48550/arxiv.2012.15723",
+            "abstract": "The recent GPT-3 model (Brown et al., 2020) achieves remarkable few-shot performance solely by leveraging a natural-language prompt and a few task demonstrations as input context. Inspired by their findings, we study few-shot learning in a more practical scenario, where we use smaller language models for which fine-tuning is computationally efficient. We present LM-BFF--better few-shot fine-tuning of language models--a suite of simple and complementary techniques for fine-tuning language models on a small number of annotated examples. Our approach includes (1) prompt-based fine-tuning together with a novel pipeline for automating prompt generation; and (2) a refined strategy for dynamically and selectively incorporating demonstrations into each context. Finally, we present a systematic evaluation for analyzing few-shot performance on a range of NLP tasks, including classification and regression. Our experiments demonstrate that our methods combine to dramatically outperform standard fine-tuning procedures in this low resource setting, achieving up to 30% absolute improvement, and 11% on average across all tasks. Our approach makes minimal assumptions on task resources and domain expertise, and hence constitutes a strong task-agnostic method for few-shot learning.",
+            "url": "https://openalex.org/W3126960149"
+          },
+          {
+            "source": "openalex",
+            "title": "Differentiable Prompt Makes Pre-trained Language Models Better Few-shot Learners",
+            "authors": [
+              "Ningyu Zhang",
+              "Luoqiu Li",
+              "Xiang Chen",
+              "Shumin Deng",
+              "Zhen Bi",
+              "Chuanqi Tan",
+              "Fei Huang",
+              "Huajun Chen"
+            ],
+            "year": 2021,
+            "venue": "arXiv (Cornell University)",
+            "doi": "10.48550/arxiv.2108.13161",
+            "abstract": "Large-scale pre-trained language models have contributed significantly to natural language processing by demonstrating remarkable abilities as few-shot learners. However, their effectiveness depends mainly on scaling the model parameters and prompt design, hindering their implementation in most real-world applications. This study proposes a novel pluggable, extensible, and efficient approach named DifferentiAble pRompT (DART), which can convert small language models into better few-shot learners without any prompt engineering. The main principle behind this approach involves reformulating potential natural language processing tasks into the task of a pre-trained language model and differentially optimizing the prompt template as well as the target label with backpropagation. Furthermore, the proposed approach can be: (i) Plugged to any pre-trained language models; (ii) Extended to widespread classification tasks. A comprehensive evaluation of standard NLP tasks demonstrates that the proposed approach achieves a better few-shot performance. Code is available in https://github.com/zjunlp/DART.",
+            "url": "https://openalex.org/W3196642073"
+          },
+          {
+            "source": "openalex",
+            "title": "Selective Annotation Makes Language Models Better Few-Shot Learners",
+            "authors": [
+              "Hongjin Su",
+              "Jungo Kasai",
+              "Chen Wu",
+              "Weijia Shi",
+              "Tianlu Wang",
+              "Jiayi Xin",
+              "Rui Zhang",
+              "Mari Ostendorf",
+              "Luke Zettlemoyer",
+              "Noah A. Smith",
+              "Changyuan Yu"
+            ],
+            "year": 2022,
+            "venue": "arXiv (Cornell University)",
+            "doi": "10.48550/arxiv.2209.01975",
+            "abstract": "Many recent approaches to natural language tasks are built on the remarkable abilities of large language models. Large language models can perform in-context learning, where they learn a new task from a few task demonstrations, without any parameter updates. This work examines the implications of in-context learning for the creation of datasets for new natural language tasks. Departing from recent in-context learning methods, we formulate an annotation-efficient, two-step framework: selective annotation that chooses a pool of examples to annotate from unlabeled data in advance, followed by prompt retrieval that retrieves task examples from the annotated pool at test time. Based on this framework, we propose an unsupervised, graph-based selective annotation method, voke-k, to select diverse, representative examples to annotate. Extensive experiments on 10 datasets (covering classification, commonsense reasoning, dialogue, and text/code generation) demonstrate that our selective annotation method improves the task performance by a large margin. On average, vote-k achieves a 12.9%/11.4% relative gain under an annotation budget of 18/100, as compared to randomly selecting examples to annotate. Compared to state-of-the-art supervised finetuning approaches, it yields similar performance with 10-100x less annotation cost across 10 tasks. We further analyze the effectiveness of our framework in various scenarios: language models with varying sizes, alternative selective annotation methods, and cases where there is a test data domain shift. We hope that our studies will serve as a basis for data annotations as large language models are increasingly applied to new tasks. Our code is available at https://github.com/HKUNLP/icl-selective-annotation.",
+            "url": "https://openalex.org/W4297633153"
+          }
+        ]
+      },
+      "metadata": {
+        "citation_id": "ref_007",
+        "fields": [
+          {
+            "field": "title",
+            "claimed": "Language Models are Few-Shot Learners",
+            "actual": "Language Models are Few-Shot Learners",
+            "status": "MATCH",
+            "similarity": 1.0
+          },
+          {
+            "field": "authors",
+            "claimed": "Brown, et al.",
+            "actual": "T. B. Brown, Benjamin Mann, Nick Ryder, Melanie Subbiah, Jared Kaplan, Prafulla Dhariwal, Arvind Neelakantan, Pranav Shyam, Girish Sastry, Amanda Askell, Sandhini Agarwal, Ariel Herbert-Voss, Gretchen Krueger, Tom Henighan, Rewon Child, Aditya Ramesh, Daniel M. Ziegler, Jeffrey Wu, Clemens Winter, Christopher Hesse, Mark Chen, Eric J. Sigler, Mateusz Litwin, Scott Gray, Benjamin Chess, Jack Clark, Christopher Berner, Sam McCandlish, Alec Radford, Ilya Sutskever, Dario Amodei",
+            "status": "MATCH",
+            "similarity": 0.8
+          },
+          {
+            "field": "year",
+            "claimed": "2020",
+            "actual": "2020",
+            "status": "MATCH",
+            "similarity": 1.0
+          }
+        ],
+        "mismatch_count": 0,
+        "has_major_mismatch": false
+      },
+      "content_check": {
+        "citation_id": "ref_007",
+        "consistency": "CONSISTENT",
+        "reasoning": "引用声明准确概括了论文摘要的核心发现：GPT-3通过few-shot设置（少量示例）在多种任务上表现出色，且这种能力得益于模型规模的扩大。",
+        "claim": "展示了GPT-3的few-shot学习能力，证明了大规模语言模型可以通过少量示例完成各种任务。",
+        "abstract": "Recent work has demonstrated substantial gains on many NLP tasks and benchmarks by pre-training on a large corpus of text followed by fine-tuning on a specific task. While typically task-agnostic in architecture, this method still requires task-specific fine-tuning datasets of thousands or tens of thousands of examples. By contrast, humans can generally perform a new language task from only a few examples or from simple instructions - something which current NLP systems still largely struggle to do. Here we show that scaling up language models greatly improves task-agnostic, few-shot performance, sometimes even reaching competitiveness with prior state-of-the-art fine-tuning approaches. Specifically, we train GPT-3, an autoregressive language model with 175 billion parameters, 10x more than any previous non-sparse language model, and test its performance in the few-shot setting. For all tasks, GPT-3 is applied without any gradient updates or fine-tuning, with tasks and few-shot demonstrations specified purely via text interaction with the model. GPT-3 achieves strong performance on many NLP datasets, including translation, question-answering, and cloze tasks, as well as several tasks that require on-the-fly reasoning or domain adaptation, such as unscrambling words, using a novel word in a sentence, or performing 3-digit arithmetic. At the same time, we also identify some datasets where GPT-3's few-shot learning still struggles, as well as some datasets where GPT-3 faces methodological issues related to training on large web corpora. Finally, we find that GPT-3 can generate samples of news articles which human evaluators have difficulty distinguishing from articles written by humans. We discuss broader societal impacts of this finding and of GPT-3 in general."
+      }
+    }
+  ]
+}
