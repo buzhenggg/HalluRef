@@ -7,7 +7,7 @@ from contextlib import asynccontextmanager
 from pathlib import Path
 from typing import AsyncGenerator
 
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, File, Request, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
@@ -15,8 +15,10 @@ from loguru import logger
 from pydantic import BaseModel
 from sse_starlette.sse import EventSourceResponse
 
-from src.agents.orchestrator import HalluRefPipeline
+from src.agents.orchestrator import HalluRefPipeline, build_retrieval_config_status
 from src.models.schemas import CitationVerdict, DetectionReport, InputTooLargeError
+from src.utils.config import load_config
+from src.utils import document_text
 
 pipeline: HalluRefPipeline | None = None
 
@@ -56,6 +58,31 @@ class DetectResponse(BaseModel):
     report: DetectionReport
 
 
+class ExtractFileResponse(BaseModel):
+    filename: str
+    content_type: str
+    text: str
+    char_count: int
+    max_input_chars: int
+    over_limit: bool
+
+
+def _detection_limits(app_inst: FastAPI) -> tuple[int, int]:
+    cfg = load_config()
+    det_cfg = cfg.get("detection", {})
+    max_input_chars = getattr(
+        app_inst.state,
+        "max_input_chars",
+        det_cfg.get("max_input_chars", 100000),
+    )
+    max_upload_bytes = getattr(
+        app_inst.state,
+        "max_upload_bytes",
+        det_cfg.get("max_upload_bytes", 10 * 1024 * 1024),
+    )
+    return int(max_input_chars), int(max_upload_bytes)
+
+
 @app.post("/api/detect", response_model=DetectResponse)
 async def detect(req: DetectRequest):
     """检测文本中的幻觉引用"""
@@ -64,6 +91,55 @@ async def detect(req: DetectRequest):
     except InputTooLargeError as e:
         return JSONResponse(status_code=413, content={"message": str(e)})
     return DetectResponse(report=report)
+
+
+@app.post("/api/extract-file", response_model=ExtractFileResponse)
+async def extract_file(request: Request, file: UploadFile = File(...)):
+    """Extract plain text from an uploaded PDF or DOCX without running detection."""
+    filename = file.filename or ""
+    content_type = file.content_type or ""
+    max_input_chars, max_upload_bytes = _detection_limits(request.app)
+
+    content = await file.read(max_upload_bytes + 1)
+    if not content:
+        return JSONResponse(status_code=400, content={"message": "Uploaded file is empty."})
+    if len(content) > max_upload_bytes:
+        return JSONResponse(
+            status_code=413,
+            content={
+                "message": (
+                    f"Uploaded file is {len(content)} bytes, exceeding the "
+                    f"{max_upload_bytes} byte limit."
+                )
+            },
+        )
+
+    try:
+        text = document_text.extract_document_text(filename, content_type, content)
+    except document_text.UnsupportedDocumentError as exc:
+        return JSONResponse(status_code=415, content={"message": str(exc)})
+    except document_text.EmptyDocumentTextError as exc:
+        return JSONResponse(status_code=422, content={"message": str(exc)})
+    except document_text.DocumentParseError as exc:
+        return JSONResponse(status_code=422, content={"message": str(exc)})
+    except document_text.DocumentTextError as exc:
+        return JSONResponse(status_code=422, content={"message": str(exc)})
+
+    if not text.strip():
+        return JSONResponse(
+            status_code=422,
+            content={"message": "No extractable text found in uploaded document."},
+        )
+
+    char_count = len(text)
+    return ExtractFileResponse(
+        filename=filename,
+        content_type=content_type,
+        text=text,
+        char_count=char_count,
+        max_input_chars=max_input_chars,
+        over_limit=char_count > max_input_chars,
+    )
 
 
 def _sse_event(event: str, data: dict | str) -> dict:
@@ -123,6 +199,18 @@ async def health():
     return {"status": "ok"}
 
 
+@app.get("/api/retrieval/config")
+async def retrieval_config():
+    cfg = load_config()
+    status = build_retrieval_config_status(cfg.get("retriever", {}))
+    max_input_chars, max_upload_bytes = _detection_limits(app)
+    status["detection"] = {
+        "max_input_chars": max_input_chars,
+        "max_upload_bytes": max_upload_bytes,
+    }
+    return status
+
+
 # 静态文件 & SPA fallback
 app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
 
@@ -130,8 +218,3 @@ app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
 @app.get("/")
 async def index():
     return FileResponse(STATIC_DIR / "index.html")
-
-
-@app.get("/architecture")
-async def architecture():
-    return FileResponse(STATIC_DIR / "architecture.html")

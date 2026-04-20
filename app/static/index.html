@@ -54,7 +54,7 @@
         <span class="font-semibold text-sm tracking-tight">HalluRef</span>
       </div>
       <div class="flex items-center gap-4">
-        <a href="https://github.com" target="_blank" class="text-xs text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 transition-colors">GitHub</a>
+        <a href="https://github.com/buzhenggg/HalluRef" target="_blank" class="text-xs text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 transition-colors">GitHub</a>
         <!-- 暗色模式切换 -->
         <button id="theme-toggle" class="w-8 h-8 flex items-center justify-center rounded hover:bg-stone-100 dark:hover:bg-slate-800 transition-colors" title="切换主题">
           <svg id="icon-sun" class="w-4 h-4 hidden dark:block" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
@@ -69,18 +69,32 @@
     <!-- ====== 标题区 ====== -->
     <section class="mb-12">
       <h1 class="text-3xl font-bold tracking-tight mb-3">幻觉引用检测</h1>
-      <p class="text-slate-500 dark:text-slate-400 text-sm max-w-2xl">粘贴 LLM 生成的学术文本，系统将通过多智能体协作自动检测其中的捏造引用、信息篡改与观点歪曲。</p>
+      <p class="text-slate-500 dark:text-slate-400 text-sm max-w-2xl">粘贴 LLM 生成的学术文本，系统将自动检测其中的捏造引用与元数据错误。</p>
     </section>
 
     <!-- ====== 输入区 ====== -->
     <section class="mb-10">
       <label for="input-text" class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-2 uppercase tracking-wider">输入文本</label>
+      <p class="mb-2 text-xs text-amber-600 dark:text-amber-400">
+        建议优先粘贴或上传参考文献 / 引用部分，而不是整篇全文；全文会消耗更多模型资源，并可能降低引用识别精准度。
+      </p>
       <textarea
         id="input-text"
         rows="10"
         class="w-full bg-white dark:bg-slate-900 border border-stone-200 dark:border-slate-700 rounded-lg px-4 py-3 text-sm font-mono leading-relaxed placeholder:text-slate-400 dark:placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-slate-300 dark:focus:ring-slate-600 resize-y"
         placeholder="在此粘贴包含引用的学术文本，例如：&#10;&#10;Vaswani et al. (2017) 提出了 Transformer 架构，其论文 &quot;Attention Is All You Need&quot; 发表于 NeurIPS 2017..."
       ></textarea>
+      <div class="mt-3 flex items-center gap-3">
+        <input id="file-upload" type="file" accept=".pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document" class="hidden" />
+        <label
+          for="file-upload"
+          class="h-9 px-4 inline-flex items-center gap-2 text-sm text-slate-600 dark:text-slate-300 border border-stone-200 dark:border-slate-700 rounded-lg hover:border-stone-300 dark:hover:border-slate-600 hover:bg-white dark:hover:bg-slate-900 transition-all cursor-pointer"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 4v12m0-12 4 4m-4-4-4 4"/><path d="M20 16.5V19a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-2.5"/></svg>
+          上传 PDF / DOCX
+        </label>
+        <span id="file-status" class="text-xs text-slate-400 dark:text-slate-500"></span>
+      </div>
       <div class="mt-4 flex items-center gap-4">
         <button
           id="btn-detect"
@@ -95,7 +109,7 @@
           加载示例
         </button>
         <span id="status-text" class="text-xs text-slate-400 dark:text-slate-500 ml-auto"></span>
-        <span id="char-counter" class="text-xs font-mono text-slate-400 dark:text-slate-500 tabular-nums">0 / 20000</span>
+        <span id="char-counter" class="text-xs font-mono text-slate-400 dark:text-slate-500 tabular-nums">0 / 100000</span>
       </div>
     </section>
 
@@ -110,12 +124,11 @@
         <span class="text-sm text-slate-500 dark:text-slate-400" id="loading-text">正在分析引用...</span>
       </div>
       <!-- 流水线进度 -->
-      <div class="grid grid-cols-5 gap-2" id="pipeline-steps">
+      <div class="grid grid-cols-4 gap-2" id="pipeline-steps">
         <div class="step" data-step="1"><div class="h-1 rounded-full bg-stone-200 dark:bg-slate-800"><div class="h-full rounded-full bg-slate-400 dark:bg-slate-500 transition-all duration-500" style="width:0%"></div></div><span class="text-[10px] text-slate-400 mt-1 block">引用提取</span></div>
         <div class="step" data-step="2"><div class="h-1 rounded-full bg-stone-200 dark:bg-slate-800"><div class="h-full rounded-full bg-slate-400 dark:bg-slate-500 transition-all duration-500" style="width:0%"></div></div><span class="text-[10px] text-slate-400 mt-1 block">文献检索</span></div>
         <div class="step" data-step="3"><div class="h-1 rounded-full bg-stone-200 dark:bg-slate-800"><div class="h-full rounded-full bg-slate-400 dark:bg-slate-500 transition-all duration-500" style="width:0%"></div></div><span class="text-[10px] text-slate-400 mt-1 block">元数据比对</span></div>
-        <div class="step" data-step="4"><div class="h-1 rounded-full bg-stone-200 dark:bg-slate-800"><div class="h-full rounded-full bg-slate-400 dark:bg-slate-500 transition-all duration-500" style="width:0%"></div></div><span class="text-[10px] text-slate-400 mt-1 block">内容核查</span></div>
-        <div class="step" data-step="5"><div class="h-1 rounded-full bg-stone-200 dark:bg-slate-800"><div class="h-full rounded-full bg-slate-400 dark:bg-slate-500 transition-all duration-500" style="width:0%"></div></div><span class="text-[10px] text-slate-400 mt-1 block">综合研判</span></div>
+        <div class="step" data-step="4"><div class="h-1 rounded-full bg-stone-200 dark:bg-slate-800"><div class="h-full rounded-full bg-slate-400 dark:bg-slate-500 transition-all duration-500" style="width:0%"></div></div><span class="text-[10px] text-slate-400 mt-1 block">综合研判</span></div>
       </div>
     </section>
 
@@ -131,7 +144,7 @@
 
       <!-- 免责提示 -->
       <div class="mb-6 px-4 py-2.5 rounded-lg border border-stone-200 dark:border-slate-800 bg-stone-100/60 dark:bg-slate-900/40 text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-        检测结果由多智能体流水线自动生成，可能存在误判，仅供参考，请以人工核实为准。
+        可能存在误判，仅供参考，请以人工核实为准。
       </div>
 
       <!-- 统计概览 -->
@@ -155,7 +168,7 @@
 
   <!-- ====== 页脚 ====== -->
   <footer class="border-t border-stone-200 dark:border-slate-800 py-6 text-center text-xs text-slate-400 dark:text-slate-600">
-    HalluRef &mdash; 基于多智能体事实核查的 LLM 幻觉引用检测框架
+    HalluRef &mdash; 基于事实核查的 LLM 幻觉引用检测框架
   </footer>
 
 <script>
@@ -168,7 +181,6 @@
     VERIFIED_MINOR: { label: '引用基本正确', color: 'teal',   icon: '&#10003;' },
     FABRICATED:     { label: '完全捏造',   color: 'red',     icon: '&#10007;' },
     METADATA_ERROR: { label: '信息篡改',   color: 'amber',   icon: '!' },
-    MISREPRESENTED: { label: '观点歪曲',   color: 'orange',  icon: '~' },
     UNVERIFIABLE:   { label: '无法验证',   color: 'slate',   icon: '?' },
   };
 
@@ -198,12 +210,6 @@
       stat: 'text-amber-600 dark:text-amber-400',
       dot: 'bg-amber-500',
     },
-    orange: {
-      border: 'border-l-orange-500', bg: 'bg-orange-50 dark:bg-orange-950/20',
-      badge: 'bg-orange-100 text-orange-700 dark:bg-orange-900/40 dark:text-orange-400',
-      stat: 'text-orange-600 dark:text-orange-400',
-      dot: 'bg-orange-500',
-    },
     slate: {
       border: 'border-l-slate-400', bg: 'bg-stone-50 dark:bg-slate-900/40',
       badge: 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400',
@@ -213,9 +219,11 @@
   };
 
   /* ── DOM 引用 ─────────────────────────────────────────── */
-  const MAX_INPUT_CHARS = 20000;
+  let MAX_INPUT_CHARS = 100000;
   const $input      = document.getElementById('input-text');
   const $btnDetect  = document.getElementById('btn-detect');
+  const $fileUpload = document.getElementById('file-upload');
+  const $fileStatus = document.getElementById('file-status');
   const $charCounter = document.getElementById('char-counter');
   const $btnSample  = document.getElementById('btn-sample');
   const $statusText = document.getElementById('status-text');
@@ -243,7 +251,7 @@
   /* 示例设计原则：
      - 错误信息直接嵌入引用陈述，不用"实际上/而非"等纠正口吻
      - 夸大/歪曲的声明写在引用句本身，确保提取器能关联
-     - 覆盖：VERIFIED / FABRICATED / METADATA_ERROR / MISREPRESENTED / UNVERIFIABLE
+     - 覆盖：VERIFIED / VERIFIED_MINOR / FABRICATED / METADATA_ERROR / UNVERIFIABLE
      - 格式：Author et al. (year) / (Author et al., year) / Author and Author (year) */
   const SAMPLE_TEXT = `大语言模型的可信性研究：从基础架构到幻觉消除
 
@@ -291,12 +299,11 @@ Bai et al. (2022) 在论文 "Training a Helpful and Harmless Assistant with Rein
   });
 
   /* ── 事件驱动的流水线进度 ──────────────────────────────
-     5 个 step 与真实 SSE 事件的对应关系:
+     4 个 step 与真实 SSE 事件的对应关系:
        step 1 引用提取    : 请求开始时不确定进度 (10% 占位) → extraction_done 100%
        step 2 文献检索   ┐
-       step 3 元数据比对 ├ 每条 verdict 对这三步同步推进 (verdicts/total)
-       step 4 内容核查   ┘
-       step 5 综合研判    : verdicts 收齐前 0% → report_complete 100%
+       step 3 元数据比对 ├ 每条 verdict 对这两步同步推进 (verdicts/total)
+       step 4 综合研判   ┘ report_complete 100%
   */
   function _setStepPct(idx, pct) {
     const steps = document.querySelectorAll('#pipeline-steps .step');
@@ -306,7 +313,7 @@ Bai et al. (2022) 在论文 "Training a Helpful and Harmless Assistant with Rein
   }
 
   function resetProgress() {
-    for (let i = 0; i < 5; i++) _setStepPct(i, 0);
+    for (let i = 0; i < 4; i++) _setStepPct(i, 0);
   }
 
   function updateProgressOnExtraction() {
@@ -318,11 +325,10 @@ Bai et al. (2022) 在论文 "Training a Helpful and Harmless Assistant with Rein
     const pct = Math.round((done / total) * 100);
     _setStepPct(1, pct);
     _setStepPct(2, pct);
-    _setStepPct(3, pct);
   }
 
   function updateProgressOnComplete() {
-    for (let i = 0; i < 5; i++) _setStepPct(i, 100);
+    for (let i = 0; i < 4; i++) _setStepPct(i, 100);
   }
 
   function startProgress() {
@@ -356,7 +362,6 @@ Bai et al. (2022) 在论文 "Training a Helpful and Harmless Assistant with Rein
         <div class="flex-1 min-w-0">
           <div class="flex items-center gap-2">
             <span class="text-xs font-mono text-slate-400 dark:text-slate-500">${d.citation_id}</span>
-            <span class="text-xs text-slate-400 dark:text-slate-600">置信度 ${(d.confidence * 100).toFixed(0)}%</span>
           </div>
           <p class="text-sm text-slate-700 dark:text-slate-300 mt-1 line-clamp-2">${escHtml(d.raw_text)}</p>
         </div>
@@ -374,7 +379,6 @@ Bai et al. (2022) 在论文 "Training a Helpful and Harmless Assistant with Rein
           </div>` : ''}
           ${match ? renderMatchDetail(match) : ''}
           ${d.metadata ? renderMetadata(d.metadata) : ''}
-          ${d.content_check && d.content_check.consistency !== 'UNVERIFIABLE' ? renderContentCheck(d.content_check) : ''}
         </div>
       </div>
     </div>`;
@@ -409,7 +413,7 @@ Bai et al. (2022) 在论文 "Training a Helpful and Harmless Assistant with Rein
 
   /* ── 渲染实时统计 ───────────────────────────────────── */
   function renderLiveStats() {
-    const counts = { VERIFIED: 0, VERIFIED_MINOR: 0, FABRICATED: 0, METADATA_ERROR: 0, MISREPRESENTED: 0, UNVERIFIABLE: 0 };
+    const counts = { VERIFIED: 0, VERIFIED_MINOR: 0, FABRICATED: 0, METADATA_ERROR: 0, UNVERIFIABLE: 0 };
     streamVerdicts.forEach(v => { if (counts[v.verdict] !== undefined) counts[v.verdict]++; });
 
     const items = [
@@ -418,7 +422,6 @@ Bai et al. (2022) 在论文 "Training a Helpful and Harmless Assistant with Rein
       { label: '基本正确',   value: counts.VERIFIED_MINOR,  color: 'teal' },
       { label: '完全捏造',   value: counts.FABRICATED,      color: 'red' },
       { label: '信息篡改',   value: counts.METADATA_ERROR,  color: 'amber' },
-      { label: '观点歪曲',   value: counts.MISREPRESENTED,  color: 'orange' },
       { label: '无法验证',   value: counts.UNVERIFIABLE,    color: 'slate' },
     ];
 
@@ -438,6 +441,7 @@ Bai et al. (2022) 在论文 "Training a Helpful and Harmless Assistant with Rein
       <div class="mt-1 text-sm space-y-1">
         <div class="text-slate-700 dark:text-slate-300 font-medium">${escHtml(match.title)}</div>
         <div class="text-xs text-slate-500 dark:text-slate-400">${escHtml(match.authors?.join(', ') || '未知作者')}${match.year ? ' · ' + match.year : ''}${match.venue ? ' · ' + escHtml(match.venue) : ''}</div>
+        ${match.source ? `<div class="text-xs text-slate-400 dark:text-slate-500">来源: <span class="font-mono">${escHtml(match.source)}</span></div>` : ''}
         ${match.doi ? `<div class="text-xs text-slate-400 font-mono">DOI: ${escHtml(match.doi)}</div>` : ''}
         ${match.url ? `<a href="${escHtml(match.url)}" target="_blank" class="text-xs text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 underline underline-offset-2">查看原文 &rarr;</a>` : ''}
       </div>
@@ -472,31 +476,9 @@ Bai et al. (2022) 在论文 "Training a Helpful and Harmless Assistant with Rein
     </div>`;
   }
 
-  /* ── 渲染内容核查 ────────────────────────────────────── */
-  function renderContentCheck(cc) {
-    const conCls = {
-      CONSISTENT: 'text-emerald-600 dark:text-emerald-400',
-      INCONSISTENT: 'text-red-600 dark:text-red-400',
-      EXAGGERATED: 'text-amber-600 dark:text-amber-400',
-      UNVERIFIABLE: 'text-slate-400',
-    };
-    const conLabel = {
-      CONSISTENT: '一致', INCONSISTENT: '矛盾',
-      EXAGGERATED: '夸大', UNVERIFIABLE: '无法判断',
-    };
-    return `
-    <div>
-      <span class="text-[10px] uppercase tracking-wider text-slate-400 dark:text-slate-500 font-medium">内容一致性</span>
-      <div class="mt-1">
-        <span class="text-xs font-medium ${conCls[cc.consistency] || ''}">${conLabel[cc.consistency] || cc.consistency}</span>
-        ${cc.reasoning ? `<p class="text-xs text-slate-500 dark:text-slate-400 mt-1">${escHtml(cc.reasoning)}</p>` : ''}
-      </div>
-    </div>`;
-  }
-
   /* ── 渲染筛选栏（完成后使用） ──────────────────────── */
   function renderFilters(report) {
-    const types = ['ALL', 'VERIFIED', 'VERIFIED_MINOR', 'FABRICATED', 'METADATA_ERROR', 'MISREPRESENTED', 'UNVERIFIABLE'];
+    const types = ['ALL', 'VERIFIED', 'VERIFIED_MINOR', 'FABRICATED', 'METADATA_ERROR', 'UNVERIFIABLE'];
     $filterBar.innerHTML = types.map(t => {
       const cfg = t === 'ALL' ? { label: '全部', color: 'slate' } : VERDICT_CFG[t];
       const count = t === 'ALL' ? report.details.length
@@ -583,9 +565,82 @@ Bai et al. (2022) 在论文 "Training a Helpful and Harmless Assistant with Rein
     } else {
       $charCounter.classList.add('text-slate-400', 'dark:text-slate-500');
     }
+    $btnDetect.disabled = len > MAX_INPUT_CHARS;
   }
   $input.addEventListener('input', updateCharCounter);
   updateCharCounter();
+
+  async function loadDetectionConfig() {
+    try {
+      const resp = await fetch('/api/retrieval/config');
+      if (!resp.ok) return;
+      const data = await resp.json();
+      const limit = Number(data.detection?.max_input_chars);
+      if (Number.isFinite(limit) && limit > 0) {
+        MAX_INPUT_CHARS = limit;
+        updateCharCounter();
+      }
+    } catch (_) {
+      /* Keep the local fallback when config cannot be loaded. */
+    }
+  }
+  loadDetectionConfig();
+
+  async function readErrorMessage(resp) {
+    try {
+      const data = await resp.json();
+      return data.message || JSON.stringify(data);
+    } catch (_) {
+      return await resp.text();
+    }
+  }
+
+  $fileUpload.addEventListener('change', async () => {
+    const file = $fileUpload.files && $fileUpload.files[0];
+    if (!file) return;
+
+    const form = new FormData();
+    form.append('file', file);
+
+    $error.classList.add('hidden');
+    $fileStatus.textContent = `正在提取：${file.name}`;
+    $fileUpload.disabled = true;
+    $btnDetect.disabled = true;
+
+    try {
+      const resp = await fetch('/api/extract-file', {
+        method: 'POST',
+        body: form,
+      });
+      if (!resp.ok) {
+        throw new Error(await readErrorMessage(resp));
+      }
+
+      const data = await resp.json();
+      const uploadLimit = Number(data.max_input_chars);
+      if (Number.isFinite(uploadLimit) && uploadLimit > 0) {
+        MAX_INPUT_CHARS = uploadLimit;
+      }
+      $input.value = data.text || '';
+      updateCharCounter();
+
+      if (data.over_limit) {
+        $fileStatus.textContent = `已提取：${data.filename}`;
+        $errorText.textContent = `文件文本长度 ${data.char_count.toLocaleString()} 字符，超出上限 ${data.max_input_chars.toLocaleString()} 字符。请删减后再检测。`;
+        $error.classList.remove('hidden');
+      } else {
+        $fileStatus.textContent = `已提取：${data.filename}（${data.char_count.toLocaleString()} 字符）`;
+      }
+    } catch (err) {
+      $fileStatus.textContent = '';
+      $errorText.textContent = `文件提取失败：${err.message}`;
+      $error.classList.remove('hidden');
+      updateCharCounter();
+    } finally {
+      $fileUpload.disabled = false;
+      $fileUpload.value = '';
+    }
+  });
 
   $btnDetect.addEventListener('click', async () => {
     const text = $input.value.trim();
@@ -652,8 +707,9 @@ Bai et al. (2022) 在论文 "Training a Helpful and Harmless Assistant with Rein
           const elapsed = ((performance.now() - t0) / 1000).toFixed(1);
           $statusText.textContent = `检测完成，耗时 ${elapsed}s`;
           $loading.classList.add('hidden');
-          /* 用最终报告渲染筛选栏 */
+          /* 用最终报告渲染筛选栏，并按初始引用顺序重排最终列表 */
           renderFilters(report);
+          renderFullCitations(report);
         },
 
         error(data) {
@@ -667,7 +723,7 @@ Bai et al. (2022) 在论文 "Training a Helpful and Harmless Assistant with Rein
       $errorText.textContent = `检测失败：${err.message}`;
       $error.classList.remove('hidden');
     } finally {
-      $btnDetect.disabled = false;
+      updateCharCounter();
     }
   });
 

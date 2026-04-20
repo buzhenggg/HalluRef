@@ -8,6 +8,7 @@
 
 from __future__ import annotations
 
+import asyncio
 import re
 from xml.etree import ElementTree as ET
 
@@ -26,12 +27,31 @@ _NS = {
 
 class ArxivRetriever(BaseRetriever):
     source_name = "arxiv"
+    _global_lock: asyncio.Lock | None = None
+    _global_last_request_time: float = 0.0
+    _global_request_interval: float = 3.5
 
     def __init__(self, timeout: int = 15, max_results: int = 5):
         # 节流由 Agent 2 入口锁统一控制
         super().__init__(timeout=timeout)
         self.base_url = "https://export.arxiv.org/api/query"
         self.max_results = max_results
+
+    @classmethod
+    def _get_global_lock(cls) -> asyncio.Lock:
+        if cls._global_lock is None:
+            cls._global_lock = asyncio.Lock()
+        return cls._global_lock
+
+    async def _rate_limit(self):
+        lock = self._get_global_lock()
+        async with lock:
+            now = asyncio.get_event_loop().time()
+            elapsed = now - self.__class__._global_last_request_time
+            interval = self.__class__._global_request_interval
+            if elapsed < interval:
+                await asyncio.sleep(interval - elapsed)
+            self.__class__._global_last_request_time = asyncio.get_event_loop().time()
 
     @staticmethod
     def _clean(text: str | None) -> str:

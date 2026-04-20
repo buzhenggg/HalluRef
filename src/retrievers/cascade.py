@@ -1,20 +1,4 @@
-"""级联检索编排器 (Cascade Retriever)
-
-策略:
-    Tier 1  OpenAlex + CrossRef         学术 API, 并行
-    Tier 2  Serper / SerpAPI            Google Web Search, 二选一 (Serper 优先)
-    Tier 3  Google Scholar 直爬          浏览器检索
-
-执行规则:
-    - 任一 tier 命中阈值, 立即返回, 后续 tier 跳过 (省请求)
-    - 任一 tier 未配置 (is_configured=False) 自动跳过
-    - Tier 2 同时传入 serper + serpapi 时, 仅使用 Serper (优先级更高)
-    - 每个 tier 的所有候选累积到最终结果, 供下游元数据/内容比对使用
-    - 单个检索器抛异常不阻塞同 tier 其他检索器或后续 tier
-
-匹配优先级 (并列分时的 tiebreak):
-    openalex > crossref > serper > serpapi > google_scholar
-"""
+"""Cascade retriever with academic -> scholar API -> direct Scholar tiers."""
 
 from __future__ import annotations
 
@@ -32,9 +16,11 @@ from src.utils.text_similarity import title_similarity
 _SOURCE_PRIORITY = {
     "openalex": 0,
     "crossref": 1,
-    "serper": 2,
-    "serpapi": 3,
-    "google_scholar": 4,
+    "arxiv": 2,
+    "semantic_scholar": 3,
+    "serper_scholar": 4,
+    "serpapi_scholar": 5,
+    "google_scholar": 6,
 }
 
 
@@ -44,29 +30,32 @@ class CascadeSearchResult:
     confidence: MatchConfidence = MatchConfidence.NONE
     best_match: RetrievedPaper | None = None
     score: float = 0.0
-    hit_tier: str | None = None  # 命中所在 tier 名 ('academic' / 'serper' / 'scholar')
+    hit_tier: str | None = None  # 'academic_primary' / 'academic_secondary' / 'scholar_search' / 'google_scholar_direct'
     candidates: list[RetrievedPaper] = field(default_factory=list)
     tiers_run: list[str] = field(default_factory=list)
+    debug_log: str = ""
 
 
 class CascadeRetriever:
     """级联检索器
 
-    Args:
-        openalex / crossref / serper / scholar:
-            可选传入对应的检索器实例。任何为 None 或 is_configured=False 的会被跳过。
-        title_exact_threshold: 高置信阈值, 命中即停止级联
-        title_fuzzy_threshold: 中置信阈值, 命中即停止级联
-        per_request_timeout: 单次检索器调用超时秒数 (兜底, 防某 tier 卡死)
+    层级顺序:
+        1. academic_primary (OpenAlex + CrossRef)
+        2. academic_secondary (arXiv + Semantic Scholar)
+        3. scholar_search
+        4. google_scholar_direct
+
     """
 
     def __init__(
         self,
         openalex: BaseRetriever | None = None,
         crossref: BaseRetriever | None = None,
-        serper: BaseRetriever | None = None,
-        serpapi: BaseRetriever | None = None,
-        scholar=None,  # GoogleScholarRetriever, 不继承 BaseRetriever
+        arxiv: BaseRetriever | None = None,
+        semantic_scholar: BaseRetriever | None = None,
+        scholar_search: BaseRetriever | None = None,
+        scholar_search_fallback: BaseRetriever | None = None,
+        google_scholar_direct=None,
         title_exact_threshold: float = 0.95,
         title_fuzzy_threshold: float = 0.85,
         per_request_timeout: float = 30.0,
@@ -80,25 +69,37 @@ class CascadeRetriever:
         self.tiers: list[tuple[str, list, bool]] = []
 
         # Tier 1: 学术 API 并行
-        academic = [
+        academic_primary = [
             r for r in (openalex, crossref)
             if r is not None and self._is_configured(r)
         ]
-        if academic:
-            self.tiers.append(("academic", academic, True))
+        if academic_primary:
+            self.tiers.append(("academic_primary", academic_primary, True))
 
-        # Tier 2: Web 搜索, Serper 优先, 二选一 (不同时启用)
-        web_search = None
-        if serper is not None and self._is_configured(serper):
-            web_search = serper
-        elif serpapi is not None and self._is_configured(serpapi):
-            web_search = serpapi
-        if web_search is not None:
-            self.tiers.append(("web_search", [web_search], False))
+        academic_secondary = [
+            r for r in (arxiv, semantic_scholar)
+            if r is not None and self._is_configured(r)
+        ]
+        if academic_secondary:
+            self.tiers.append(("academic_secondary", academic_secondary, True))
 
-        # Tier 3: Google Scholar 直爬
-        if scholar is not None and self._is_configured(scholar):
-            self.tiers.append(("scholar", [scholar], False))
+        # Tier 2: Scholar Search API, Serper preferred over SerpAPI.
+        chosen_scholar = None
+        if scholar_search is not None and self._is_configured(scholar_search):
+            chosen_scholar = scholar_search
+        elif scholar_search_fallback is not None and self._is_configured(scholar_search_fallback):
+            chosen_scholar = scholar_search_fallback
+        if chosen_scholar is not None:
+            self.tiers.append(("scholar_search", [chosen_scholar], False))
+
+        # Tier 3: direct Google Scholar HTTP crawler fallback.
+        # If a Scholar API is configured, direct crawling stays disabled for this run.
+        if (
+            chosen_scholar is None
+            and google_scholar_direct is not None
+            and self._is_configured(google_scholar_direct)
+        ):
+            self.tiers.append(("google_scholar_direct", [google_scholar_direct], False))
 
         logger.info(
             f"[Cascade] active tiers: "
@@ -110,19 +111,25 @@ class CascadeRetriever:
         check = getattr(retriever, "is_configured", None)
         return bool(check()) if callable(check) else True
 
-    async def _safe_search(self, retriever, title, authors, year) -> list[RetrievedPaper]:
-        """单检索器调用, 异常吞掉返回 []"""
+    async def _safe_search(
+        self, retriever, tier_name, title, authors, year
+    ) -> tuple[list[RetrievedPaper], str]:
+        """单检索器调用, 返回 (论文列表, 调试摘要)"""
         try:
-            return await asyncio.wait_for(
+            papers = await asyncio.wait_for(
                 retriever.search(title=title, authors=authors, year=year),
                 timeout=self.per_request_timeout,
             )
+            detail = getattr(retriever, "last_search_debug", "") or (
+                f"{len(papers)} candidates"
+            )
+            return papers, f"{tier_name}/{retriever.source_name}: {detail}"
         except asyncio.TimeoutError:
             logger.warning(f"[Cascade] {retriever.source_name} timeout")
-            return []
+            return [], f"{tier_name}/{retriever.source_name}: error (timeout)"
         except Exception as e:
             logger.warning(f"[Cascade] {retriever.source_name} error: {e}")
-            return []
+            return [], f"{tier_name}/{retriever.source_name}: error ({e})"
 
     def _confidence_for(self, score: float) -> MatchConfidence:
         if score >= self.exact_thresh:
@@ -165,9 +172,11 @@ class CascadeRetriever:
         """
         authors = authors or []
         result = CascadeSearchResult()
+        debug_lines: list[str] = ["检索调试:"]
 
         if not title and not authors:
             logger.warning("[Cascade] empty query (no title/authors)")
+            result.debug_log = "检索调试:\n- 空查询: 未提供 title/authors"
             return result
 
         for tier_name, retrievers, parallel in self.tiers:
@@ -181,16 +190,22 @@ class CascadeRetriever:
             # ── 执行该 tier ────────────────
             if parallel:
                 tier_results = await asyncio.gather(
-                    *[self._safe_search(r, title, authors, year) for r in retrievers]
+                    *[
+                        self._safe_search(r, tier_name, title, authors, year)
+                        for r in retrievers
+                    ]
                 )
             else:
                 tier_results = [
-                    await self._safe_search(retrievers[0], title, authors, year)
+                    await self._safe_search(
+                        retrievers[0], tier_name, title, authors, year
+                    )
                 ]
 
             tier_papers: list[RetrievedPaper] = []
-            for papers in tier_results:
+            for papers, debug_line in tier_results:
                 tier_papers.extend(papers)
+                debug_lines.append(f"- {debug_line}")
 
             result.candidates.extend(tier_papers)
 
@@ -216,6 +231,8 @@ class CascadeRetriever:
                     result.candidates,
                     key=lambda p: _SOURCE_PRIORITY.get(p.source, 999),
                 )[:10]
+                debug_lines.append(f"- 最终命中层: {tier_name}")
+                result.debug_log = "\n".join(debug_lines)
                 return result
 
         # ── 全部 tier 跑完仍未命中 ──
@@ -228,6 +245,8 @@ class CascadeRetriever:
             result.candidates,
             key=lambda p: _SOURCE_PRIORITY.get(p.source, 999),
         )[:10]
+        debug_lines.append("- 最终未命中: 所有 tier 均未达到阈值")
+        result.debug_log = "\n".join(debug_lines)
         return result
 
     async def close(self):

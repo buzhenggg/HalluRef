@@ -6,6 +6,7 @@
 
 from __future__ import annotations
 
+import asyncio
 import json
 from types import SimpleNamespace
 
@@ -120,6 +121,11 @@ class TestSemanticScholar:
         await r.search_by_title("X")
         assert captured.get("x-api-key") == "abc"
 
+    def test_api_key_required_for_configuration(self):
+        assert SemanticScholarRetriever(api_key="abc").is_configured() is True
+        assert SemanticScholarRetriever(api_key="").is_configured() is False
+        assert SemanticScholarRetriever(api_key=None).is_configured() is False
+
     @pytest.mark.asyncio
     async def test_empty_data(self, monkeypatch):
         r = SemanticScholarRetriever()
@@ -214,6 +220,30 @@ class TestArxiv:
         papers = await r.search_by_title("anything")
         assert papers == []
 
+    @pytest.mark.asyncio
+    async def test_global_cooldown_serializes_arxiv_requests(self, monkeypatch):
+        ArxivRetriever._global_last_request_time = 0.0
+        ArxivRetriever._global_lock = None
+        ArxivRetriever._global_request_interval = 0.05
+
+        r1 = ArxivRetriever()
+        r2 = ArxivRetriever()
+        starts = []
+
+        async def gated_request(retriever):
+            await retriever._rate_limit()
+            starts.append(asyncio.get_event_loop().time())
+
+        try:
+            await asyncio.gather(gated_request(r1), gated_request(r2))
+        finally:
+            ArxivRetriever._global_request_interval = 3.5
+            ArxivRetriever._global_last_request_time = 0.0
+            ArxivRetriever._global_lock = None
+
+        assert len(starts) == 2
+        assert starts[1] - starts[0] >= 0.045
+
 
 # ───────────────────────── Serper ─────────────────────────
 
@@ -221,7 +251,7 @@ class TestArxiv:
 class TestSerper:
     @pytest.mark.asyncio
     async def test_parse_search(self, monkeypatch):
-        # Google Web Search 响应结构: 通用 organic 网页结果
+        # Serper search API response shape: generic organic results.
         payload = {
             "organic": [
                 {
@@ -233,7 +263,7 @@ class TestSerper:
                 }
             ]
         }
-        r = SerperRetriever(api_key="dummy")
+        r = SerperRetriever(api_key="dummy", enrich_links=False)
 
         async def fake_req(method, url, **kw):
             assert method == "POST"
@@ -265,7 +295,7 @@ class TestSerper:
                 }
             ]
         }
-        r = SerperRetriever(api_key="k")
+        r = SerperRetriever(api_key="k", enrich_links=False)
         monkeypatch.setattr(r, "_request_with_retry", lambda *a, **kw: _fake_async(payload))
         papers = await r.search_by_title("X")
         assert papers[0].year == 2019
@@ -278,14 +308,14 @@ class TestSerper:
             captured["body"] = json.loads(kw["content"])
             return _fake_json_resp({"organic": []})
 
-        r = SerperRetriever(api_key="k")
+        r = SerperRetriever(api_key="k", enrich_links=False)
         monkeypatch.setattr(r, "_request_with_retry", fake_req)
         await r.search_by_author_year(["Vaswani", "Shazeer"], 2017)
         assert captured["body"]["q"] == "Vaswani Shazeer 2017"
 
     @pytest.mark.asyncio
     async def test_empty_organic(self, monkeypatch):
-        r = SerperRetriever(api_key="k")
+        r = SerperRetriever(api_key="k", enrich_links=False)
         monkeypatch.setattr(r, "_request_with_retry", lambda *a, **kw: _fake_async({"organic": []}))
         papers = await r.search_by_title("nothing")
         assert papers == []
@@ -294,6 +324,19 @@ class TestSerper:
         assert SerperRetriever(api_key="x").is_configured() is True
         assert SerperRetriever(api_key=None).is_configured() is False
         assert SerperRetriever(api_key="").is_configured() is False
+
+    @pytest.mark.asyncio
+    async def test_scholar_mode_uses_scholar_endpoint(self, monkeypatch):
+        payload = {"organic": []}
+        r = SerperRetriever(api_key="dummy", enrich_links=False, search_type="scholar")
+
+        async def fake_req(method, url, **kw):
+            assert url == "https://google.serper.dev/scholar"
+            return _fake_json_resp(payload)
+
+        monkeypatch.setattr(r, "_request_with_retry", fake_req)
+        assert await r.search_by_title("Attention Is All You Need") == []
+        assert r.source_name == "serper_scholar"
 
 
 class TestSerpApi:
@@ -311,7 +354,7 @@ class TestSerpApi:
                 }
             ]
         }
-        r = SerpApiRetriever(api_key="dummy")
+        r = SerpApiRetriever(api_key="dummy", enrich_links=False)
 
         async def fake_req(method, url, **kw):
             assert method == "GET"
@@ -332,7 +375,7 @@ class TestSerpApi:
     @pytest.mark.asyncio
     async def test_empty_results(self, monkeypatch):
         from src.retrievers.serpapi import SerpApiRetriever
-        r = SerpApiRetriever(api_key="k")
+        r = SerpApiRetriever(api_key="k", enrich_links=False)
         monkeypatch.setattr(r, "_request_with_retry", lambda *a, **kw: _fake_async({}))
         assert await r.search_by_title("x") == []
 
@@ -340,3 +383,17 @@ class TestSerpApi:
         from src.retrievers.serpapi import SerpApiRetriever
         assert SerpApiRetriever(api_key="x").is_configured() is True
         assert SerpApiRetriever(api_key=None).is_configured() is False
+
+    @pytest.mark.asyncio
+    async def test_scholar_mode_uses_google_scholar_engine(self, monkeypatch):
+        from src.retrievers.serpapi import SerpApiRetriever
+
+        r = SerpApiRetriever(api_key="dummy", enrich_links=False, search_type="scholar")
+
+        async def fake_req(method, url, **kw):
+            assert kw["params"]["engine"] == "google_scholar"
+            return _fake_json_resp({"organic_results": []})
+
+        monkeypatch.setattr(r, "_request_with_retry", fake_req)
+        assert await r.search_by_title("Attention Is All You Need") == []
+        assert r.source_name == "serpapi_scholar"

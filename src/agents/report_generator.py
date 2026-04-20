@@ -1,6 +1,6 @@
-"""Agent 5: 综合研判与报告生成智能体
+"""Agent 5: 综合研判与报告生成模块。
 
-汇总所有 Agent 结果, 对每条引用给出幻觉分类标签 + 置信度, 生成结构化检测报告。
+汇总所有 Agent 结果, 对每条引用给出幻觉分类标签与结构化检测报告。
 """
 
 from __future__ import annotations
@@ -10,8 +10,6 @@ from loguru import logger
 from src.models.schemas import (
     Citation,
     CitationVerdict,
-    ContentCheckResult,
-    ContentConsistency,
     DetectionReport,
     FieldMatchStatus,
     HallucinationType,
@@ -28,34 +26,40 @@ _MINOR_FIELDS = {"year", "venue"}
 class ReportGenerator:
     """综合研判 Agent"""
 
+    @staticmethod
+    def _citation_sort_key(verdict: CitationVerdict) -> tuple[int, str]:
+        suffix = verdict.citation_id.rsplit("_", 1)[-1]
+        try:
+            return (int(suffix), verdict.citation_id)
+        except ValueError:
+            return (10**9, verdict.citation_id)
+
     def classify_one(
         self,
         citation: Citation,
         retrieval: RetrievalResult | None,
         metadata: MetadataComparisonResult | None,
-        content: ContentCheckResult | None,
     ) -> CitationVerdict:
         """对单条引用做研判 (供 per-citation pipeline 使用)"""
-        return self._classify(citation, retrieval, metadata, content)
+        return self._classify(citation, retrieval, metadata)
 
     def aggregate(self, verdicts: list[CitationVerdict]) -> DetectionReport:
         """从已有的逐条 verdict 聚合成最终报告"""
+        ordered_verdicts = sorted(verdicts, key=self._citation_sort_key)
         report = DetectionReport(
-            total_citations=len(verdicts),
-            verified=sum(1 for v in verdicts if v.verdict == HallucinationType.VERIFIED),
-            verified_minor=sum(1 for v in verdicts if v.verdict == HallucinationType.VERIFIED_MINOR),
-            fabricated=sum(1 for v in verdicts if v.verdict == HallucinationType.FABRICATED),
-            metadata_error=sum(1 for v in verdicts if v.verdict == HallucinationType.METADATA_ERROR),
-            misrepresented=sum(1 for v in verdicts if v.verdict == HallucinationType.MISREPRESENTED),
-            unverifiable=sum(1 for v in verdicts if v.verdict == HallucinationType.UNVERIFIABLE),
-            details=verdicts,
+            total_citations=len(ordered_verdicts),
+            verified=sum(1 for v in ordered_verdicts if v.verdict == HallucinationType.VERIFIED),
+            verified_minor=sum(1 for v in ordered_verdicts if v.verdict == HallucinationType.VERIFIED_MINOR),
+            fabricated=sum(1 for v in ordered_verdicts if v.verdict == HallucinationType.FABRICATED),
+            metadata_error=sum(1 for v in ordered_verdicts if v.verdict == HallucinationType.METADATA_ERROR),
+            unverifiable=sum(1 for v in ordered_verdicts if v.verdict == HallucinationType.UNVERIFIABLE),
+            details=ordered_verdicts,
         )
         logger.info(
             f"[Agent5] Report: total={report.total_citations}, "
             f"verified={report.verified}, verified_minor={report.verified_minor}, "
             f"fabricated={report.fabricated}, "
             f"metadata_error={report.metadata_error}, "
-            f"misrepresented={report.misrepresented}, "
             f"unverifiable={report.unverifiable}"
         )
         return report
@@ -65,14 +69,12 @@ class ReportGenerator:
         citations: list[Citation],
         retrievals: list[RetrievalResult],
         metadata_results: list[MetadataComparisonResult],
-        content_results: list[ContentCheckResult],
     ) -> DetectionReport:
         """汇总所有 Agent 结果, 生成检测报告"""
 
         # 建立索引
         retrieval_map = {r.citation_id: r for r in retrievals}
         metadata_map = {m.citation_id: m for m in metadata_results}
-        content_map = {c.citation_id: c for c in content_results}
 
         verdicts: list[CitationVerdict] = []
 
@@ -80,9 +82,8 @@ class ReportGenerator:
             cid = citation.citation_id
             retrieval = retrieval_map.get(cid)
             metadata = metadata_map.get(cid)
-            content = content_map.get(cid)
 
-            verdict = self._classify(citation, retrieval, metadata, content)
+            verdict = self._classify(citation, retrieval, metadata)
             verdicts.append(verdict)
 
         # 统计 (复用 aggregate)
@@ -93,21 +94,15 @@ class ReportGenerator:
         citation: Citation,
         retrieval: RetrievalResult | None,
         metadata: MetadataComparisonResult | None,
-        content: ContentCheckResult | None,
     ) -> CitationVerdict:
         """对单条引用执行分类决策树
 
         判定优先级 (短路):
             1. 未检索到论文          → FABRICATED
-            2. title 或 authors 错   → METADATA_ERROR
-            3. 内容矛盾 / 夸大       → MISREPRESENTED
-            4. year/venue 等小字段错 → VERIFIED_MINOR (若 LLM 内容存疑则 evidence 附注)
-            5. 全部通过             → VERIFIED      (若 LLM 内容存疑则 evidence 附注)
-
-        说明: LLM 内容核查返回 UNVERIFIABLE 时不再升级成 UNVERIFIABLE 标签
-              (论文真实存在 + 关键元数据正确 = 引用本身没出错), 只在 evidence 中注明
-              "内容核查存疑", 完整 LLM reasoning 仍随 content_check 字段返回前端供人工查看。
-              UNVERIFIABLE 标签仅保留给 orchestrator 层的整条引用处理异常兜底。
+            2. 关键字段缺失         → UNVERIFIABLE
+            3. title 或 authors 错  → METADATA_ERROR
+            4. year/venue 等小字段错 → VERIFIED_MINOR
+            5. 全部通过             → VERIFIED
         """
 
         # 1. 未找到 → FABRICATED
@@ -121,10 +116,23 @@ class ReportGenerator:
                 suggestion="建议删除该引用或替换为真实文献",
                 retrieval=retrieval,
                 metadata=metadata,
-                content_check=content,
             )
 
-        # 2. 找到 → 关键字段 (title/authors) 检查
+        # 2. 找到但关键字段缺失 → UNVERIFIABLE
+        missing_fields = self._missing_key_fields(citation, retrieval)
+        if missing_fields:
+            return CitationVerdict(
+                citation_id=citation.citation_id,
+                raw_text=citation.raw_text,
+                verdict=HallucinationType.UNVERIFIABLE,
+                confidence=0.6,
+                evidence=f"关键字段缺失, 无法完成核验: {', '.join(missing_fields)}",
+                suggestion="建议补全作者等关键元数据后再重新检测",
+                retrieval=retrieval,
+                metadata=metadata,
+            )
+
+        # 3. 找到 → 关键字段 (title/authors) 检查
         key_mismatches, minor_mismatches = self._split_mismatches(metadata)
         if key_mismatches:
             return CitationVerdict(
@@ -136,42 +144,9 @@ class ReportGenerator:
                 suggestion="请核实并修正引用的元数据信息",
                 retrieval=retrieval,
                 metadata=metadata,
-                content_check=content,
             )
 
-        # 3. 关键元数据 OK → 内容核查
-        content_uncertain_note = ""
-        if content:
-            if content.consistency == ContentConsistency.INCONSISTENT:
-                return CitationVerdict(
-                    citation_id=citation.citation_id,
-                    raw_text=citation.raw_text,
-                    verdict=HallucinationType.MISREPRESENTED,
-                    confidence=0.85,
-                    evidence=f"内容不一致: {content.reasoning}",
-                    suggestion="引用声明与论文实际内容不符, 请重新核实",
-                    retrieval=retrieval,
-                    metadata=metadata,
-                    content_check=content,
-                )
-            if content.consistency == ContentConsistency.EXAGGERATED:
-                return CitationVerdict(
-                    citation_id=citation.citation_id,
-                    raw_text=citation.raw_text,
-                    verdict=HallucinationType.MISREPRESENTED,
-                    confidence=0.75,
-                    evidence=f"观点夸大: {content.reasoning}",
-                    suggestion="引用声明夸大了论文结论, 建议调整表述",
-                    retrieval=retrieval,
-                    metadata=metadata,
-                    content_check=content,
-                )
-            if content.consistency == ContentConsistency.UNVERIFIABLE:
-                # 不升级为 UNVERIFIABLE 标签: 论文存在 + 关键元数据正确 = 引用本身正确
-                # 仅在 evidence 中附注存疑, 并继续走 VERIFIED / VERIFIED_MINOR 分支
-                content_uncertain_note = "; 内容声明存疑 (LLM 仅凭摘要无法定论, 建议人工核实)"
-
-        # 4. 关键元数据 OK + 内容也没问题 → 看是否有 year/venue 小字段错
+        # 4. 关键元数据 OK → 看是否有 year/venue 小字段错
         if minor_mismatches:
             return CitationVerdict(
                 citation_id=citation.citation_id,
@@ -180,23 +155,15 @@ class ReportGenerator:
                 confidence=0.85,
                 evidence=(
                     f"论文存在, 标题与作者匹配; 但 {', '.join(minor_mismatches)} "
-                    f"字段与真实文献不符" + content_uncertain_note
+                    f"字段与真实文献不符"
                 ),
                 suggestion="建议修正这些字段的引用信息",
                 retrieval=retrieval,
                 metadata=metadata,
-                content_check=content,
             )
 
         # 5. 一切正常 → VERIFIED
-        if content is not None and content.consistency == ContentConsistency.CONSISTENT:
-            evidence = "论文存在, 元数据一致, 内容核查通过"
-        elif content is not None and content.consistency == ContentConsistency.UNVERIFIABLE:
-            evidence = "论文存在, 元数据一致" + content_uncertain_note
-        elif retrieval.best_match and not (retrieval.best_match.abstract or "").strip():
-            evidence = "论文存在, 元数据一致 (摘要缺失, 跳过内容核查)"
-        else:
-            evidence = "论文存在, 元数据一致 (引用未包含具体声明, 跳过内容核查)"
+        evidence = "论文存在, 元数据一致"
         return CitationVerdict(
             citation_id=citation.citation_id,
             raw_text=citation.raw_text,
@@ -206,8 +173,22 @@ class ReportGenerator:
             suggestion="",
             retrieval=retrieval,
             metadata=metadata,
-            content_check=content,
         )
+
+    @staticmethod
+    def _missing_key_fields(
+        citation: Citation,
+        retrieval: RetrievalResult | None,
+    ) -> list[str]:
+        if not retrieval or not retrieval.best_match:
+            return ["title", "authors"]
+
+        missing: list[str] = []
+        if not (citation.parsed.title or "").strip() or not (retrieval.best_match.title or "").strip():
+            missing.append("title")
+        if not citation.parsed.authors or not retrieval.best_match.authors:
+            missing.append("authors")
+        return missing
 
     @staticmethod
     def _split_mismatches(
@@ -230,9 +211,14 @@ class ReportGenerator:
     def _fabricated_evidence(retrieval: RetrievalResult | None) -> str:
         if not retrieval:
             return "未执行检索"
+        debug_suffix = (
+            f"\n\n{retrieval.debug_log}"
+            if retrieval.debug_log.strip()
+            else ""
+        )
         if not retrieval.all_candidates:
-            return "在所有学术数据源中均未检索到该论文"
+            return "在所有学术数据源中均未检索到该论文" + debug_suffix
         return (
             f"在学术数据源中检索到 {len(retrieval.all_candidates)} 条候选, "
             f"但标题匹配度均低于阈值, 疑似捏造"
-        )
+        ) + debug_suffix

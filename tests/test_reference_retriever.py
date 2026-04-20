@@ -72,7 +72,7 @@ class TestConcurrentVerify:
         r1 = FakeRetriever("openalex", [_make_paper("openalex", "Attention Is All You Need")])
         r2 = FakeRetriever("crossref", [_make_paper("crossref", "Attention Is All You Need")])
 
-        agent = ReferenceRetriever(retrievers=[r1, r2])
+        agent = ReferenceRetriever(retrievers=[r1, r2], interval_min=0.0, interval_max=0.0)
         citation = _make_citation("ref_001", "Attention Is All You Need")
 
         result = await agent.verify(citation)
@@ -90,7 +90,7 @@ class TestConcurrentVerify:
         r1 = FakeRetriever("openalex", [_make_paper("openalex", "Paper A")])
         r2 = FakeRetriever("crossref", [_make_paper("crossref", "Paper B")])
 
-        agent = ReferenceRetriever(retrievers=[r1, r2])
+        agent = ReferenceRetriever(retrievers=[r1, r2], interval_min=0.0, interval_max=0.0)
         citation = _make_citation("ref_001", "Paper A")
 
         result = await agent.verify(citation)
@@ -105,7 +105,7 @@ class TestConcurrentVerify:
         r_fail = FakeRetriever("openalex", [], should_fail=True)
         r_ok = FakeRetriever("crossref", [_make_paper("crossref", "Attention Is All You Need")])
 
-        agent = ReferenceRetriever(retrievers=[r_fail, r_ok])
+        agent = ReferenceRetriever(retrievers=[r_fail, r_ok], interval_min=0.0, interval_max=0.0)
         citation = _make_citation("ref_001", "Attention Is All You Need")
 
         result = await agent.verify(citation)
@@ -120,7 +120,7 @@ class TestConcurrentVerify:
         r1 = FakeRetriever("openalex", [], should_fail=True)
         r2 = FakeRetriever("crossref", [], should_fail=True)
 
-        agent = ReferenceRetriever(retrievers=[r1, r2])
+        agent = ReferenceRetriever(retrievers=[r1, r2], interval_min=0.0, interval_max=0.0)
         citation = _make_citation("ref_001", "Some Paper")
 
         result = await agent.verify(citation)
@@ -136,7 +136,7 @@ class TestConcurrentVerify:
         r1 = FakeRetriever("openalex", [paper], delay=delay)
         r2 = FakeRetriever("crossref", [paper], delay=delay)
 
-        agent = ReferenceRetriever(retrievers=[r1, r2])
+        agent = ReferenceRetriever(retrievers=[r1, r2], interval_min=0.0, interval_max=0.0)
         citation = _make_citation("ref_001", "Test Paper")
 
         start = asyncio.get_event_loop().time()
@@ -157,7 +157,7 @@ class TestConcurrentVerifyBatch:
     async def test_batch_returns_correct_order(self):
         """批量结果顺序应与输入一致"""
         r = FakeRetriever("openalex", [_make_paper("openalex", "Paper")])
-        agent = ReferenceRetriever(retrievers=[r])
+        agent = ReferenceRetriever(retrievers=[r], interval_min=0.0, interval_max=0.0)
 
         citations = [_make_citation(f"ref_{i:03d}", "Paper") for i in range(5)]
         results = await agent.verify_batch(citations)
@@ -168,10 +168,12 @@ class TestConcurrentVerifyBatch:
 
     @pytest.mark.asyncio
     async def test_batch_concurrency_limited(self):
-        """批量验证应受 max_concurrent 限制"""
+        """批量验证当前会被全局入口锁串行化"""
         paper = _make_paper("openalex", "Paper")
         r = FakeRetriever("openalex", [paper], delay=0.1)
-        agent = ReferenceRetriever(retrievers=[r], max_concurrent=2)
+        agent = ReferenceRetriever(
+            retrievers=[r], max_concurrent=2, interval_min=0.0, interval_max=0.0
+        )
 
         citations = [_make_citation(f"ref_{i:03d}", "Paper") for i in range(4)]
 
@@ -180,14 +182,14 @@ class TestConcurrentVerifyBatch:
         elapsed = asyncio.get_event_loop().time() - start
 
         assert len(results) == 4
-        # max_concurrent=2, 4条引用需要2批, 约0.2s; 串行则0.4s
-        assert elapsed < 0.35
+        # 当前实现使用全局入口锁串行化 verify，因此总耗时接近 4 * 0.1s
+        assert elapsed >= 0.4
 
     @pytest.mark.asyncio
     async def test_batch_empty(self):
         """空列表应返回空结果"""
         r = FakeRetriever("openalex", [])
-        agent = ReferenceRetriever(retrievers=[r])
+        agent = ReferenceRetriever(retrievers=[r], interval_min=0.0, interval_max=0.0)
 
         results = await agent.verify_batch([])
         assert results == []
@@ -196,9 +198,16 @@ class TestConcurrentVerifyBatch:
     async def test_no_title_no_authors(self):
         """无标题无作者时应返回 NONE 置信度"""
         r = FakeRetriever("openalex", [])
-        agent = ReferenceRetriever(retrievers=[r])
+        agent = ReferenceRetriever(retrievers=[r], interval_min=0.0, interval_max=0.0)
         citation = _make_citation("ref_001", "", authors=[])
 
         result = await agent.verify(citation)
         assert result.found is False
         assert result.confidence == MatchConfidence.NONE
+
+
+def test_default_random_interval_range_is_one_to_three_seconds():
+    agent = ReferenceRetriever()
+
+    assert agent.interval_min == 1.0
+    assert agent.interval_max == 3.0

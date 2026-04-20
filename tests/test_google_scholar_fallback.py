@@ -11,6 +11,7 @@ from src.models.schemas import (
     RetrievedPaper,
 )
 from src.retrievers.base import BaseRetriever
+from src.retrievers.cascade import CascadeRetriever
 from src.retrievers.google_scholar import GoogleScholarRetriever
 from src.agents.reference_retriever import ReferenceRetriever
 
@@ -268,3 +269,54 @@ class TestFallbackIntegration:
         ])
         assert len(results) == 2
         assert all(r.found for r in results)
+
+
+class TestCascadeDirectScholarFallback:
+    """Google Scholar direct crawler is the cascade final fallback tier."""
+
+    @pytest.mark.asyncio
+    async def test_cascade_skips_direct_scholar_when_scholar_api_is_configured(self):
+        scholar_api = FakeRetriever("serper_scholar", papers=[])
+        direct = GoogleScholarRetriever(proxy=None)
+        direct.search = AsyncMock(
+            return_value=[
+                RetrievedPaper(
+                    source="google_scholar",
+                    title="Attention Is All You Need",
+                    year=2017,
+                )
+            ]
+        )
+        cascade = CascadeRetriever(
+            scholar_search=scholar_api,
+            google_scholar_direct=direct,
+        )
+
+        result = await cascade.search(title="Attention Is All You Need")
+
+        assert result.found is False
+        assert result.hit_tier is None
+        assert result.tiers_run == ["scholar_search"]
+        direct.search.assert_not_called()
+
+    @pytest.mark.asyncio
+    async def test_cascade_uses_direct_scholar_when_no_scholar_api_is_configured(self):
+        direct = GoogleScholarRetriever(proxy=None)
+        direct.search = AsyncMock(
+            return_value=[
+                RetrievedPaper(
+                    source="google_scholar",
+                    title="Attention Is All You Need",
+                    year=2017,
+                )
+            ]
+        )
+        cascade = CascadeRetriever(google_scholar_direct=direct)
+
+        result = await cascade.search(title="Attention Is All You Need")
+
+        assert result.found is True
+        assert result.hit_tier == "google_scholar_direct"
+        assert result.best_match is not None
+        assert result.best_match.source == "google_scholar"
+        direct.search.assert_called_once()

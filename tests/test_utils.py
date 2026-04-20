@@ -60,6 +60,23 @@ class TestAuthorNameSimilarity:
         score = author_name_similarity("J. Smith", "John Smith")
         assert score > 0.6
 
+    def test_initial_plus_surname_matches_full_given_name(self):
+        assert author_name_similarity("Z. Guo", "Zhijiang Guo") >= 0.9
+        assert author_name_similarity("M. Schlichtkrull", "Michael Schlichtkrull") >= 0.9
+        assert author_name_similarity("A. Vlachos", "Andreas Vlachos") >= 0.9
+
+    def test_inverted_initial_name_matches_full_name(self):
+        assert author_name_similarity("Guo, Z.", "Zhijiang Guo") >= 0.9
+
+    def test_multiple_initials_and_suffix_match_without_suffix_penalty(self):
+        assert author_name_similarity("E. C. M. Boyle, III", "E C M Boyle") >= 0.9
+
+    def test_same_surname_different_initial_is_not_high_confidence(self):
+        assert author_name_similarity("Z. Guo", "Michael Guo") < 0.8
+
+    def test_different_surname_is_low_confidence(self):
+        assert author_name_similarity("Z. Guo", "Zhijiang Wang") < 0.4
+
 
 class TestAuthorListSimilarity:
     def test_identical_list(self):
@@ -80,4 +97,52 @@ class TestAuthorListSimilarity:
         score, _ = author_list_similarity([], [])
         assert score == 1.0
 
+    def test_initial_author_list_matches_full_names(self):
+        score, matches = author_list_similarity(
+            ["Z. Guo", "M. Schlichtkrull", "A. Vlachos"],
+            ["Zhijiang Guo", "Michael Schlichtkrull", "Andreas Vlachos"],
+        )
+        assert score >= 0.8
+        assert matches == [
+            ("Z. Guo", "Zhijiang Guo"),
+            ("M. Schlichtkrull", "Michael Schlichtkrull"),
+            ("A. Vlachos", "Andreas Vlachos"),
+        ]
 
+    def test_author_list_matches_out_of_order(self):
+        score, matches = author_list_similarity(
+            ["M. Schlichtkrull", "A. Vlachos", "Z. Guo"],
+            ["Zhijiang Guo", "Michael Schlichtkrull", "Andreas Vlachos"],
+        )
+
+        assert score >= 0.8
+        assert matches == [
+            ("M. Schlichtkrull", "Michael Schlichtkrull"),
+            ("A. Vlachos", "Andreas Vlachos"),
+            ("Z. Guo", "Zhijiang Guo"),
+        ]
+
+    def test_et_al_first_author_is_high_confidence_match(self):
+        score, matches = author_list_similarity(
+            ["Vaswani et al."],
+            [
+                "Ashish Vaswani",
+                "Noam Shazeer",
+                "Niki Parmar",
+                "Jakob Uszkoreit",
+                "Llion Jones",
+                "Aidan N. Gomez",
+                "Lukasz Kaiser",
+                "Illia Polosukhin",
+            ],
+        )
+
+        assert score >= 0.9
+        assert matches == [("Vaswani et al.", "Ashish Vaswani")]
+
+    def test_obvious_author_count_mismatch_is_not_full_match(self):
+        score, _ = author_list_similarity(
+            ["Z. Guo", "M. Schlichtkrull", "A. Vlachos"],
+            ["Zhijiang Guo", "Michael Schlichtkrull"],
+        )
+        assert score < 0.8

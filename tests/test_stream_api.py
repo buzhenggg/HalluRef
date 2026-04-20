@@ -10,14 +10,9 @@ from app.api import app
 from src.models.schemas import (
     Citation,
     CitationVerdict,
-    ContentCheckResult,
-    ContentConsistency,
     DetectionReport,
     HallucinationType,
-    MatchConfidence,
-    MetadataComparisonResult,
     ParsedCitation,
-    RetrievalResult,
 )
 
 
@@ -39,6 +34,21 @@ def _make_verdict(cid: str, verdict: HallucinationType) -> CitationVerdict:
         verdict=verdict,
         confidence=0.9,
         evidence="test evidence",
+    )
+
+
+async def _fake_run_streaming(citations: list[Citation], verdicts: list[CitationVerdict]):
+    yield "extraction_done", citations
+    for verdict in verdicts:
+        yield "citation_verdict", verdict
+    yield "report_complete", DetectionReport(
+        total_citations=len(verdicts),
+        fabricated=sum(1 for v in verdicts if v.verdict == HallucinationType.FABRICATED),
+        verified=sum(1 for v in verdicts if v.verdict == HallucinationType.VERIFIED),
+        verified_minor=sum(1 for v in verdicts if v.verdict == HallucinationType.VERIFIED_MINOR),
+        metadata_error=sum(1 for v in verdicts if v.verdict == HallucinationType.METADATA_ERROR),
+        unverifiable=sum(1 for v in verdicts if v.verdict == HallucinationType.UNVERIFIABLE),
+        details=verdicts,
     )
 
 
@@ -79,24 +89,10 @@ class TestStreamEndpoint:
     async def test_stream_events_order(self):
         """应按 extraction_done → citation_verdict(s) → report_complete 顺序推送"""
         citations = [_make_citation("ref_001", "Paper A")]
-        retrieval = RetrievalResult(
-            citation_id="ref_001", found=False, confidence=MatchConfidence.NONE
-        )
-        metadata = MetadataComparisonResult(citation_id="ref_001")
-        content = ContentCheckResult(citation_id="ref_001")
         verdict = _make_verdict("ref_001", HallucinationType.FABRICATED)
 
         with patch.object(app.state, "pipeline", create=True) as mock_pipeline:
-            mock_pipeline.agent1_extractor = AsyncMock()
-            mock_pipeline.agent1_extractor.extract = AsyncMock(return_value=citations)
-            mock_pipeline.agent2_retriever = AsyncMock()
-            mock_pipeline.agent2_retriever.verify = AsyncMock(return_value=retrieval)
-            mock_pipeline.agent3_comparator = AsyncMock()
-            mock_pipeline.agent3_comparator.compare = lambda c, r: metadata
-            mock_pipeline.agent4_checker = AsyncMock()
-            mock_pipeline.agent4_checker.check = AsyncMock(return_value=content)
-            mock_pipeline.agent5_reporter = AsyncMock()
-            mock_pipeline.agent5_reporter._classify = lambda c, r, m, cc: verdict
+            mock_pipeline.run_streaming = lambda text: _fake_run_streaming(citations, [verdict])
 
             async with AsyncClient(
                 transport=ASGITransport(app=app), base_url="http://test"
@@ -123,24 +119,10 @@ class TestStreamEndpoint:
             _make_citation("ref_001", "Paper A"),
             _make_citation("ref_002", "Paper B"),
         ]
-        retrieval = RetrievalResult(
-            citation_id="ref_001", found=False, confidence=MatchConfidence.NONE
-        )
-        metadata = MetadataComparisonResult(citation_id="ref_001")
-        content = ContentCheckResult(citation_id="ref_001")
         verdict = _make_verdict("ref_001", HallucinationType.FABRICATED)
 
         with patch.object(app.state, "pipeline", create=True) as mock_pipeline:
-            mock_pipeline.agent1_extractor = AsyncMock()
-            mock_pipeline.agent1_extractor.extract = AsyncMock(return_value=citations)
-            mock_pipeline.agent2_retriever = AsyncMock()
-            mock_pipeline.agent2_retriever.verify = AsyncMock(return_value=retrieval)
-            mock_pipeline.agent3_comparator = AsyncMock()
-            mock_pipeline.agent3_comparator.compare = lambda c, r: metadata
-            mock_pipeline.agent4_checker = AsyncMock()
-            mock_pipeline.agent4_checker.check = AsyncMock(return_value=content)
-            mock_pipeline.agent5_reporter = AsyncMock()
-            mock_pipeline.agent5_reporter._classify = lambda c, r, m, cc: verdict
+            mock_pipeline.run_streaming = lambda text: _fake_run_streaming(citations, [verdict])
 
             async with AsyncClient(
                 transport=ASGITransport(app=app), base_url="http://test"
@@ -162,26 +144,14 @@ class TestStreamEndpoint:
             _make_citation("ref_002", "Paper B"),
             _make_citation("ref_003", "Paper C"),
         ]
-        retrieval = RetrievalResult(
-            citation_id="x", found=False, confidence=MatchConfidence.NONE
-        )
-        metadata = MetadataComparisonResult(citation_id="x")
-        content = ContentCheckResult(citation_id="x")
-
-        def make_verdict_for(c, r, m, cc):
-            return _make_verdict(c.citation_id, HallucinationType.FABRICATED)
+        verdicts = [
+            _make_verdict("ref_001", HallucinationType.FABRICATED),
+            _make_verdict("ref_002", HallucinationType.FABRICATED),
+            _make_verdict("ref_003", HallucinationType.FABRICATED),
+        ]
 
         with patch.object(app.state, "pipeline", create=True) as mock_pipeline:
-            mock_pipeline.agent1_extractor = AsyncMock()
-            mock_pipeline.agent1_extractor.extract = AsyncMock(return_value=citations)
-            mock_pipeline.agent2_retriever = AsyncMock()
-            mock_pipeline.agent2_retriever.verify = AsyncMock(return_value=retrieval)
-            mock_pipeline.agent3_comparator = AsyncMock()
-            mock_pipeline.agent3_comparator.compare = lambda c, r: metadata
-            mock_pipeline.agent4_checker = AsyncMock()
-            mock_pipeline.agent4_checker.check = AsyncMock(return_value=content)
-            mock_pipeline.agent5_reporter = AsyncMock()
-            mock_pipeline.agent5_reporter._classify = make_verdict_for
+            mock_pipeline.run_streaming = lambda text: _fake_run_streaming(citations, verdicts)
 
             async with AsyncClient(
                 transport=ASGITransport(app=app), base_url="http://test"
@@ -201,24 +171,10 @@ class TestStreamEndpoint:
     async def test_report_complete_has_statistics(self):
         """report_complete 事件应包含汇总统计"""
         citations = [_make_citation("ref_001", "Paper A")]
-        retrieval = RetrievalResult(
-            citation_id="ref_001", found=False, confidence=MatchConfidence.NONE
-        )
-        metadata = MetadataComparisonResult(citation_id="ref_001")
-        content = ContentCheckResult(citation_id="ref_001")
         verdict = _make_verdict("ref_001", HallucinationType.FABRICATED)
 
         with patch.object(app.state, "pipeline", create=True) as mock_pipeline:
-            mock_pipeline.agent1_extractor = AsyncMock()
-            mock_pipeline.agent1_extractor.extract = AsyncMock(return_value=citations)
-            mock_pipeline.agent2_retriever = AsyncMock()
-            mock_pipeline.agent2_retriever.verify = AsyncMock(return_value=retrieval)
-            mock_pipeline.agent3_comparator = AsyncMock()
-            mock_pipeline.agent3_comparator.compare = lambda c, r: metadata
-            mock_pipeline.agent4_checker = AsyncMock()
-            mock_pipeline.agent4_checker.check = AsyncMock(return_value=content)
-            mock_pipeline.agent5_reporter = AsyncMock()
-            mock_pipeline.agent5_reporter._classify = lambda c, r, m, cc: verdict
+            mock_pipeline.run_streaming = lambda text: _fake_run_streaming(citations, [verdict])
 
             async with AsyncClient(
                 transport=ASGITransport(app=app), base_url="http://test"
@@ -233,3 +189,12 @@ class TestStreamEndpoint:
             data = report_evt["data"]
             assert data["total_citations"] == 1
             assert data["fabricated"] == 1
+
+    @pytest.mark.asyncio
+    async def test_architecture_page_is_not_exposed(self):
+        async with AsyncClient(
+            transport=ASGITransport(app=app), base_url="http://test"
+        ) as client:
+            resp = await client.get("/architecture")
+
+        assert resp.status_code == 404

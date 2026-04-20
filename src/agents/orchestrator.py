@@ -1,7 +1,7 @@
-"""多 Agent 编排主控
+"""编排主控
 
-串联 5 个 Agent 的流水线:
-  文本 → 引用提取 → 文献检索 → 元数据比对 → 内容核查 → 综合报告
+串联 4 个 模块 的流水线:
+  文本 → 引用提取 → 文献检索 → 元数据比对 → 综合报告
 """
 
 from __future__ import annotations
@@ -16,7 +16,6 @@ from typing import AsyncIterator
 from loguru import logger
 
 from src.agents.citation_extractor import CitationExtractor
-from src.agents.content_checker import ContentChecker
 from src.agents.metadata_comparator import MetadataComparator
 from src.agents.reference_retriever import ReferenceRetriever
 from src.agents.report_generator import ReportGenerator
@@ -31,10 +30,242 @@ from src.utils.config import load_config
 from src.utils.llm_client import LLMClient
 from src.retrievers.openalex import OpenAlexRetriever
 from src.retrievers.crossref import CrossRefRetriever
-from src.retrievers.google_scholar import GoogleScholarRetriever
+from src.retrievers.arxiv import ArxivRetriever
+from src.retrievers.semantic_scholar import SemanticScholarRetriever
 from src.retrievers.serper import SerperRetriever
 from src.retrievers.serpapi import SerpApiRetriever
 from src.retrievers.cascade import CascadeRetriever
+from src.retrievers.google_scholar import GoogleScholarRetriever
+
+
+ENABLE_ACADEMIC_APIS = True
+ENABLE_SEARCH_APIS = True
+
+
+def _has_value(value) -> bool:
+    return bool(str(value or "").strip())
+
+
+def build_retrieval_config_status(ret_cfg: dict) -> dict:
+    """Return effective retrieval provider status for the web UI."""
+    ss_cfg = ret_cfg.get("semantic_scholar", {})
+    sp_cfg = ret_cfg.get("serper", {})
+    sa_cfg = ret_cfg.get("serpapi", {})
+
+    semantic_configured = _has_value(ss_cfg.get("api_key"))
+    serper_configured = _has_value(sp_cfg.get("api_key"))
+    serpapi_configured = _has_value(sa_cfg.get("api_key"))
+    scholar_api_available = ENABLE_SEARCH_APIS and (
+        serper_configured or serpapi_configured
+    )
+
+    academic_providers = [
+        {
+            "name": "OpenAlex",
+            "source": "openalex",
+            "configured": True,
+            "active": ENABLE_ACADEMIC_APIS,
+            "status": "active" if ENABLE_ACADEMIC_APIS else "disabled",
+            "message": "Enabled" if ENABLE_ACADEMIC_APIS else "Disabled by switch",
+        },
+        {
+            "name": "CrossRef",
+            "source": "crossref",
+            "configured": True,
+            "active": ENABLE_ACADEMIC_APIS,
+            "status": "active" if ENABLE_ACADEMIC_APIS else "disabled",
+            "message": "Enabled" if ENABLE_ACADEMIC_APIS else "Disabled by switch",
+        },
+        {
+            "name": "arXiv",
+            "source": "arxiv",
+            "configured": True,
+            "active": ENABLE_ACADEMIC_APIS,
+            "status": "active" if ENABLE_ACADEMIC_APIS else "disabled",
+            "message": "Enabled" if ENABLE_ACADEMIC_APIS else "Disabled by switch",
+        },
+        {
+            "name": "Semantic Scholar",
+            "source": "semantic_scholar",
+            "configured": semantic_configured,
+            "active": ENABLE_ACADEMIC_APIS and semantic_configured,
+            "status": (
+                "active"
+                if ENABLE_ACADEMIC_APIS and semantic_configured
+                else "disabled"
+                if not ENABLE_ACADEMIC_APIS
+                else "error"
+            ),
+            "message": (
+                "API key configured"
+                if semantic_configured
+                else "Missing API key"
+                if ENABLE_ACADEMIC_APIS
+                else "Disabled by switch"
+            ),
+        },
+    ]
+
+    if not ENABLE_SEARCH_APIS:
+        serper_status = serpapi_status = "disabled"
+        serper_message = serpapi_message = "Disabled by switch"
+        serper_active = serpapi_active = False
+    else:
+        serper_active = serper_configured
+        serpapi_active = (not serper_configured) and serpapi_configured
+        serper_status = "active" if serper_active else "error"
+        serpapi_status = (
+            "standby" if serper_configured and serpapi_configured
+            else "active" if serpapi_active
+            else "error"
+        )
+        serper_message = (
+            "API key configured" if serper_configured else "Missing API key"
+        )
+        serpapi_message = (
+            "Standby because Serper is preferred"
+            if serper_configured and serpapi_configured
+            else "API key configured"
+            if serpapi_configured
+            else "Missing API key"
+        )
+
+    scholar_providers = [
+        {
+            "name": "Serper Scholar",
+            "source": "serper_scholar",
+            "configured": serper_configured,
+            "active": serper_active,
+            "status": serper_status,
+            "message": serper_message,
+        },
+        {
+            "name": "SerpAPI Scholar",
+            "source": "serpapi_scholar",
+            "configured": serpapi_configured,
+            "active": serpapi_active,
+            "status": serpapi_status,
+            "message": serpapi_message,
+        },
+    ]
+
+    direct_active = not scholar_api_available
+    direct_provider = {
+        "name": "Google Scholar Direct",
+        "source": "google_scholar",
+        "configured": True,
+        "active": direct_active,
+        "status": "active" if direct_active else "standby",
+        "message": (
+            "Enabled because no Scholar API is configured"
+            if direct_active
+            else "Disabled because a Scholar API is configured"
+        ),
+    }
+
+    return {
+        "policy": (
+            "academic -> scholar_search -> google_scholar_direct; "
+            "direct crawler is enabled only when no Scholar API is configured."
+        ),
+        "tiers": [
+            {
+                "tier": "academic",
+                "label": "Tier 1 Academic APIs",
+                "active": ENABLE_ACADEMIC_APIS,
+                "providers": academic_providers,
+            },
+            {
+                "tier": "scholar_search",
+                "label": "Tier 2 Google Scholar Search APIs",
+                "active": scholar_api_available,
+                "providers": scholar_providers,
+            },
+            {
+                "tier": "google_scholar_direct",
+                "label": "Tier 3 Direct Google Scholar Crawler",
+                "active": direct_active,
+                "providers": [direct_provider],
+            },
+        ],
+    }
+
+
+def build_cascade_retriever(ret_cfg: dict, sim_cfg: dict) -> CascadeRetriever:
+    """构建级联检索器，并支持代码内调试开关。"""
+    oa_cfg = ret_cfg.get("openalex", {})
+    cr_cfg = ret_cfg.get("crossref", {})
+    ax_cfg = ret_cfg.get("arxiv", {})
+    ss_cfg = ret_cfg.get("semantic_scholar", {})
+    sp_cfg = ret_cfg.get("serper", {})
+    sa_cfg = ret_cfg.get("serpapi", {})
+    gs_cfg = ret_cfg.get("google_scholar", {})
+    proxy_cfg = ret_cfg.get("proxy", {})
+    proxy_server = proxy_cfg.get("server") or None
+
+    openalex = None
+    crossref = None
+    arxiv = None
+    semantic_scholar = None
+    if ENABLE_ACADEMIC_APIS:
+        openalex = OpenAlexRetriever(
+            mailto=oa_cfg.get("mailto"),
+            timeout=oa_cfg.get("timeout", 15),
+        )
+        crossref = CrossRefRetriever(
+            mailto=cr_cfg.get("mailto"),
+            timeout=cr_cfg.get("timeout", 15),
+        )
+        arxiv = ArxivRetriever(
+            timeout=ax_cfg.get("timeout", 15),
+            max_results=ax_cfg.get("max_results", 5),
+        )
+        semantic_scholar = (
+            SemanticScholarRetriever(
+                api_key=ss_cfg.get("api_key"),
+                timeout=ss_cfg.get("timeout", 15),
+            )
+            if _has_value(ss_cfg.get("api_key"))
+            else None
+        )
+
+    scholar_api = None
+    scholar_api_fallback = None
+    if ENABLE_SEARCH_APIS:
+        scholar_api = SerperRetriever(
+            api_key=sp_cfg.get("api_key"),
+            timeout=sp_cfg.get("timeout", 15),
+            max_results=sp_cfg.get("max_results", 5),
+            enrich_links=sp_cfg.get("enrich_links", True),
+            search_type="scholar",
+            page_fetch_proxy=proxy_server,
+        ) if _has_value(sp_cfg.get("api_key")) else None
+        scholar_api_fallback = SerpApiRetriever(
+            api_key=sa_cfg.get("api_key"),
+            timeout=sa_cfg.get("timeout", 20),
+            max_results=sa_cfg.get("max_results", 5),
+            enrich_links=sa_cfg.get("enrich_links", True),
+            search_type="scholar",
+            page_fetch_proxy=proxy_server,
+        ) if _has_value(sa_cfg.get("api_key")) else None
+
+    google_scholar_direct = GoogleScholarRetriever(
+        proxy=proxy_server,
+        timeout=gs_cfg.get("timeout", 15),
+        max_results=gs_cfg.get("max_results", 3),
+    )
+
+    return CascadeRetriever(
+        openalex=openalex,
+        crossref=crossref,
+        arxiv=arxiv,
+        semantic_scholar=semantic_scholar,
+        scholar_search=scholar_api,
+        scholar_search_fallback=scholar_api_fallback,
+        google_scholar_direct=google_scholar_direct,
+        title_exact_threshold=sim_cfg.get("title_exact_threshold", 0.95),
+        title_fuzzy_threshold=sim_cfg.get("title_fuzzy_threshold", 0.85),
+    )
 
 
 class HalluRefPipeline:
@@ -57,49 +288,9 @@ class HalluRefPipeline:
         )
 
         # ── 构建级联检索器 (Tier 级早停) ──
-        oa_cfg = ret_cfg.get("openalex", {})
-        cr_cfg = ret_cfg.get("crossref", {})
-        sp_cfg = ret_cfg.get("serper", {})
-        sa_cfg = ret_cfg.get("serpapi", {})
-        gs_cfg = ret_cfg.get("google_scholar", {})
+        cascade = build_cascade_retriever(ret_cfg, sim_cfg)
 
-        openalex = OpenAlexRetriever(
-            mailto=oa_cfg.get("mailto"),
-            timeout=oa_cfg.get("timeout", 15),
-        )
-        crossref = CrossRefRetriever(
-            mailto=cr_cfg.get("mailto"),
-            timeout=cr_cfg.get("timeout", 15),
-        )
-        serper = SerperRetriever(
-            api_key=sp_cfg.get("api_key"),
-            timeout=sp_cfg.get("timeout", 15),
-            max_results=sp_cfg.get("max_results", 5),
-        ) if sp_cfg.get("api_key") else None
-        serpapi = SerpApiRetriever(
-            api_key=sa_cfg.get("api_key"),
-            timeout=sa_cfg.get("timeout", 20),
-            max_results=sa_cfg.get("max_results", 5),
-        ) if sa_cfg.get("api_key") else None
-        scholar = None
-        if gs_cfg.get("enabled", False):
-            scholar = GoogleScholarRetriever(
-                proxy=gs_cfg.get("proxy"),
-                timeout=gs_cfg.get("timeout", 15),
-                max_results=gs_cfg.get("max_results", 3),
-            )
-
-        cascade = CascadeRetriever(
-            openalex=openalex,
-            crossref=crossref,
-            serper=serper,
-            serpapi=serpapi,
-            scholar=scholar,
-            title_exact_threshold=sim_cfg.get("title_exact_threshold", 0.95),
-            title_fuzzy_threshold=sim_cfg.get("title_fuzzy_threshold", 0.85),
-        )
-
-        # 初始化 5 个 Agent
+        # 初始化 4 个 Agent
         self.agent1_extractor = CitationExtractor(self.llm)
         self.agent2_retriever = ReferenceRetriever(
             cascade=cascade,
@@ -108,12 +299,12 @@ class HalluRefPipeline:
         )
         self.agent3_comparator = MetadataComparator(
             mismatch_threshold=det_cfg.get("metadata_mismatch_threshold", 2),
+            llm=self.llm,
         )
-        self.agent4_checker = ContentChecker(self.llm)
-        self.agent5_reporter = ReportGenerator()
+        self.agent4_reporter = ReportGenerator()
 
         # 输入长度上限
-        self.max_input_chars = det_cfg.get("max_input_chars", 20000)
+        self.max_input_chars = det_cfg.get("max_input_chars", 100000)
 
     def _check_input_length(self, text: str) -> None:
         if len(text) > self.max_input_chars:
@@ -141,13 +332,13 @@ class HalluRefPipeline:
             logger.warning("[Pipeline] 未提取到任何引用, 终止流水线")
             return DetectionReport()
 
-        # Step 2-5: 调用流式接口收集结果
+        # Step 2-4: 调用流式接口收集结果
         verdicts: list[CitationVerdict] = []
         async for v in self._process_citations(citations):
             verdicts.append(v)
 
         # 聚合报告
-        report = self.agent5_reporter.aggregate(verdicts)
+        report = self.agent4_reporter.aggregate(verdicts)
 
         logger.info("=" * 60)
         logger.info("HalluRef Pipeline DONE")
@@ -156,21 +347,15 @@ class HalluRefPipeline:
         return report
 
     async def _process_one(self, citation: Citation) -> CitationVerdict:
-        """单条引用全链路处理 (Agent 2→3→4→5), 异常隔离, 永不抛出"""
+        """单条引用全链路处理 (Agent 2→3→4), 异常隔离, 永不抛出"""
         cid = citation.citation_id
         try:
             # 2. 检索
             retrieval = await self.agent2_retriever.verify(citation)
             # 3. 元数据比对 (同步)
-            metadata = self.agent3_comparator.compare(citation, retrieval)
-            # 4. 内容核查 (仅 found 时调用 LLM)
-            content = None
-            if retrieval.found:
-                content = await self.agent4_checker.check(citation, retrieval)
-            # 5. 单条研判
-            return self.agent5_reporter.classify_one(
-                citation, retrieval, metadata, content,
-            )
+            metadata = await self.agent3_comparator.compare_async(citation, retrieval)
+            # 4. 单条研判
+            return self.agent4_reporter.classify_one(citation, retrieval, metadata)
         except Exception as e:
             logger.error(f"[Pipeline] {cid} error: {e}")
             return CitationVerdict(
@@ -230,9 +415,9 @@ class HalluRefPipeline:
             return
         yield "extraction_done", citations
 
-        # Step 2-5: 流式吐 verdict
+        # Step 2-4: 流式吐 verdict
         logger.info(
-            f"[Pipeline] Step 2-5: per-citation streaming ({len(citations)} citations)"
+            f"[Pipeline] Step 2-4: per-citation streaming ({len(citations)} citations)"
         )
         verdicts: list[CitationVerdict] = []
         async for verdict in self._process_citations(citations):
@@ -240,7 +425,7 @@ class HalluRefPipeline:
             yield "citation_verdict", verdict
 
         # 最终聚合
-        report = self.agent5_reporter.aggregate(verdicts)
+        report = self.agent4_reporter.aggregate(verdicts)
         logger.info("HalluRef Pipeline DONE (streaming)")
         yield "report_complete", report
 

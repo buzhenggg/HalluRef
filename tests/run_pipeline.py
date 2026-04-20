@@ -23,9 +23,9 @@ async def main():
     print(f"Total time: {elapsed:.2f}s")
     print(f"Citations:  {report.total_citations}")
     print(f"Verified:   {report.verified}")
+    print(f"VerifiedMinor: {report.verified_minor}")
     print(f"Fabricated: {report.fabricated}")
     print(f"MetaError:  {report.metadata_error}")
-    print(f"Misrepresented: {report.misrepresented}")
     print(f"Unverifiable:   {report.unverifiable}")
     print("=" * 60)
     for d in report.details:

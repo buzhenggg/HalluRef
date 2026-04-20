@@ -39,8 +39,8 @@ async def test_run_streaming_rejects_oversize(pipeline):
 def test_api_returns_413():
     from app.api import app
     with TestClient(app) as client:
-        # 默认配置上限 20000，构造超限文本
-        text = "a" * 20001
+        # 默认配置上限 100000，构造超限文本
+        text = "a" * 100001
         resp = client.post("/api/detect", json={"text": text})
     assert resp.status_code == 413
     assert "上限" in resp.json()["message"]

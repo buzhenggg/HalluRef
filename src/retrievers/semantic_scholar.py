@@ -27,6 +27,9 @@ class SemanticScholarRetriever(BaseRetriever):
     def _headers(self) -> dict:
         return {"x-api-key": self.api_key} if self.api_key else {}
 
+    def is_configured(self) -> bool:
+        return bool(str(self.api_key or "").strip())
+
     def _parse_paper(self, p: dict) -> RetrievedPaper:
         authors = [a.get("name", "") for a in (p.get("authors") or []) if a.get("name")]
 

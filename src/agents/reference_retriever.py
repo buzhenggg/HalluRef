@@ -1,10 +1,10 @@
-"""Agent 2: 文献检索核查智能体
+"""Agent 2: 文献检索核查模块
 
 级联（Cascade）策略, 按 tier 顺序调用检索器, 任一 tier 命中阈值即停止,
 后续 tier 不再发起请求, 节省 API 调用与时间:
-    Tier 1 academic    OpenAlex + CrossRef     并行
-    Tier 2 web_search  Serper / SerpAPI        二选一
-    Tier 3 scholar     Google Scholar 直爬     兜底
+    Tier 1 academic               OpenAlex + CrossRef + arXiv  并行
+    Tier 2 scholar_search         Serper / SerpAPI Scholar      二选一
+    Tier 3 google_scholar_direct  Google Scholar 直爬           兜底
 
 实际级联逻辑由 ``CascadeRetriever`` 实现, 本 Agent 仅做适配 (输出 RetrievalResult)。
 若未注入 cascade, 则回退到旧的"全部并发 + 可选 fallback"行为以保持向后兼容。
@@ -44,7 +44,7 @@ class ReferenceRetriever:
         fallback_retriever=None,
         cascade=None,
         interval_min: float = 1.0,
-        interval_max: float = 2.0,
+        interval_max: float = 3.0,
     ):
         self.retrievers = retrievers or []
         self.exact_thresh = title_exact_threshold
@@ -149,6 +149,7 @@ class ReferenceRetriever:
                 confidence=cascade_result.confidence,
                 best_match=cascade_result.best_match if cascade_result.found else None,
                 all_candidates=cascade_result.candidates[:10],
+                debug_log=cascade_result.debug_log,
             )
 
         # ── 兼容路径: 并发请求所有检索器 ──

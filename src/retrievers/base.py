@@ -34,6 +34,7 @@ class BaseRetriever(ABC):
         self.request_interval = request_interval
         self._client: httpx.AsyncClient | None = None
         self._last_request_time: float = 0.0
+        self.last_search_debug: str = ""
 
     async def _get_client(self) -> httpx.AsyncClient:
         if self._client is None or self._client.is_closed:
@@ -120,17 +121,23 @@ class BaseRetriever(ABC):
     ) -> list[RetrievedPaper]:
         """综合检索: 先按标题, 无结果则按作者+年份"""
         results: list[RetrievedPaper] = []
+        self.last_search_debug = ""
 
         if title:
             try:
                 results = await self.search_by_title(title)
             except Exception as e:
+                self.last_search_debug = f"error ({e})"
                 logger.warning(f"[{self.source_name}] title search failed: {e}")
 
         if not results and authors:
             try:
                 results = await self.search_by_author_year(authors, year)
             except Exception as e:
+                self.last_search_debug = f"error ({e})"
                 logger.warning(f"[{self.source_name}] author search failed: {e}")
+
+        if not self.last_search_debug:
+            self.last_search_debug = f"{len(results)} candidates"
 
         return results

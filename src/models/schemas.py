@@ -27,7 +27,6 @@ class HallucinationType(str, Enum):
     """幻觉引用分类"""
     FABRICATED = "FABRICATED"              # 完全捏造
     METADATA_ERROR = "METADATA_ERROR"      # 信息篡改 (title 或 authors 不匹配)
-    MISREPRESENTED = "MISREPRESENTED"      # 观点歪曲
     VERIFIED = "VERIFIED"                  # 引用正确
     VERIFIED_MINOR = "VERIFIED_MINOR"      # 引用基本正确 (title 与 authors 匹配, 仅 year/venue 等小字段有误)
     UNVERIFIABLE = "UNVERIFIABLE"          # 无法验证 (LLM 看不出 / LLM 调用失败)
@@ -49,14 +48,6 @@ class FieldMatchStatus(str, Enum):
     UNKNOWN = "UNKNOWN"
 
 
-class ContentConsistency(str, Enum):
-    """内容一致性判定"""
-    CONSISTENT = "CONSISTENT"
-    INCONSISTENT = "INCONSISTENT"
-    UNVERIFIABLE = "UNVERIFIABLE"
-    EXAGGERATED = "EXAGGERATED"
-
-
 # ── 引用提取 (Agent 1) ───────────────────────────────────
 
 class ParsedCitation(BaseModel):
@@ -74,7 +65,6 @@ class Citation(BaseModel):
     raw_text: str = Field(description="引用的原始文本")
     parsed: ParsedCitation = Field(description="解析后的结构化元数据")
     context: str = Field(default="", description="引用所在的上下文句子")
-    claim: str = Field(default="", description="LLM声称该论文说了什么")
 
 
 # ── 文献检索 (Agent 2) ───────────────────────────────────
@@ -98,6 +88,7 @@ class RetrievalResult(BaseModel):
     confidence: MatchConfidence = MatchConfidence.NONE
     best_match: Optional[RetrievedPaper] = None
     all_candidates: list[RetrievedPaper] = Field(default_factory=list)
+    debug_log: str = Field(default="", description="检索链路调试摘要")
 
 
 # ── 元数据比对 (Agent 3) ──────────────────────────────────
@@ -119,18 +110,7 @@ class MetadataComparisonResult(BaseModel):
     has_major_mismatch: bool = False
 
 
-# ── 内容一致性 (Agent 4) ──────────────────────────────────
-
-class ContentCheckResult(BaseModel):
-    """内容一致性核查结果"""
-    citation_id: str
-    consistency: ContentConsistency = ContentConsistency.UNVERIFIABLE
-    reasoning: str = Field(default="", description="判断理由")
-    claim: str = Field(default="", description="LLM的引用声明")
-    abstract: str = Field(default="", description="论文真实摘要")
-
-
-# ── 综合报告 (Agent 5) ────────────────────────────────────
+# ── 综合报告 (Agent 4) ────────────────────────────────────
 
 class CitationVerdict(BaseModel):
     """单条引用的最终判定"""
@@ -144,8 +124,6 @@ class CitationVerdict(BaseModel):
     # 中间结果引用
     retrieval: Optional[RetrievalResult] = None
     metadata: Optional[MetadataComparisonResult] = None
-    content_check: Optional[ContentCheckResult] = None
-
 
 class DetectionReport(BaseModel):
     """完整检测报告"""
@@ -154,6 +132,5 @@ class DetectionReport(BaseModel):
     verified_minor: int = 0
     fabricated: int = 0
     metadata_error: int = 0
-    misrepresented: int = 0
     unverifiable: int = 0
     details: list[CitationVerdict] = Field(default_factory=list)
