@@ -9,6 +9,11 @@ llm:
   max_tokens: 8192
 
 retriever:
+  proxy:
+    # 统一代理配置，同时作用于 Google Scholar 直接爬虫与落地页抓取
+    # 例如: "http://127.0.0.1:7890" / "socks5://127.0.0.1:7891"
+    server: ""
+
   openalex:
     base_url: "https://api.openalex.org/works"
     # 填入邮箱进入 polite pool, 可获得 10 req/s (无需注册)
@@ -21,28 +26,33 @@ retriever:
     mailto: "your@email.com"
     timeout: 15
 
+  arxiv:
+    timeout: 15
+    max_results: 5
+
+  semantic_scholar:
+    # Semantic Scholar Graph API. Required to enable this Tier 1 academic retriever.
+    api_key: ""
+    timeout: 15
+
   serper:
-    # Serper.dev — Google Web Search, 注册即送 2500 次免费查询
-    # 端点: https://google.serper.dev/search
+    # Serper.dev – 用于 Google Scholar Search API
+    # Scholar 端点: https://google.serper.dev/scholar
     api_key: "YOUR_SERPER_API_KEY"
     timeout: 15
     max_results: 5
 
   serpapi:
-    # SerpAPI.com — Google Web Search 备选, 100 次/月免费
-    # 端点: https://serpapi.com/search.json (engine=google)
-    # Tier 2 中 Serper 优先, 仅当 Serper 未配置时启用 SerpAPI
+    # SerpAPI.com – Scholar 搜索 API 备选, 100 次/月免费
+    # 端点: https://serpapi.com/search.json (engine=google_scholar)
+    # Scholar 层遵循 Serper 优先, 仅当 Serper 未配置时启用 SerpAPI
     api_key: ""
     timeout: 20
     max_results: 5
 
   google_scholar:
-    # 启用 Google Scholar 补查 (主力检索未找到时自动触发)
-    enabled: true
-    # HTTP/SOCKS5 代理地址, 避免 Google 封禁 IP
-    # 示例: "http://127.0.0.1:7890" / "socks5://127.0.0.1:1080"
-    proxy: "http://127.0.0.1:7890"
-    timeout: 20
+    # Google Scholar direct HTTP crawler final fallback
+    timeout: 15
     max_results: 3
 
 similarity:
@@ -56,4 +66,6 @@ detection:
   # 元数据不一致判定阈值：不一致字段数 >= 此值 → METADATA_ERROR
   metadata_mismatch_threshold: 2
   # 单次检测的最大输入文本字符数，超过则拒绝处理
-  max_input_chars: 20000
+  max_input_chars: 100000
+  # 上传 PDF / DOCX 文件的最大字节数，默认 10 MiB
+  max_upload_bytes: 10485760
