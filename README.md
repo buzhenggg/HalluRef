@@ -5,7 +5,7 @@
   </p>
 </p>
 
-![image-20260420183714776](C:/Users/buzheng/AppData/Roaming/Typora/typora-user-images/image-20260420183714776.png)
+![image-20260420183714776](/img/img1.png)
 
 
 ---
